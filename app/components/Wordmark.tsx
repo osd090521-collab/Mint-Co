@@ -19,10 +19,10 @@ export function Wordmark({
     <span
       className={`font-display font-medium tracking-tight text-ink ${sizes[size]} ${className}`}
     >
-      Mint{" "}
-      <span aria-hidden="true" className="text-mint italic">
+      Mint
+      <span aria-hidden="true" className="mx-[0.12em] text-mint italic">
         &amp;
-      </span>{" "}
+      </span>
       Co
     </span>
   );

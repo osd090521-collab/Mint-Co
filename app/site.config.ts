@@ -26,11 +26,14 @@ export const site = {
   emailGeneral: "hello@mintandco.co.uk",
   // Leave empty until a real WhatsApp Business number exists. "" => CTA hidden.
   whatsappNumber: "",
+  // External "connected to the web" trust links — render only when set.
+  gbpUrl: "", // Google Business Profile URL
+  instagramUrl: "", // e.g. https://instagram.com/mintandco
 
   audit: {
     subject: "Free website audit — Mint & Co",
     body:
-      "Hi Omar & David,\n\nI'd like a free audit of my business's online presence.\n\nBusiness name:\nWhat I do:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
+      "Hi Omar & David,\n\nI'd love a free audit of how my business looks online.\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
   },
 } as const;
 
@@ -47,7 +50,7 @@ export function auditMailto(): string {
 export function auditWhatsApp(): string | null {
   if (!site.whatsappNumber) return null;
   const text = encodeURIComponent(
-    "Hi Omar & David, I'd like a free audit of my business's online presence.",
+    "Hi Omar & David — I'd love a free audit of how my business looks online.",
   );
   return `https://wa.me/${site.whatsappNumber}?text=${text}`;
 }

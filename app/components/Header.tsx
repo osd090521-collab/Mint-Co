@@ -31,7 +31,7 @@ export function Header() {
           href={auditMailto()}
           className="text-sm font-medium text-mint-deep underline-offset-4 hover:underline"
         >
-          Get your free audit
+          Get my free audit
         </a>
       </div>
     </header>

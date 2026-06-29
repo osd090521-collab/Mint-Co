@@ -19,7 +19,11 @@ export function MobileCta() {
 
   return (
     <div
-      className={`fixed inset-x-0 bottom-0 z-40 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 transition-all duration-300 sm:hidden ${
+      style={{
+        boxShadow:
+          "0 -1px 2px rgba(16,33,27,0.04), 0 -8px 24px rgba(16,33,27,0.05)",
+      }}
+      className={`fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-4 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md transition-all duration-300 sm:hidden ${
         visible
           ? "translate-y-0 opacity-100"
           : "pointer-events-none translate-y-4 opacity-0"
@@ -27,9 +31,9 @@ export function MobileCta() {
     >
       <a
         href={auditMailto()}
-        className="flex min-h-[52px] items-center justify-center rounded-xl bg-mint-cta text-base font-semibold text-white shadow-soft"
+        className="flex min-h-[52px] items-center justify-center rounded-xl bg-mint-cta text-base font-semibold tracking-[0.01em] text-white transition active:scale-[0.98]"
       >
-        Get your free audit
+        Get my free audit
       </a>
     </div>
   );
