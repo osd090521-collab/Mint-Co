@@ -1,0 +1,6 @@
+# Normalise line endings — avoid CRLF noise from Windows in the repo/diffs.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff2 binary
