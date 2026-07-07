@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Fraunces, Geist } from "next/font/google";
 import "./globals.css";
+import { Footer } from "./components/Footer";
+import { Header } from "./components/Header";
+import { MobileCta } from "./components/MobileCta";
 import { site } from "./site.config";
 
 const geistSans = Geist({
@@ -19,19 +22,23 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Mint & Co — Websites for Barbers & Local Businesses | Harrow",
+    default: "Mint & Co — Premium Websites for Businesses | Harrow & Pinner",
     template: "%s · Mint & Co",
   },
   description: site.description,
   applicationName: site.name,
-  authors: [{ name: "Omar & David" }],
+  authors: [{ name: "Omar" }, { name: "David" }, { name: "Rodrick" }],
   keywords: [
-    "website for barbers",
-    "local business website",
-    "barber website Harrow",
-    "small business website Pinner",
-    "mobile-first website",
-    "local SEO",
+    "web design",
+    "business websites",
+    "small business websites",
+    "website design Harrow",
+    "website design Pinner",
+    "web design London",
+    "mobile-first websites",
+    "local SEO websites",
+    "Google presence websites",
+    "premium websites for businesses",
   ],
   alternates: { canonical: "/" },
   openGraph: {
@@ -39,19 +46,19 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: site.url,
     siteName: site.name,
-    title: "Mint & Co — Websites for Barbers & Local Businesses",
+    title: "Mint & Co — Premium Websites for Businesses",
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mint & Co — Websites for Barbers & Local Businesses",
+    title: "Mint & Co — Premium Websites for Businesses",
     description: site.description,
   },
   robots: { index: true, follow: true },
 };
 
 // JSON-LD — only true facts (no fake address/phone/aggregateRating).
-const jsonLd = {
+const professionalServiceJsonLd = {
   "@context": "https://schema.org",
   "@type": "ProfessionalService",
   name: site.name,
@@ -63,6 +70,27 @@ const jsonLd = {
   knowsAbout: ["Web design", "Web development", "Local SEO", "Google Business Profile"],
   slogan: site.tagline,
 };
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: site.name,
+  url: site.url,
+  logo: `${site.url}/apple-icon`,
+  description: site.description,
+  email: site.email,
+  founder: site.founders.map((name) => ({ "@type": "Person", name })),
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: site.name,
+  url: site.url,
+  publisher: { "@type": "Organization", name: site.name },
+};
+
+const jsonLdBlocks = [professionalServiceJsonLd, organizationJsonLd, websiteJsonLd];
 
 export default function RootLayout({
   children,
@@ -84,11 +112,17 @@ export default function RootLayout({
         >
           Skip to content
         </a>
+        <Header />
         {children}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
+        <Footer />
+        <MobileCta />
+        {jsonLdBlocks.map((block) => (
+          <script
+            key={block["@type"]}
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(block) }}
+          />
+        ))}
       </body>
     </html>
   );

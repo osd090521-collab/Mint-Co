@@ -1,7 +1,10 @@
 import { ImageResponse } from "next/og";
+import { compassDataUri } from "./components/compass";
 import { site } from "./site.config";
 
-export const alt = "Mint & Co — websites for barbers and local businesses";
+export const dynamic = "force-static";
+
+export const alt = "Mint & Co — premium websites for businesses, Harrow & Pinner";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -20,7 +23,9 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", fontSize: 40, color: "#10211B" }}>
+        <div style={{ display: "flex", alignItems: "center", fontSize: 40, color: "#10211B" }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={compassDataUri} width={64} height={64} alt="" style={{ marginRight: 18 }} />
           <span>Mint</span>
           <span style={{ color: "#1E8E68", fontStyle: "italic", margin: "0 10px" }}>
             &amp;
@@ -39,10 +44,10 @@ export default function OpengraphImage() {
               letterSpacing: "-0.02em",
             }}
           >
-            A website that makes your shop look as good as it actually is.
+            Look as good online as you do in person.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "#566761" }}>
-            {`Websites for barbers & local businesses · from ${site.priceFrom}, fixed`}
+            {"Clear fixed-price packages, agreed before we start"}
           </div>
         </div>
 

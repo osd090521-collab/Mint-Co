@@ -1,6 +1,9 @@
 /**
- * The wordmark IS the brand. "Mint & Co" set in Fraunces with the ampersand —
- * the one coloured, characterful device — in mint. No leaf, ever.
+ * The "Mint & Co" wordmark: Fraunces Regular (400) in deep green, with the
+ * ampersand — the one coloured, characterful device in the text — in mint
+ * italic. Pairs with the Mint Compass symbol in the primary lockup
+ * (see LogoLockup in compass.tsx). Panel-refined: lighter editorial weight,
+ * tight tracking (T1), calmer beside the symbol.
  */
 export function Wordmark({
   className = "",
@@ -11,18 +14,16 @@ export function Wordmark({
 }) {
   const sizes = {
     sm: "text-lg",
-    md: "text-xl",
+    md: "text-[21px]",
     lg: "text-2xl",
   } as const;
 
   return (
     <span
-      className={`font-display font-medium tracking-tight text-ink ${sizes[size]} ${className}`}
+      className={`font-display font-normal tracking-[-0.01em] text-[#0F2D23] ${sizes[size]} ${className}`}
     >
       Mint
-      <span aria-hidden="true" className="mx-[0.12em] text-mint italic">
-        &amp;
-      </span>
+      <span className="mx-[0.14em] text-mint italic">&amp;</span>
       Co
     </span>
   );

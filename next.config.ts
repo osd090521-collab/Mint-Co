@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+// Static-export mode is toggled with EXPORT=true (used to generate the
+// www.mintandco.co.uk static snapshot). Security headers require a server,
+// so they only apply to the normal (Vercel) build, not the static export.
+const isExport = process.env.EXPORT === "true";
+
 const securityHeaders = [
   {
     key: "Strict-Transport-Security",
@@ -14,10 +19,12 @@ const securityHeaders = [
   },
 ];
 
-const nextConfig: NextConfig = {
-  async headers() {
-    return [{ source: "/:path*", headers: securityHeaders }];
-  },
-};
+const nextConfig: NextConfig = isExport
+  ? { output: "export", trailingSlash: true }
+  : {
+      async headers() {
+        return [{ source: "/:path*", headers: securityHeaders }];
+      },
+    };
 
 export default nextConfig;

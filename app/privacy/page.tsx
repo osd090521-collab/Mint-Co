@@ -1,6 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { Wordmark } from "../components/Wordmark";
 import { site } from "../site.config";
 
 export const metadata: Metadata = {
@@ -14,17 +12,13 @@ export default function PrivacyPage() {
   return (
     <main id="main" className="flex-1">
       <div className="mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-24">
-        <Link href="/" aria-label="Mint & Co home" className="rounded">
-          <Wordmark size="md" />
-        </Link>
-
-        <h1 className="mt-10 text-3xl font-medium sm:text-4xl">Your privacy</h1>
+        <h1 className="text-3xl font-medium sm:text-4xl">Your privacy</h1>
         <p className="mt-2 text-sm text-muted">Last updated: June 2026</p>
 
         <div className="mt-8 space-y-5 text-base leading-relaxed text-slate">
           <p>
-            Mint &amp; Co is a UK partnership run by Omar and David, based in{" "}
-            {site.location}.
+            Mint &amp; Co is a UK partnership run by Omar, David and Rodrick,
+            based in {site.location}.
           </p>
           <p>
             This website uses <strong>no cookies, tracking or analytics</strong>
@@ -57,15 +51,6 @@ export default function PrivacyPage() {
             .
           </p>
         </div>
-
-        <p className="mt-12">
-          <Link
-            href="/"
-            className="text-sm font-medium text-mint-deep underline-offset-4 hover:underline"
-          >
-            ← Back to home
-          </Link>
-        </p>
       </div>
     </main>
   );

@@ -1,4 +1,7 @@
 import { ImageResponse } from "next/og";
+import { compassDataUri } from "./components/compass";
+
+export const dynamic = "force-static";
 
 export const size = { width: 180, height: 180 };
 export const contentType = "image/png";
@@ -14,13 +17,10 @@ export default function AppleIcon() {
           alignItems: "center",
           justifyContent: "center",
           background: "#FAFAF7",
-          color: "#1E8E68",
-          fontSize: 120,
-          fontStyle: "italic",
-          fontFamily: "Georgia, serif",
         }}
       >
-        &amp;
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={compassDataUri} width={132} height={132} alt="" />
       </div>
     ),
     size,

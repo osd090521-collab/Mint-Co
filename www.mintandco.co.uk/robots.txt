@@ -1,0 +1,5 @@
+User-Agent: *
+Allow: /
+
+Host: https://mintandco.co.uk
+Sitemap: https://mintandco.co.uk/sitemap.xml

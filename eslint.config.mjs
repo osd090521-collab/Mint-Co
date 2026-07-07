@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Static export snapshot (built artifact, not source).
+    "www.mintandco.co.uk/**",
   ]),
 ]);
 

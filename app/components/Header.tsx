@@ -2,8 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Wordmark } from "./Wordmark";
+import { LogoLockup } from "./compass";
 import { auditMailto } from "../site.config";
+
+const navLinks = [
+  { href: "/services", label: "Services" },
+  { href: "/process", label: "Process" },
+  { href: "/about", label: "About" },
+];
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -23,10 +29,21 @@ export function Header() {
           : "border-b border-transparent bg-transparent"
       }`}
     >
-      <div className="mx-auto flex max-w-5xl items-center justify-between px-5 py-4 sm:px-8">
+      <div className="mx-auto flex max-w-5xl items-center justify-between gap-6 px-5 py-4 sm:px-8">
         <Link href="/" aria-label="Mint & Co home" className="rounded">
-          <Wordmark size="md" />
+          <LogoLockup markSize={34} />
         </Link>
+        <nav aria-label="Primary" className="hidden items-center gap-8 sm:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-slate underline-offset-4 hover:text-ink hover:underline"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
         <a
           href={auditMailto()}
           className="text-sm font-medium text-mint-deep underline-offset-4 hover:underline"

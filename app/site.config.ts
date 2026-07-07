@@ -14,11 +14,10 @@ export const site = {
   url: "https://mintandco.co.uk",
   tagline: "Your business, in mint condition.",
   description:
-    "Mint & Co builds clean, premium, mobile-first websites for barbers and local businesses — built to be found on Google. Fixed price from £895. By Omar & David, Harrow & Pinner.",
+    "Mint & Co builds clean, premium, mobile-first websites for businesses — clear fixed-price packages, agreed before we start. By Omar, David & Rodrick, Harrow & Pinner.",
   location: "Harrow & Pinner, North West London",
-  areaServed: ["Harrow", "Pinner", "North West London"],
-  founders: ["Omar", "David"],
-  priceFrom: "£895",
+  areaServed: ["Harrow", "Pinner", "North West London", "London", "United Kingdom"],
+  founders: ["Omar", "David", "Rodrick"],
 
   // Live, working inbox (interim primary contact).
   email: "omar@mintandco.co.uk",
@@ -33,7 +32,7 @@ export const site = {
   audit: {
     subject: "Free website audit — Mint & Co",
     body:
-      "Hi Omar & David,\n\nI'd love a free audit of how my business looks online.\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
+      "Hi Omar, David & Rodrick,\n\nI'd love a free audit of how my business looks online.\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
   },
 } as const;
 
@@ -50,7 +49,7 @@ export function auditMailto(): string {
 export function auditWhatsApp(): string | null {
   if (!site.whatsappNumber) return null;
   const text = encodeURIComponent(
-    "Hi Omar & David — I'd love a free audit of how my business looks online.",
+    "Hi Omar, David & Rodrick — I'd love a free audit of how my business looks online.",
   );
   return `https://wa.me/${site.whatsappNumber}?text=${text}`;
 }

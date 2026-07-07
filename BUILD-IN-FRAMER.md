@@ -1,5 +1,7 @@
 # Build Mint & Co in Framer — Build Kit
 
+> ⚠️ **Stale — do not use.** The facts in this guide (team size, founder names, pricing, target audience) are out of date as of 2026-07-02. See `app/site.config.ts` and `app/page.tsx` for the current facts before following any copy block in this document.
+
 This is the step-by-step guide to rebuild the Mint & Co site in **Framer** so you (Omar) can edit and publish it yourself, with no developer. It mirrors the refined, live **reference site** exactly.
 
 > **Your visual target (build to match this):** https://mint-and-co-site.vercel.app
