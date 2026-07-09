@@ -21,7 +21,7 @@ export default function Home() {
         {/* Oversized faint ampersand — typographic art direction, not decoration */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -right-[4%] -top-[6%] select-none font-display italic leading-none text-mint/[0.05] text-[22rem] sm:text-[30rem]"
+          className="pointer-events-none absolute -right-[4%] -top-[6%] select-none font-display leading-none text-mint/[0.05] text-[22rem] sm:text-[30rem]"
         >
           &amp;
         </span>

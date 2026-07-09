@@ -30,7 +30,7 @@ export const site = {
   whatsappNumber: "447504828622",
   // External "connected to the web" trust links — render only when set.
   gbpUrl: "", // Google Business Profile URL
-  instagramUrl: "", // e.g. https://instagram.com/mintandco
+  instagramUrl: "https://www.instagram.com/bymintco/",
 
   // TODO: no real testimonials yet — never fabricate. Render only when non-empty.
   testimonials: [] as { quote: string; name: string; business: string }[],

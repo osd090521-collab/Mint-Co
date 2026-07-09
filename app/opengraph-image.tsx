@@ -27,7 +27,7 @@ export default function OpengraphImage() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={compassDataUri} width={64} height={64} alt="" style={{ marginRight: 18 }} />
           <span>Mint</span>
-          <span style={{ color: "#1E8E68", fontStyle: "italic", margin: "0 10px" }}>
+          <span style={{ color: "#1E8E68", margin: "0 10px" }}>
             &amp;
           </span>
           <span>Co</span>
