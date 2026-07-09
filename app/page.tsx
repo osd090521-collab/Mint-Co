@@ -32,7 +32,7 @@ export default function Home() {
             it's the LCP element and must not paint blank behind JS/IO gating.
             Reveal is reserved for below-the-fold sections.
           */}
-          <Eyebrow>Web Studio · Harrow &amp; Pinner</Eyebrow>
+          <Eyebrow>Web Studio · Harrow</Eyebrow>
           <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-6xl sm:leading-[1.05] sm:tracking-[-0.03em]">
             Look as good online as you do in person.
           </h1>
@@ -55,9 +55,9 @@ export default function Home() {
             )}
           </div>
           <p className="mt-6 max-w-xl text-sm text-muted">
-            Harrow &amp; Pinner-based, working with businesses across
-            London and the UK · clear fixed-price packages · live in 7–10
-            working days · your domain &amp; Google profile stay yours.
+            Harrow-based, working with businesses across London and the
+            UK · clear fixed-price packages · live in 7–10 working days ·
+            your domain &amp; Google profile stay yours.
           </p>
           <p className="mt-4 text-sm text-muted">
             No obligation, no hard sell — we&apos;ll show you what we&apos;d
@@ -146,9 +146,9 @@ export default function Home() {
           </Reveal>
           <Reveal delay={120}>
             <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
-              We&apos;re Omar, David and Rodrick — Harrow &amp; Pinner-based,
-              working with businesses across London and the UK. You&apos;ll
-              deal with us directly, not a call centre.
+              We&apos;re Omar, David and Rodrick — Harrow-based, working
+              with businesses across London and the UK. You&apos;ll deal
+              with us directly, not a call centre.
             </p>
           </Reveal>
           <Reveal delay={180}>

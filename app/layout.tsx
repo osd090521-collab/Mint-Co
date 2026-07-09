@@ -22,7 +22,7 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Mint & Co — Premium Websites for Businesses | Harrow & Pinner",
+    default: "Mint & Co — Premium Websites for Businesses | Harrow",
     template: "%s · Mint & Co",
   },
   description: site.description,
@@ -33,7 +33,6 @@ export const metadata: Metadata = {
     "business websites",
     "small business websites",
     "website design Harrow",
-    "website design Pinner",
     "web design London",
     "mobile-first websites",
     "local SEO websites",

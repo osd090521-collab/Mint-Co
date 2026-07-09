@@ -4,9 +4,8 @@
  * COMPLIANCE NOTE (do not publish a dead channel):
  * - `email` is the live, working inbox (omar@). Used as the interim primary
  *   contact until the `hello@` alias is set up AND SPF/DMARC pass.
- * - `whatsappNumber` is intentionally empty. The WhatsApp CTA only renders
- *   once a real WhatsApp Business number is set here (international format,
- *   digits only, e.g. "447XXXXXXXXX"). Until then, email is the primary CTA.
+ * - `phone`/`whatsappNumber` are the same real mobile number. Leave either
+ *   empty (`""`) to hide its CTA if the number ever stops being live.
  */
 export const site = {
   name: "Mint & Co",
@@ -14,9 +13,9 @@ export const site = {
   url: "https://mintandco.co.uk",
   tagline: "Your business, in mint condition.",
   description:
-    "Mint & Co builds clean, premium, mobile-first websites for businesses — clear fixed-price packages, agreed before we start. By Omar, David & Rodrick, Harrow & Pinner.",
-  location: "Harrow & Pinner, North West London",
-  areaServed: ["Harrow", "Pinner", "North West London", "London", "United Kingdom"],
+    "Mint & Co builds clean, premium, mobile-first websites for businesses — clear fixed-price packages, agreed before we start. By Omar, David & Rodrick, Harrow.",
+  location: "Harrow, North West London",
+  areaServed: ["Harrow", "North West London", "London", "United Kingdom"],
   founders: ["Omar", "David", "Rodrick"],
 
   // Live, working inbox (interim primary contact).
@@ -27,10 +26,8 @@ export const site = {
   davidEmail: "",
   // TODO: not yet provided. Leave empty — no public rendering until confirmed.
   rodrickEmail: "",
-  // TODO: not yet provided. Leave empty — no public rendering until confirmed.
-  phone: "",
-  // Leave empty until a real WhatsApp Business number exists. "" => CTA hidden.
-  whatsappNumber: "",
+  phone: "07504 828622",
+  whatsappNumber: "447504828622",
   // External "connected to the web" trust links — render only when set.
   gbpUrl: "", // Google Business Profile URL
   instagramUrl: "", // e.g. https://instagram.com/mintandco

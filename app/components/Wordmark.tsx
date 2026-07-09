@@ -23,7 +23,7 @@ export function Wordmark({
       className={`font-display font-normal tracking-[-0.01em] text-[#0F2D23] ${sizes[size]} ${className}`}
     >
       Mint
-      <span className="mx-[0.14em] text-mint italic">&amp;</span>
+      <span className="ml-[0.14em] mr-[0.22em] text-mint italic">&amp;</span>
       Co
     </span>
   );

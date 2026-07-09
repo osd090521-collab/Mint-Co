@@ -2,17 +2,19 @@ import type { Metadata } from "next";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
-import { site } from "../site.config";
+import { auditWhatsApp, site } from "../site.config";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Mint & Co is a three-person studio — Omar, David and Rodrick — building in the open from Harrow & Pinner, working with businesses across London and the UK.",
+    "Mint & Co is a three-person studio — Omar, David and Rodrick — building in the open from Harrow, working with businesses across London and the UK.",
   alternates: { canonical: "/about" },
   robots: { index: true, follow: true },
 };
 
 export default function AboutPage() {
+  const whatsApp = auditWhatsApp();
+
   return (
     <main id="main" className="flex-1">
       <section className="border-b border-line">
@@ -27,11 +29,11 @@ export default function AboutPage() {
           </Reveal>
           <Reveal delay={120}>
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
-              We&apos;re Omar, David and Rodrick. Harrow &amp; Pinner-based,
-              working with businesses across London and the UK. This very
-              site is our first piece of work — so you&apos;re not looking
-              at a sales pitch, you&apos;re looking at the exact standard
-              we&apos;d build yours to. Judge us on it.
+              We&apos;re Omar, David and Rodrick. Harrow-based, working with
+              businesses across London and the UK. This very site is our
+              first piece of work — so you&apos;re not looking at a sales
+              pitch, you&apos;re looking at the exact standard we&apos;d
+              build yours to. Judge us on it.
             </p>
           </Reveal>
           <Reveal delay={160}>
@@ -39,6 +41,45 @@ export default function AboutPage() {
               You&apos;ll deal directly with Omar, David and Rodrick — not a
               call centre, not a chatbot.
             </p>
+          </Reveal>
+          <Reveal delay={200}>
+            <div className="mt-10">
+              <Eyebrow>How to reach us</Eyebrow>
+              <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 text-base">
+                <a
+                  href={`mailto:${site.email}`}
+                  className="font-medium text-mint-deep underline underline-offset-4"
+                >
+                  {site.email}
+                </a>
+                {site.phone && (
+                  <a
+                    href={`tel:${site.phone}`}
+                    className="font-medium text-mint-deep underline underline-offset-4"
+                  >
+                    {site.phone}
+                  </a>
+                )}
+                {whatsApp && (
+                  <a
+                    href={whatsApp}
+                    className="font-medium text-mint-deep underline underline-offset-4"
+                  >
+                    WhatsApp
+                  </a>
+                )}
+                {site.instagramUrl && (
+                  <a
+                    href={site.instagramUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-medium text-mint-deep underline underline-offset-4"
+                  >
+                    Instagram
+                  </a>
+                )}
+              </div>
+            </div>
           </Reveal>
         </div>
       </section>
@@ -69,17 +110,6 @@ export default function AboutPage() {
             <p className="mt-10 max-w-xl text-base text-muted">
               {site.location} · working with businesses across London and
               the UK.
-              {site.phone && (
-                <>
-                  {" · "}
-                  <a
-                    href={`tel:${site.phone}`}
-                    className="font-medium text-mint-deep underline underline-offset-4"
-                  >
-                    {site.phone}
-                  </a>
-                </>
-              )}
             </p>
           </Reveal>
         </div>
