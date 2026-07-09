@@ -3,6 +3,13 @@ import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
 import { auditWhatsApp, site } from "../site.config";
+import {
+  EmailIcon,
+  InstagramIcon,
+  PhoneIcon,
+  WhatsAppIcon,
+  iconLinkClass,
+} from "../components/icons";
 
 export const metadata: Metadata = {
   title: "About",
@@ -45,27 +52,18 @@ export default function AboutPage() {
           <Reveal delay={200}>
             <div className="mt-10">
               <Eyebrow>How to reach us</Eyebrow>
-              <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 text-base">
-                <a
-                  href={`mailto:${site.email}`}
-                  className="font-medium text-mint-deep underline underline-offset-4"
-                >
-                  {site.email}
+              <div className="mt-4 flex flex-wrap gap-3">
+                <a href={`mailto:${site.email}`} aria-label="Email us" title="Email us" className={iconLinkClass}>
+                  <EmailIcon />
                 </a>
                 {site.phone && (
-                  <a
-                    href={`tel:${site.phone}`}
-                    className="font-medium text-mint-deep underline underline-offset-4"
-                  >
-                    {site.phone}
+                  <a href={`tel:${site.phone}`} aria-label="Call us" title="Call us" className={iconLinkClass}>
+                    <PhoneIcon />
                   </a>
                 )}
                 {whatsApp && (
-                  <a
-                    href={whatsApp}
-                    className="font-medium text-mint-deep underline underline-offset-4"
-                  >
-                    WhatsApp
+                  <a href={whatsApp} aria-label="Message us on WhatsApp" title="WhatsApp" className={iconLinkClass}>
+                    <WhatsAppIcon />
                   </a>
                 )}
                 {site.instagramUrl && (
@@ -73,9 +71,11 @@ export default function AboutPage() {
                     href={site.instagramUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="font-medium text-mint-deep underline underline-offset-4"
+                    aria-label="Find us on Instagram"
+                    title="Instagram"
+                    className={iconLinkClass}
                   >
-                    Instagram
+                    <InstagramIcon />
                   </a>
                 )}
               </div>
