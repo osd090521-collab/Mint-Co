@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AmpMarker } from "../components/AmpMarker";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
@@ -6,7 +7,7 @@ import { Reveal } from "../components/Reveal";
 export const metadata: Metadata = {
   title: "Process & Pricing",
   description:
-    "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in ten days.",
+    "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in 7–10 working days.",
   alternates: { canonical: "/process" },
   robots: { index: true, follow: true },
 };
@@ -22,7 +23,7 @@ const steps = [
   },
   {
     t: "We build",
-    d: "Ten working days from receiving your content, with two rounds of revisions along the way so you can shape the result.",
+    d: "7–10 working days from receiving your content, with two rounds of revisions along the way so you can shape the result.",
   },
   {
     t: "You launch",
@@ -53,22 +54,39 @@ export default function ProcessPage() {
       </section>
 
       <section>
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <div className="grid gap-8 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-12">
+        <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
+          {/*
+            One Reveal trigger for the whole timeline (not one per step —
+            keeps a single IntersectionObserver here instead of four).
+            Nodes and the connecting line stagger in via CSS under
+            [data-shown="true"] .timeline-* selectors in globals.css.
+          */}
+          <Reveal as="ol" className="relative">
+            <div
+              aria-hidden="true"
+              className="absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-line"
+            />
+            <div
+              aria-hidden="true"
+              className="timeline-line absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-mint"
+            />
             {steps.map((step, i) => (
-              <Reveal key={step.t} delay={i * 60}>
-                <h2 className="flex items-baseline gap-3 text-xl font-medium text-ink">
-                  <span aria-hidden="true" className="text-mint">
-                    &amp;
-                  </span>
-                  {step.t}
-                </h2>
-                <p className="mt-3 text-base leading-relaxed text-muted">
-                  {step.d}
-                </p>
-              </Reveal>
+              <li key={step.t} className="timeline-node relative flex gap-6 pb-12 last:pb-0">
+                <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint bg-bg text-sm font-semibold text-mint-deep">
+                  {i + 1}
+                </span>
+                <div className="pt-1">
+                  <h2 className="flex items-baseline gap-2 text-xl font-medium text-ink">
+                    <AmpMarker />
+                    {step.t}
+                  </h2>
+                  <p className="mt-2 text-base leading-relaxed text-muted">
+                    {step.d}
+                  </p>
+                </div>
+              </li>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 

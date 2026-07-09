@@ -57,6 +57,10 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 };
 
+// External trust links (Google Business Profile, Instagram) — only wired
+// into sameAs once real URLs exist in site.config.ts.
+const sameAs = [site.gbpUrl, site.instagramUrl].filter(Boolean);
+
 // JSON-LD — only true facts (no fake address/phone/aggregateRating).
 const professionalServiceJsonLd = {
   "@context": "https://schema.org",
@@ -69,6 +73,7 @@ const professionalServiceJsonLd = {
   founder: site.founders.map((name) => ({ "@type": "Person", name })),
   knowsAbout: ["Web design", "Web development", "Local SEO", "Google Business Profile"],
   slogan: site.tagline,
+  ...(sameAs.length > 0 && { sameAs }),
 };
 
 const organizationJsonLd = {
@@ -80,6 +85,7 @@ const organizationJsonLd = {
   description: site.description,
   email: site.email,
   founder: site.founders.map((name) => ({ "@type": "Person", name })),
+  ...(sameAs.length > 0 && { sameAs }),
 };
 
 const websiteJsonLd = {

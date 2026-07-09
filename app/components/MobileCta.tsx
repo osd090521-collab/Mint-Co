@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Cta } from "./Cta";
 import { auditMailto } from "../site.config";
 
 /**
@@ -19,6 +20,8 @@ export function MobileCta() {
 
   return (
     <div
+      inert={!visible}
+      aria-hidden={!visible}
       style={{
         boxShadow:
           "0 -1px 2px rgba(16,33,27,0.04), 0 -8px 24px rgba(16,33,27,0.05)",
@@ -29,12 +32,9 @@ export function MobileCta() {
           : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <a
-        href={auditMailto()}
-        className="flex min-h-[52px] items-center justify-center rounded-xl bg-mint-cta text-base font-semibold tracking-[0.01em] text-white transition active:scale-[0.98]"
-      >
+      <Cta href={auditMailto()} className="w-full">
         Get my free audit
-      </a>
+      </Cta>
     </div>
   );
 }

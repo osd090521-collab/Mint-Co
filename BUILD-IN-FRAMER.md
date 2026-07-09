@@ -1,6 +1,6 @@
 # Build Mint & Co in Framer — Build Kit
 
-> ⚠️ **Stale — do not use.** The facts in this guide (team size, founder names, pricing, target audience) are out of date as of 2026-07-02. See `app/site.config.ts` and `app/page.tsx` for the current facts before following any copy block in this document.
+> ⚠️ **Stale — do not use.** The facts in this guide (team size, founder names, pricing, target audience) are out of date as of 2026-07-02. Mint & Co targets broad businesses, not a specific trade — do not reintroduce "barbers/tailors" framing anywhere in this document. See `app/site.config.ts` and `app/page.tsx` for the current facts before following any copy block in this document.
 
 This is the step-by-step guide to rebuild the Mint & Co site in **Framer** so you (Omar) can edit and publish it yourself, with no developer. It mirrors the refined, live **reference site** exactly.
 
@@ -64,42 +64,22 @@ Use **Stack gaps**, not margins (so it stays tidy when you edit).
 - **MobileCTA** — a bar pinned to the bottom, **Phone breakpoint only**: full-width Button, `bg/95` fill + background blur, **1px `line` top border**, soft upward shadow, respects the phone safe-area.
 - **Row** (for "What we do") — 2-column stack `256px | 1fr`; the `&` marker in a fixed **24px** box, right-aligned, colour `mint`.
 
-## 7. Sections (build to match the reference, paste this exact copy)
-1. **Header** (sticky) — Wordmark left; text link "Get my free audit" right. Gains a 1px `line` bottom border + `bg/85` blur on scroll.
-2. **Hero** (feature padding, `bg`):
-   - Eyebrow: `Web Studio · Harrow & Pinner`
-   - H1: `A website that makes your shop look as good as it actually is.`
-   - Subhead (colour **slate**): `Clean, fast, mobile-first websites for barbers, tailors and the local businesses people love. Built properly. Fixed price. Live in ten working days. — By Omar & David.`
-   - Button: **Get my free audit** + secondary text link (email now; WhatsApp once live).
-   - Trust strip (Meta, muted): `Harrow & Pinner-based · fixed £895 · live in 10 working days · your domain & Google profile stay yours.`
-   - Reassurance (Meta, muted): `No obligation, no hard sell — we'll show you what we'd change, you decide.`
-   - Behind it all: a giant Fraunces *italic* `&`, colour `mint` at **5% opacity**, top-left-of-right-edge, clipped by the section (`overflow hidden`), sent behind, non-interactive.
-3. **The Problem** (standard, `warm` band):
-   - H2: `Brilliant in person. Often invisible online.`
-   - Body (slate): `Most good local businesses either have no website, or one that's slow and broken on a phone — which usually isn't the owner's fault; they're too busy running a great business to ever look at their own site on a phone. In ten seconds on a screen, a stranger decides whether to trust you. We make those ten seconds count.`
-4. **Positioning** (standard, `bg`):
-   - A **48 × 2px `mint`** accent bar.
-   - Statement (Fraunces, ink, `£895, fixed` in `mint-deep`): `Premium work, fairly priced, properly delivered. Complete websites from £895, fixed.`
-   - Sub (muted): `Fixed price · 50% to begin, the rest only when you're happy and before we go live · two rounds of revisions · ten working days from your content. No "it'll be ready soon."`
-5. **What we do** (3 Rows, hairline dividers): `Clean, premium websites` / `Built mobile-first` / `Built to be found on Google` — with the descriptions from the reference (row 3: `Google Business Profile, local SEO foundations, map and Search Console set up — in every build, no exceptions.`).
-6. **Who we are / Trust** (standard, `warm` band):
-   - Eyebrow `Who we are`; H2: `A two-person studio. Harrow & Pinner, North West London.`
-   - Body: `We're Omar and David. This very site is our first piece of work — so you're not looking at a sales pitch, you're looking at the exact standard we'd build yours to. Judge us on it.`
-   - Emphasis line (ink, medium): `You'll deal with Omar and David directly — not a call centre, not a chatbot.`
-   - Two **TrustCards**: (1) `We won't promise you top of Google. Nobody honestly can…` (2) `You own what's yours…`
-7. **Contact** (feature padding, centred):
-   - H2: `Let's get your business in mint condition.`
-   - Sub: `Send us a line and we'll reply with a short, honest write-up: how your business looks on a phone right now, where you're losing customers, and the two or three things we'd fix first. No charge, no pressure.`
-   - Button **Get my free audit** (+ WhatsApp button once live).
-   - Reassurance: `Free, no obligation — and we'll only use your details to reply. Real people. Real replies — usually within one working day.`
-   - `Prefer email? omar@mintandco.co.uk`
-8. **Footer** (`warm`): Wordmark (large) + `Mint & Co — a two-person studio by Omar & David. Harrow & Pinner, North West London.` · email · `© 2026 Mint & Co · Privacy` · `Designed & built by us.` Reserve extra bottom space on phone so the sticky bar never covers it.
+## 7. Sections (build to match the reference)
+Do not paste copy from this section — the blocks that used to live here (hero, positioning, services, about, contact, footer) hardcoded outdated facts (a "barbers, tailors" audience, a two-person team, a fixed `£895` price). Mint & Co targets broad businesses and pricing is never quoted publicly as a number. Instead, copy the live text verbatim from the coded reference at build time:
+1. **Header** (sticky) — Wordmark left; text link "Get my free audit" right. Gains a 1px `line` bottom border + `bg/85` blur on scroll. Copy from `app/components/Header.tsx`.
+2. **Hero** (feature padding, `bg`) — copy Eyebrow/H1/subhead/CTA/trust strip/reassurance text from `app/page.tsx`. Behind it all: a giant Fraunces *italic* `&`, colour `mint` at **5% opacity**, top-left-of-right-edge, clipped by the section (`overflow hidden`), sent behind, non-interactive.
+3. **The Problem** (standard, `warm` band) — copy H2/body from `app/page.tsx`.
+4. **Positioning** (standard, `bg`) — a **48 × 2px `mint`** accent bar, then copy the statement/sub from `app/page.tsx` (pricing is described qualitatively — "clear fixed-price packages, agreed before we start" — never as a number).
+5. **What we do** (3 Rows, hairline dividers) — copy the three row headings/descriptions from `app/services/page.tsx`.
+6. **Who we are / Trust** (standard, `warm` band) — copy Eyebrow/H1/body/emphasis line and the two TrustCards from `app/about/page.tsx`. It's a three-person studio (Omar, David, Rodrick).
+7. **Contact** (feature padding, centred) — copy H2/sub/reassurance/email fallback from `app/components/ContactCta.tsx`.
+8. **Footer** (`warm`) — copy Wordmark + tagline line, nav, email, copyright from `app/components/Footer.tsx`. Reserve extra bottom space on phone so the sticky bar never covers it.
 
 ## 8. Motion, SEO & accessibility
 - **Appear animation**: fade-up — opacity 0→1, **+12px** offset, **500ms ease-out**, **once** on scroll-in. Stagger the three "What we do" rows by **60ms** each. Keep it calm — no bounce/spring.
 - ⚠️ **Reduced motion**: Framer's appear effects don't always respect the visitor's "reduce motion" setting. **Test it** (turn on Reduce Motion in your OS and reload). If elements stay hidden or still animate, disable the appear effect — content must always be visible. This is the one thing the rebuild can get *worse* than the code version, so verify it.
-- **SEO** (Site Settings): per-page Title + Description (use the reference's: title "Mint & Co — Websites for Barbers & Local Businesses | Harrow"; description mentions "from £895"); set a Social/OG image (wordmark + tagline on the warm bg); set the favicon to the **`&` mark**. Framer auto-generates sitemap.xml + robots.txt.
-- **JSON-LD**: Site Settings → **Custom Code → Start of `<head>`**, paste a `<script type="application/ld+json">` with `ProfessionalService` (name, url, description, email, areaServed Harrow/Pinner/NW London, founders Omar & David). **Only true facts — no address, phone, or ratings you don't have.** (Copy the object from `app/layout.tsx`.)
+- **SEO** (Site Settings): per-page Title + Description — copy verbatim from the live `metadata` export in each `app/**/page.tsx` (do not reintroduce a trade-specific title or a quoted price); set a Social/OG image (wordmark + tagline on the warm bg); set the favicon to the compass mark. Framer auto-generates sitemap.xml + robots.txt.
+- **JSON-LD**: Site Settings → **Custom Code → Start of `<head>`**, paste a `<script type="application/ld+json">` with `ProfessionalService` (name, url, description, email, areaServed, founders — Omar, David, Rodrick). **Only true facts — no address, phone, or ratings you don't have.** (Copy the object from `app/layout.tsx`.)
 - **Booking** (future / per client): use Framer's Embed for Calendly / Fresha — no code needed.
 
 ## 9. Go live on mintandco.co.uk (do this LAST, after the build is approved)
@@ -112,6 +92,6 @@ Framer's DNS differs from Vercel. In Framer: Site Settings → Domains → "Conn
 - SSL is automatic once DNS resolves (minutes–hours). Keep the Vercel site up until Framer shows "connected", then it's safe.
 
 ## 10. Owner to-dos that make it convert harder (independent of Framer)
-- **WhatsApp**: get a WhatsApp Business number → add a WhatsApp deep-link button as a **co-primary CTA** (Framer has a native WhatsApp button; pre-fill: "Hi Omar & David — I'd love a free audit of how my business looks online."). This is the single biggest conversion lever for barbers.
+- **WhatsApp**: get a WhatsApp Business number → add a WhatsApp deep-link button as a **co-primary CTA** (Framer has a native WhatsApp button; pre-fill text should match `site.config.ts`'s `auditWhatsApp()` message). This is a strong conversion lever for mobile visitors generally.
 - **External trust links**: once your Google Business Profile and/or Instagram exist, link them in the footer ("find us on Google / Instagram") — being "connected to the web" is a real trust signal for a new firm.
 - **Email**: finish SPF + DMARC and make `hello@` live; then switch the site contact from `omar@` to `hello@`.

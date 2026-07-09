@@ -38,7 +38,7 @@ export function Header() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-sm font-medium text-slate underline-offset-4 hover:text-ink hover:underline"
+              className="text-sm font-medium text-slate underline underline-offset-4 hover:text-ink"
             >
               {link.label}
             </Link>
@@ -46,11 +46,29 @@ export function Header() {
         </nav>
         <a
           href={auditMailto()}
-          className="text-sm font-medium text-mint-deep underline-offset-4 hover:underline"
+          className="text-sm font-medium text-mint-deep underline underline-offset-4"
         >
           Get my free audit
         </a>
       </div>
+      {/*
+        Compact mobile nav row — three links fit comfortably at 375px, so a
+        visible row needs no JS and no ARIA menu-button (REVIEW C3).
+      */}
+      <nav
+        aria-label="Primary"
+        className="flex items-center justify-center gap-6 border-t border-line px-5 py-2 text-sm sm:hidden"
+      >
+        {navLinks.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className="font-medium text-slate underline underline-offset-4 hover:text-ink"
+          >
+            {link.label}
+          </Link>
+        ))}
+      </nav>
     </header>
   );
 }

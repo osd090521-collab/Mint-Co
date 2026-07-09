@@ -1,8 +1,6 @@
+import { Cta } from "./Cta";
 import { Reveal } from "./Reveal";
 import { auditMailto, auditWhatsApp, site } from "../site.config";
-
-const ctaClass =
-  "inline-flex min-h-[52px] items-center justify-center rounded-xl bg-mint-cta px-8 text-base font-semibold tracking-[0.01em] text-white shadow-soft transition duration-150 hover:bg-mint-deep active:scale-[0.98]";
 
 /** Shared closing CTA band — used at the bottom of every page. */
 export function ContactCta() {
@@ -26,16 +24,11 @@ export function ContactCta() {
         </Reveal>
         <Reveal delay={140}>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <a href={auditMailto()} className={ctaClass}>
-              Get my free audit
-            </a>
+            <Cta href={auditMailto()}>Get my free audit</Cta>
             {whatsApp && (
-              <a
-                href={whatsApp}
-                className="inline-flex min-h-[52px] items-center justify-center rounded-xl border border-line px-8 text-base font-medium text-mint-deep transition-colors hover:bg-tint"
-              >
+              <Cta href={whatsApp} variant="secondary">
                 Message us on WhatsApp
-              </a>
+              </Cta>
             )}
           </div>
         </Reveal>
@@ -51,7 +44,7 @@ export function ContactCta() {
             Prefer email?{" "}
             <a
               href={`mailto:${site.email}`}
-              className="font-medium text-mint-deep underline-offset-4 hover:underline"
+              className="font-medium text-mint-deep underline underline-offset-4"
             >
               {site.email}
             </a>

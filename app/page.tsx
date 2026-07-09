@@ -1,14 +1,15 @@
 import Link from "next/link";
 import { ContactCta } from "./components/ContactCta";
+import { Cta } from "./components/Cta";
 import { Eyebrow } from "./components/Eyebrow";
 import { Reveal } from "./components/Reveal";
 import { auditMailto, auditWhatsApp, site } from "./site.config";
 
-const ctaClass =
-  "inline-flex min-h-[52px] items-center justify-center rounded-xl bg-mint-cta px-7 text-base font-semibold tracking-[0.01em] text-white shadow-soft transition duration-150 hover:bg-mint-deep active:scale-[0.98]";
-
 const teaserLinkClass =
-  "font-medium text-mint-deep underline-offset-4 hover:underline";
+  "font-medium text-mint-deep underline underline-offset-4";
+
+const inlineLinkClass =
+  "text-base font-medium text-mint-deep underline underline-offset-4";
 
 export default function Home() {
   const whatsApp = auditWhatsApp();
@@ -26,57 +27,42 @@ export default function Home() {
         </span>
 
         <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
-          <Reveal>
-            <Eyebrow>Web Studio · Harrow &amp; Pinner</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-6xl sm:leading-[1.05] sm:tracking-[-0.03em]">
-              Look as good online as you do in person.
-            </h1>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
-              Clean, fast, mobile-first websites for businesses that want to
-              look trusted, professional and easy to contact — built
-              properly, with clear fixed-price packages agreed before we
-              start.
-            </p>
-          </Reveal>
-          <Reveal delay={180}>
-            <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-              <a href={auditMailto()} className={ctaClass}>
-                Get my free audit
+          {/*
+            Hero renders as plain server HTML at full opacity (no Reveal) —
+            it's the LCP element and must not paint blank behind JS/IO gating.
+            Reveal is reserved for below-the-fold sections.
+          */}
+          <Eyebrow>Web Studio · Harrow &amp; Pinner</Eyebrow>
+          <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-6xl sm:leading-[1.05] sm:tracking-[-0.03em]">
+            Look as good online as you do in person.
+          </h1>
+          <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
+            Clean, fast, mobile-first websites for businesses that want to
+            look trusted, professional and easy to contact — built
+            properly, with clear fixed-price packages agreed before we
+            start.
+          </p>
+          <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <Cta href={auditMailto()}>Get my free audit</Cta>
+            {whatsApp ? (
+              <a href={whatsApp} className={inlineLinkClass}>
+                or message us on WhatsApp →
               </a>
-              {whatsApp ? (
-                <a
-                  href={whatsApp}
-                  className="text-base font-medium text-mint-deep underline-offset-4 hover:underline"
-                >
-                  or message us on WhatsApp →
-                </a>
-              ) : (
-                <a
-                  href={`mailto:${site.email}`}
-                  className="text-base font-medium text-mint-deep underline-offset-4 hover:underline"
-                >
-                  {site.email}
-                </a>
-              )}
-            </div>
-          </Reveal>
-          <Reveal delay={220}>
-            <p className="mt-6 max-w-xl text-sm text-muted">
-              Harrow &amp; Pinner-based, working with businesses across
-              London and the UK · clear fixed-price packages · live in 10
-              working days · your domain &amp; Google profile stay yours.
-            </p>
-          </Reveal>
-          <Reveal delay={260}>
-            <p className="mt-4 text-sm text-muted">
-              No obligation, no hard sell — we&apos;ll show you what we&apos;d
-              change, you decide.
-            </p>
-          </Reveal>
+            ) : (
+              <a href={`mailto:${site.email}`} className={inlineLinkClass}>
+                {site.email}
+              </a>
+            )}
+          </div>
+          <p className="mt-6 max-w-xl text-sm text-muted">
+            Harrow &amp; Pinner-based, working with businesses across
+            London and the UK · clear fixed-price packages · live in 7–10
+            working days · your domain &amp; Google profile stay yours.
+          </p>
+          <p className="mt-4 text-sm text-muted">
+            No obligation, no hard sell — we&apos;ll show you what we&apos;d
+            change, you decide.
+          </p>
         </div>
       </section>
 

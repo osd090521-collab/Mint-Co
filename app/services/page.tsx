@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AmpMarker } from "../components/AmpMarker";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
@@ -17,7 +18,7 @@ const rows = [
     d: "Designed with care, built to a genuinely high standard — not stamped out of a template.",
   },
   {
-    t: "Built mobile-first",
+    t: "Built to work beautifully on mobile",
     d: "Designed for the phone first, because that's where nearly all your customers actually are.",
   },
   {
@@ -58,12 +59,7 @@ export default function ServicesPage() {
               className="grid grid-cols-1 gap-2 border-b border-line py-8 sm:grid-cols-[16rem_1fr] sm:gap-10 sm:py-10"
             >
               <h2 className="flex items-baseline gap-3 text-xl font-medium text-ink">
-                <span
-                  aria-hidden="true"
-                  className="w-6 shrink-0 text-right text-mint"
-                >
-                  &amp;
-                </span>
+                <AmpMarker className="w-6 shrink-0 text-right" />
                 {row.t}
               </h2>
               <p className="text-base leading-relaxed text-muted">{row.d}</p>

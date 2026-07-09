@@ -86,6 +86,44 @@ html[data-js] [data-reveal][data-shown="true"] {
   transform: none;
 }
 
+/*
+  Process timeline — a single Reveal trigger on the <ol> fans out to its
+  .timeline-node children via nth-child stagger, and grows the connecting
+  .timeline-line, instead of one IntersectionObserver per step.
+*/
+html[data-js] [data-reveal] .timeline-node {
+  opacity: 0;
+  transform: translateY(12px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+html[data-js] [data-reveal][data-shown="true"] .timeline-node {
+  opacity: 1;
+  transform: none;
+}
+html[data-js] [data-reveal] .timeline-node:nth-child(1) {
+  transition-delay: 0ms;
+}
+html[data-js] [data-reveal] .timeline-node:nth-child(2) {
+  transition-delay: 150ms;
+}
+html[data-js] [data-reveal] .timeline-node:nth-child(3) {
+  transition-delay: 300ms;
+}
+html[data-js] [data-reveal] .timeline-node:nth-child(4) {
+  transition-delay: 450ms;
+}
+html[data-js] [data-reveal] .timeline-line {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1s ease;
+  transition-delay: 100ms;
+}
+html[data-js] [data-reveal][data-shown="true"] .timeline-line {
+  transform: scaleY(1);
+}
+
 /* Restrained motion, honoured for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -95,6 +133,11 @@ html[data-js] [data-reveal][data-shown="true"] {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+  html[data-js] [data-reveal] .timeline-node,
+  html[data-js] [data-reveal] .timeline-line {
+    opacity: 1;
+    transform: none;
   }
   *,
   *::before,

@@ -69,10 +69,47 @@ export default function AboutPage() {
             <p className="mt-10 max-w-xl text-base text-muted">
               {site.location} · working with businesses across London and
               the UK.
+              {site.phone && (
+                <>
+                  {" · "}
+                  <a
+                    href={`tel:${site.phone}`}
+                    className="font-medium text-mint-deep underline underline-offset-4"
+                  >
+                    {site.phone}
+                  </a>
+                </>
+              )}
             </p>
           </Reveal>
         </div>
       </section>
+
+      {site.testimonials.length > 0 && (
+        <section>
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+            <Reveal>
+              <Eyebrow>What businesses say</Eyebrow>
+            </Reveal>
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              {site.testimonials.map((t, i) => (
+                <Reveal
+                  key={t.name}
+                  delay={i * 60}
+                  className="rounded-xl border-t-2 border-mint bg-surface p-7 shadow-card"
+                >
+                  <p className="text-base leading-relaxed text-slate">
+                    &ldquo;{t.quote}&rdquo;
+                  </p>
+                  <p className="mt-4 text-sm font-medium text-ink">
+                    {t.name} · {t.business}
+                  </p>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <ContactCta />
     </main>

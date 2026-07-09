@@ -23,11 +23,20 @@ export const site = {
   email: "omar@mintandco.co.uk",
   // General-enquiries alias — switch `email` to this once it's live + SPF/DMARC pass.
   emailGeneral: "hello@mintandco.co.uk",
+  // TODO: not yet provided. Leave empty — no public rendering until confirmed.
+  davidEmail: "",
+  // TODO: not yet provided. Leave empty — no public rendering until confirmed.
+  rodrickEmail: "",
+  // TODO: not yet provided. Leave empty — no public rendering until confirmed.
+  phone: "",
   // Leave empty until a real WhatsApp Business number exists. "" => CTA hidden.
   whatsappNumber: "",
   // External "connected to the web" trust links — render only when set.
   gbpUrl: "", // Google Business Profile URL
   instagramUrl: "", // e.g. https://instagram.com/mintandco
+
+  // TODO: no real testimonials yet — never fabricate. Render only when non-empty.
+  testimonials: [] as { quote: string; name: string; business: string }[],
 
   audit: {
     subject: "Free website audit — Mint & Co",
@@ -36,13 +45,17 @@ export const site = {
   },
 } as const;
 
-/** Pre-filled mailto for the primary "Get your free audit" CTA. */
+/**
+ * Pre-filled mailto for the primary "Get your free audit" CTA.
+ *
+ * Uses encodeURIComponent (RFC 6068 %20-style spaces), not URLSearchParams —
+ * URLSearchParams form-encodes spaces as "+", which several mail clients
+ * (Apple Mail, Outlook desktop, Thunderbird) render literally in the body.
+ */
 export function auditMailto(): string {
-  const params = new URLSearchParams({
-    subject: site.audit.subject,
-    body: site.audit.body,
-  });
-  return `mailto:${site.email}?${params.toString()}`;
+  const subject = encodeURIComponent(site.audit.subject);
+  const body = encodeURIComponent(site.audit.body);
+  return `mailto:${site.email}?subject=${subject}&body=${body}`;
 }
 
 /** Pre-filled WhatsApp link, or null when no number is configured. */

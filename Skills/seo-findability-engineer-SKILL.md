@@ -226,7 +226,7 @@ Metadata should be:
 Avoid titles like:
 
 ```txt
-Web Design London | Website Design London | Local Website Design | SEO London | Barber Websites
+Web Design London | Website Design London | Local Website Design | SEO London | Business Websites
 ```
 
 Prefer titles like:
@@ -679,7 +679,7 @@ Mint & Co website design shown on a mobile screen
 Bad alt text:
 
 ```txt
-SEO web design London best agency premium AI website barber ranking
+SEO web design London best agency premium AI website ranking
 ```
 
 Use empty alt text for purely decorative images where appropriate.
