@@ -34,7 +34,7 @@ export default function Home() {
           */}
           <Eyebrow>Web Studio · Harrow</Eyebrow>
           <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-6xl sm:leading-[1.05] sm:tracking-[-0.03em]">
-            Look as good online as you do in person.
+            Look as good online as you do in person. 🙂
           </h1>
           <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
             Clean, fast, mobile-first websites for businesses that want to
