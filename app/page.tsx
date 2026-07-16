@@ -87,24 +87,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* POSITIONING teaser — full detail lives on /process */}
+      {/* PACKAGES teaser — full detail lives on /packages */}
       <section>
         <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
           <Reveal>
-            <div className="h-0.5 w-12 bg-mint" />
+            <Eyebrow>Packages</Eyebrow>
           </Reveal>
           <Reveal delay={60}>
-            <p className="mt-8 max-w-3xl font-display text-2xl font-medium leading-snug text-ink sm:text-3xl">
-              Premium work, fairly priced, properly delivered.{" "}
-              <span className="whitespace-nowrap text-mint-deep">
-                Clear fixed-price packages, agreed before we start.
-              </span>
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
+              Essentials £49/mo · Growth £119/mo · Complete £179/mo — one
+              monthly price, everything included. No setup fee, no minimum
+              term, cancel anytime.
             </p>
           </Reveal>
           <Reveal delay={120}>
-            <p className="mt-6 max-w-2xl text-base leading-relaxed text-muted">
-              <Link href="/process" className={teaserLinkClass}>
-                See how our process and pricing works →
+            <p className="mt-6">
+              <Link href="/packages" className={teaserLinkClass}>
+                See all packages →
               </Link>
             </p>
           </Reveal>

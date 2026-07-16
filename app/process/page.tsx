@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { AmpMarker } from "../components/AmpMarker";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
@@ -48,6 +49,17 @@ export default function ProcessPage() {
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
               Premium work, fairly priced, properly delivered — clear
               fixed-price packages, agreed before we start.
+            </p>
+          </Reveal>
+          <Reveal delay={180}>
+            <p className="mt-6 max-w-xl text-base text-muted">
+              See exactly what&apos;s included and what it costs{" "}
+              <Link
+                href="/packages"
+                className="font-medium text-mint-deep underline underline-offset-4"
+              >
+                → Packages
+              </Link>
             </p>
           </Reveal>
         </div>

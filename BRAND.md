@@ -43,7 +43,7 @@ The visual identity for Mint & Co. Board-reviewed and WCAG-checked. This file is
 ## Voice
 Honest, direct, warm, no jargon. Sell hard on what's **true** (premium, fixed price, ten days, "built to the standard we sell"). **Never** guarantee rankings or bookings. No public competitor-knocking. Never fake reality (no fabricated premises, staff, results, testimonials, or schema).
 
-**Pricing promise:** clear fixed-price packages, agreed before work begins — no vague quotes, no surprise extras. Public copy never states a specific number until packages are confirmed.
+**Pricing promise:** clear fixed-price packages, agreed before work begins — no vague quotes, no surprise extras. Public copy states our three confirmed monthly packages and prices (see `/packages`) — no hidden numbers.
 
 ## Motion & detail
 One restrained system: fade-up 500ms ease-out, once, on scroll-in (`Reveal`), disabled under `prefers-reduced-motion`. Custom `:focus-visible` (2px mint ring). One CTA style only (`mint-cta` fill). Mint `::selection`. Oversized faint `&` as hero texture.

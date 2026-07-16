@@ -7,6 +7,7 @@ import { auditMailto } from "../site.config";
 
 const navLinks = [
   { href: "/services", label: "Services" },
+  { href: "/packages", label: "Packages" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
 ];
@@ -52,12 +53,12 @@ export function Header() {
         </a>
       </div>
       {/*
-        Compact mobile nav row — three links fit comfortably at 375px, so a
+        Compact mobile nav row — four short links fit at 375px, so a
         visible row needs no JS and no ARIA menu-button (REVIEW C3).
       */}
       <nav
         aria-label="Primary"
-        className="flex items-center justify-center gap-6 border-t border-line px-5 py-2 text-sm sm:hidden"
+        className="flex items-center justify-center gap-4 border-t border-line px-5 py-2 text-sm sm:hidden"
       >
         {navLinks.map((link) => (
           <Link

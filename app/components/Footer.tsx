@@ -12,6 +12,7 @@ import {
 
 const navLinks = [
   { href: "/services", label: "Services" },
+  { href: "/packages", label: "Packages" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
 ];

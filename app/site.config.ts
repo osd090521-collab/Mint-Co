@@ -63,3 +63,16 @@ export function auditWhatsApp(): string | null {
   );
   return `https://wa.me/${site.whatsappNumber}?text=${text}`;
 }
+
+/**
+ * Pre-filled mailto for a package (or the review stand) enquiry CTA.
+ * `priceLine` is a short human-readable price, e.g. "£119/month" or
+ * "£30 one-time".
+ */
+export function packageMailto(tier: string, priceLine: string): string {
+  const subject = encodeURIComponent(`${tier} — Mint & Co`);
+  const body = encodeURIComponent(
+    `Hi Omar, David & Rodrick,\n\nI'd like to find out more about ${tier} (${priceLine}).\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.`,
+  );
+  return `mailto:${site.email}?subject=${subject}&body=${body}`;
+}
