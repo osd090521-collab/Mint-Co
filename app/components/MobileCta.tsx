@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Cta } from "./Cta";
-import { auditMailto } from "../site.config";
+import { primaryCta } from "../site.config";
 
 /**
  * Mobile-only sticky bottom CTA. Appears after the hero scrolls out of view.
@@ -10,6 +10,7 @@ import { auditMailto } from "../site.config";
  */
 export function MobileCta() {
   const [visible, setVisible] = useState(false);
+  const cta = primaryCta("sticky");
 
   useEffect(() => {
     const onScroll = () => setVisible(window.scrollY > 560);
@@ -32,8 +33,8 @@ export function MobileCta() {
           : "pointer-events-none translate-y-4 opacity-0"
       }`}
     >
-      <Cta href={auditMailto()} className="w-full">
-        Get my free audit
+      <Cta href={cta.href} className="w-full">
+        {cta.label}
       </Cta>
     </div>
   );

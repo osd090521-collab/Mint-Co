@@ -1,10 +1,11 @@
 import { Cta } from "./Cta";
 import { Reveal } from "./Reveal";
-import { auditMailto, auditWhatsApp, site } from "../site.config";
+import { auditWhatsApp, ctaConsequence, primaryCta, site } from "../site.config";
 
 /** Shared closing CTA band — used at the bottom of every page. */
 export function ContactCta() {
   const whatsApp = auditWhatsApp();
+  const cta = primaryCta("band");
 
   return (
     <section id="contact" className="border-t border-line">
@@ -24,13 +25,16 @@ export function ContactCta() {
         </Reveal>
         <Reveal delay={140}>
           <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Cta href={auditMailto()}>Get my free audit</Cta>
+            <Cta href={cta.href}>{cta.label}</Cta>
             {whatsApp && (
               <Cta href={whatsApp} variant="secondary">
                 Message us on WhatsApp
               </Cta>
             )}
           </div>
+        </Reveal>
+        <Reveal delay={160}>
+          <p className="mt-3 text-xs text-muted">{ctaConsequence(cta.href)}</p>
         </Reveal>
         <Reveal delay={200}>
           <p className="mx-auto mt-6 max-w-md text-sm text-muted">

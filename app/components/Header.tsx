@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoLockup } from "./compass";
-import { auditMailto } from "../site.config";
+import { primaryCta } from "../site.config";
 
 const navLinks = [
   { href: "/services", label: "Services" },
@@ -14,6 +14,7 @@ const navLinks = [
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
+  const cta = primaryCta("header");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -46,10 +47,10 @@ export function Header() {
           ))}
         </nav>
         <a
-          href={auditMailto()}
+          href={cta.href}
           className="text-sm font-medium text-mint-deep underline underline-offset-4"
         >
-          Get my free audit
+          {cta.label}
         </a>
       </div>
       {/*

@@ -4,6 +4,7 @@ import { AmpMarker } from "../components/AmpMarker";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
+import { site } from "../site.config";
 
 export const metadata: Metadata = {
   title: "Process & Pricing",
@@ -11,6 +12,12 @@ export const metadata: Metadata = {
     "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in 7–10 working days.",
   alternates: { canonical: "/process" },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: "Process & Pricing · Mint & Co",
+    description:
+      "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in 7–10 working days.",
+    url: `${site.url}/process`,
+  },
 };
 
 const steps = [

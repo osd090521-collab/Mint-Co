@@ -6,6 +6,11 @@ export const metadata: Metadata = {
   description: "How Mint & Co handles your information.",
   alternates: { canonical: "/privacy" },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: "Privacy · Mint & Co",
+    description: "How Mint & Co handles your information.",
+    url: `${site.url}/privacy`,
+  },
 };
 
 export default function PrivacyPage() {

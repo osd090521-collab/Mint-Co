@@ -4,7 +4,7 @@ import { Cta } from "../components/Cta";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
 import { Reveal } from "../components/Reveal";
-import { packageMailto } from "../site.config";
+import { packageMailto, site } from "../site.config";
 
 export const metadata: Metadata = {
   title: "Packages",
@@ -12,6 +12,12 @@ export const metadata: Metadata = {
     "Three monthly packages from Mint & Co — Essentials, Growth and Complete — no setup fee, no minimum term, cancel anytime, and a free Google review stand in every package.",
   alternates: { canonical: "/packages" },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: "Packages · Mint & Co",
+    description:
+      "Three monthly packages from Mint & Co — Essentials, Growth and Complete — no setup fee, no minimum term, cancel anytime, and a free Google review stand in every package.",
+    url: `${site.url}/packages`,
+  },
 };
 
 const tiers = [

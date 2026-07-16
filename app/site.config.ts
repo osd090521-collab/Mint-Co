@@ -32,6 +32,11 @@ export const site = {
   gbpUrl: "", // Google Business Profile URL
   instagramUrl: "https://www.instagram.com/bymintco/",
 
+  // TODO: not yet provided. Leave empty — primaryCta() falls back to the
+  // audit mailto until a real booking link exists (never publish a dead
+  // channel — see COMPLIANCE NOTE above).
+  bookingUrl: "",
+
   // TODO: no real testimonials yet — never fabricate. Render only when non-empty.
   testimonials: [] as { quote: string; name: string; business: string }[],
 
@@ -48,11 +53,37 @@ export const site = {
  * Uses encodeURIComponent (RFC 6068 %20-style spaces), not URLSearchParams —
  * URLSearchParams form-encodes spaces as "+", which several mail clients
  * (Apple Mail, Outlook desktop, Thunderbird) render literally in the body.
+ *
+ * `source` tags which placement the click came from (e.g. "header",
+ * "sticky", "hero", "band") as a `Ref:` line in the body — with no
+ * analytics on this site, it's the only attribution there is.
  */
-export function auditMailto(): string {
+export function auditMailto(source?: string): string {
   const subject = encodeURIComponent(site.audit.subject);
-  const body = encodeURIComponent(site.audit.body);
+  const body = encodeURIComponent(
+    source ? `${site.audit.body}\n\nRef: ${source}` : site.audit.body,
+  );
   return `mailto:${site.email}?subject=${subject}&body=${body}`;
+}
+
+/**
+ * Single source of truth for the primary CTA across Header, MobileCta,
+ * ContactCta and the hero — resolves to a real booking link once one
+ * exists, otherwise falls back to the audit mailto. Keeps the label in
+ * lockstep with the wired channel (never "Book a free call" over mailto).
+ */
+export function primaryCta(source: string): { href: string; label: string } {
+  if (site.bookingUrl) {
+    return { href: site.bookingUrl, label: "Book a free call" };
+  }
+  return { href: auditMailto(source), label: "Get my free audit" };
+}
+
+/** Short tap-consequence microcopy for a CTA href — sets expectations before the tap. */
+export function ctaConsequence(href: string): string {
+  if (href.startsWith("mailto:")) return "Opens your email app";
+  if (href.startsWith("https://wa.me/")) return "Opens WhatsApp";
+  return "Opens in a new tab";
 }
 
 /** Pre-filled WhatsApp link, or null when no number is configured. */

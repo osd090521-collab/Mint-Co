@@ -17,6 +17,12 @@ export const metadata: Metadata = {
     "Mint & Co is a three-person studio — Omar, David and Rodrick — building in the open from Harrow, working with businesses across London and the UK.",
   alternates: { canonical: "/about" },
   robots: { index: true, follow: true },
+  openGraph: {
+    title: "About · Mint & Co",
+    description:
+      "Mint & Co is a three-person studio — Omar, David and Rodrick — building in the open from Harrow, working with businesses across London and the UK.",
+    url: `${site.url}/about`,
+  },
 };
 
 export default function AboutPage() {

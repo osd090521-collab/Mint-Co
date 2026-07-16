@@ -124,6 +124,24 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
   transform: scaleY(1);
 }
 
+/* Services marquee — full-bleed scrolling band, duplicated track for a
+   seamless loop. Paused on hover/focus so the text can actually be read. */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+.marquee-track:hover,
+.marquee-track:focus-within {
+  animation-play-state: paused;
+}
+
 /* Restrained motion, honoured for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -138,6 +156,14 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
   html[data-js] [data-reveal] .timeline-line {
     opacity: 1;
     transform: none;
+  }
+  .marquee-track {
+    animation: none;
+    flex-wrap: wrap;
+    width: auto;
+  }
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
   }
   *,
   *::before,

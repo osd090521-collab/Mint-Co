@@ -3,7 +3,13 @@ import { ContactCta } from "./components/ContactCta";
 import { Cta } from "./components/Cta";
 import { Eyebrow } from "./components/Eyebrow";
 import { Reveal } from "./components/Reveal";
-import { auditMailto, auditWhatsApp, site } from "./site.config";
+import { ServicesMarquee } from "./components/ServicesMarquee";
+import {
+  auditWhatsApp,
+  ctaConsequence,
+  primaryCta,
+  site,
+} from "./site.config";
 
 const teaserLinkClass =
   "font-medium text-mint-deep underline underline-offset-4";
@@ -13,6 +19,7 @@ const inlineLinkClass =
 
 export default function Home() {
   const whatsApp = auditWhatsApp();
+  const cta = primaryCta("hero");
 
   return (
     <main id="main" className="flex-1">
@@ -43,7 +50,7 @@ export default function Home() {
             start.
           </p>
           <div className="mt-10 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <Cta href={auditMailto()}>Get my free audit</Cta>
+            <Cta href={cta.href}>{cta.label}</Cta>
             {whatsApp ? (
               <a href={whatsApp} className={inlineLinkClass}>
                 or message us on WhatsApp →
@@ -54,6 +61,7 @@ export default function Home() {
               </a>
             )}
           </div>
+          <p className="mt-2 text-xs text-muted">{ctaConsequence(cta.href)}</p>
           <p className="mt-6 max-w-xl text-sm text-muted">
             Harrow-based, working with businesses across London and the
             UK · clear fixed-price packages · live in 7–10 working days ·
@@ -65,6 +73,8 @@ export default function Home() {
           </p>
         </div>
       </section>
+
+      <ServicesMarquee />
 
       {/* THE PROBLEM — standard padding 64/96 */}
       <section className="border-y border-line bg-warm">
