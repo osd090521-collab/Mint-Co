@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { AmpMarker } from "../components/AmpMarker";
 import { Eyebrow } from "../components/Eyebrow";
 import { auditWhatsApp, site } from "../site.config";
 
@@ -51,9 +50,13 @@ const FRUSTRATIONS = [
 ];
 const BUSINESS_TYPES = [
   "Barber",
-  "Trade (plumber, electrician, builder)",
   "Salon, beauty or clinic",
-  "Café, retail or hospitality",
+  "Trade (plumber, electrician, builder)",
+  "Café, restaurant or takeaway",
+  "Shop or high-street retail",
+  "Dry cleaner, tailor or alterations",
+  "Online shop or dropshipping",
+  "Social seller (Instagram or TikTok)",
   "Other",
 ];
 const WEBSITE_YES = "Yes, I have one";
@@ -69,7 +72,7 @@ const STEP_TITLES = [
 ];
 
 type Answers = {
-  frustration: string;
+  frustrations: string[];
   note: string;
   businessName: string;
   businessType: string;
@@ -84,7 +87,7 @@ type Answers = {
 };
 
 const EMPTY: Answers = {
-  frustration: "",
+  frustrations: [],
   note: "",
   businessName: "",
   businessType: "",
@@ -99,7 +102,7 @@ const EMPTY: Answers = {
 };
 
 const STEP_FIELDS: (keyof Answers)[][] = [
-  ["frustration"],
+  ["frustrations"],
   ["businessName", "businessType", "businessTypeOther", "location"],
   ["hasWebsite", "websiteUrl"],
   ["name", "contactMethod", "contactDetail"],
@@ -120,7 +123,8 @@ function businessTypeFinal(a: Answers): string {
 function validateStep(step: number, a: Answers): Partial<Record<keyof Answers, string>> {
   const errs: Partial<Record<keyof Answers, string>> = {};
   if (step === 0) {
-    if (!a.frustration) errs.frustration = "Pick the one that fits best — you can add detail in the note.";
+    if (a.frustrations.length === 0)
+      errs.frustrations = "Pick at least one — as many as apply.";
   }
   if (step === 1) {
     if (!a.businessName.trim()) errs.businessName = "Tell us your business name.";
@@ -155,7 +159,7 @@ function fallbackMailto(a: Answers): string {
     `Type of business: ${businessTypeFinal(a)}`,
     `Where we're based: ${a.location}`,
     `Website: ${a.hasWebsite === WEBSITE_YES ? a.websiteUrl : "No website yet"}`,
-    `Biggest frustration: ${a.frustration}`,
+    `Biggest frustration: ${a.frustrations.join("; ")}`,
     ...(a.note.trim() ? [`Note: ${a.note.trim()}`] : []),
     ...(a.timeline ? [`When we'd like to move: ${a.timeline}`] : []),
     `Name: ${a.name}`,
@@ -326,6 +330,79 @@ function ChipGroup({
   );
 }
 
+/**
+ * Multi-select chip row (the 02-design-spec "one-vs-many" pattern):
+ * role="group" container, plain <button aria-pressed> chips — every chip a
+ * natural tab stop, Space/Enter toggles natively. Selected shows a leading
+ * CHECK where single-select shows a dot, so sighted users get the same
+ * one-vs-many cue AT users get from the semantics.
+ */
+function MultiChipGroup({
+  id,
+  labelledBy,
+  options,
+  values,
+  onToggle,
+  error,
+}: {
+  id: string;
+  labelledBy: string;
+  options: readonly string[];
+  values: string[];
+  onToggle: (v: string) => void;
+  error?: string;
+}) {
+  return (
+    <div>
+      <div
+        id={id}
+        role="group"
+        aria-labelledby={labelledBy}
+        aria-describedby={error ? `${id}-error` : undefined}
+        className="flex flex-wrap gap-2"
+      >
+        {options.map((opt) => {
+          const selected = values.includes(opt);
+          return (
+            <button
+              key={opt}
+              type="button"
+              aria-pressed={selected}
+              data-chip=""
+              onClick={() => onToggle(opt)}
+              className={`inline-flex min-h-[44px] items-center rounded-full border px-4 text-[15px] font-medium transition-colors duration-150 ${
+                selected
+                  ? "border-mint-cta bg-mint-cta text-white"
+                  : "border-line bg-surface text-slate hover:border-mint"
+              }`}
+            >
+              {selected ? (
+                <svg viewBox="0 0 12 12" className="mr-2 h-3 w-3 shrink-0" aria-hidden="true">
+                  <path
+                    d="M2 6.2 4.8 9 10 3.4"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : (
+                <span
+                  aria-hidden="true"
+                  className="mr-2 inline-block h-2 w-2 rounded-full border border-muted/60"
+                />
+              )}
+              {opt}
+            </button>
+          );
+        })}
+      </div>
+      {error && <FieldError id={`${id}-error`} text={error} />}
+    </div>
+  );
+}
+
 /* ---------- the wizard ---------- */
 
 export function IntakeWizard() {
@@ -358,9 +435,23 @@ export function IntakeWizard() {
       const raw = sessionStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        const savedAnswers = saved?.answers as Partial<Answers> | undefined;
-        if (savedAnswers && Object.values(savedAnswers).some((v) => v)) {
-          setAnswers({ ...EMPTY, ...savedAnswers });
+        const savedAnswers = saved?.answers as
+          | (Partial<Answers> & { frustration?: string })
+          | undefined;
+        const hasContent =
+          savedAnswers &&
+          Object.values(savedAnswers).some((v) =>
+            Array.isArray(v) ? v.length > 0 : Boolean(v),
+          );
+        if (savedAnswers && hasContent) {
+          // Tolerate the pre-multi-select saved shape (frustration: string).
+          const frustrations = Array.isArray(savedAnswers.frustrations)
+            ? savedAnswers.frustrations.filter((v): v is string => typeof v === "string")
+            : typeof savedAnswers.frustration === "string" && savedAnswers.frustration
+              ? [savedAnswers.frustration]
+              : [];
+          delete savedAnswers.frustration;
+          setAnswers({ ...EMPTY, ...savedAnswers, frustrations });
           if (Number.isInteger(saved.step) && saved.step >= 0 && saved.step <= 3)
             setStep(saved.step);
           if (typeof saved.startedAt === "number") startedAt.current = saved.startedAt;
@@ -411,8 +502,9 @@ export function IntakeWizard() {
   function focusField(field: keyof Answers) {
     const el = document.getElementById(`fa-${field}`);
     if (!el) return;
-    if (el.getAttribute("role") === "radiogroup") {
-      (el.querySelector('[role="radio"]') as HTMLElement | null)?.focus();
+    const role = el.getAttribute("role");
+    if (role === "radiogroup" || role === "group") {
+      (el.querySelector("[data-chip]") as HTMLElement | null)?.focus();
     } else {
       el.focus();
     }
@@ -496,7 +588,7 @@ export function IntakeWizard() {
         location: a.location.trim(),
         hasWebsite: a.hasWebsite === WEBSITE_YES ? "Yes" : "No",
         websiteUrl: a.hasWebsite === WEBSITE_YES ? a.websiteUrl.trim() : "",
-        frustration: a.frustration,
+        frustration: a.frustrations.join("; "),
         note: a.note.trim(),
         timeline: a.timeline,
         name: a.name.trim(),
@@ -551,7 +643,6 @@ export function IntakeWizard() {
           tabIndex={-1}
           className="mt-6 text-[1.9rem] font-medium leading-tight tracking-[-0.01em] text-ink outline-none sm:text-4xl"
         >
-          <AmpMarker className="mr-2" />
           Thanks, {firstName} — your write-up is on its way.
         </h1>
         <p className="mt-6 text-base leading-relaxed text-slate sm:text-lg">
@@ -661,12 +752,7 @@ export function IntakeWizard() {
             tabIndex={-1}
             className="mt-8 text-[1.9rem] font-medium leading-tight tracking-[-0.01em] text-ink outline-none sm:text-4xl"
           >
-            {step === 0 && (
-              <>
-                <AmpMarker className="mr-2" />
-                What&apos;s the biggest frustration?
-              </>
-            )}
+            {step === 0 && <>What&apos;s the biggest frustration?</>}
             {step === 1 && <>Tell us about your business.</>}
             {step === 2 && <>Do you have a website right now?</>}
             {step === 3 && <>Where should we send your write-up?</>}
@@ -675,18 +761,23 @@ export function IntakeWizard() {
           {step === 0 && (
             <div className="mt-8 space-y-6">
               <p className="text-sm text-muted">
-                Takes under two minutes — most answers are a tap.
+                Takes under two minutes — tap as many as apply.
               </p>
-              <ChipGroup
-                id="fa-frustration"
+              <MultiChipGroup
+                id="fa-frustrations"
                 labelledBy="fa-step-heading"
                 options={FRUSTRATIONS}
-                value={answers.frustration}
-                onSelect={(v) => {
-                  setA("frustration", v);
-                  clearError("frustration");
+                values={answers.frustrations}
+                onToggle={(v) => {
+                  setAnswers((a) => ({
+                    ...a,
+                    frustrations: a.frustrations.includes(v)
+                      ? a.frustrations.filter((x) => x !== v)
+                      : [...a.frustrations, v],
+                  }));
+                  clearError("frustrations");
                 }}
-                error={errors.frustration}
+                error={errors.frustrations}
               />
               {noteOpen ? (
                 <div>
@@ -872,7 +963,7 @@ export function IntakeWizard() {
               )}
               <div>
                 <p id="fa-timeline-label" className="text-sm font-medium text-ink">
-                  Roughly when would you want to move?{" "}
+                  When would you like to get started?{" "}
                   <span className="font-normal text-muted">(optional)</span>
                 </p>
                 <p className="mt-1 text-sm text-muted">

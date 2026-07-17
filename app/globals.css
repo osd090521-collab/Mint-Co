@@ -171,7 +171,8 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
     transform: scale(1.03);
   }
 }
-[data-chip][aria-checked="true"] {
+[data-chip][aria-checked="true"],
+[data-chip][aria-pressed="true"] {
   animation: chip-pulse 100ms ease-out;
 }
 @keyframes bar-indeterminate {

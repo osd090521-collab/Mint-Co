@@ -43,10 +43,17 @@ Google account — no third-party service, no monthly cost.
 ## 4. Test with curl (before wiring the site)
 
 ```bash
-curl -sL -X POST 'PASTE_WEB_APP_URL_HERE' \
+# NOTE: no `-X POST` — that would force POST on the 302 redirect hop too,
+# which Google rejects with a 411. `--data` makes the first hop a POST and
+# lets curl switch to GET when following the redirect.
+curl -sL 'PASTE_WEB_APP_URL_HERE' \
   -H 'Content-Type: text/plain' \
   --data '{"token":"mintco-fa-2026-compass-7481","elapsedMs":5000,"company":"","ref":"curl-test","businessName":"Curl Test Barbers","businessType":"Barber","location":"Pinner","hasWebsite":"No","websiteUrl":"","frustration":"No website at all","note":"delete this row","timeline":"","name":"Curl Test","contactMethod":"Email","contactDetail":"test@example.com"}'
 ```
+
+If the first hop returns **401**, the deployment's "Who has access" is not
+**Anyone** — fix via Deploy → Manage deployments → ✏️ Edit → set access →
+New version → Deploy (URL stays the same).
 
 Expected: `{"ok":true}` in the terminal, a new row in **Leads**, and an
 email to omar@ within a minute. Delete the test row afterwards.
