@@ -18,7 +18,7 @@ export default function PrivacyPage() {
     <main id="main" className="flex-1">
       <div className="mx-auto max-w-2xl px-5 py-16 sm:px-8 sm:py-24">
         <h1 className="text-3xl font-medium sm:text-4xl">Your privacy</h1>
-        <p className="mt-2 text-sm text-muted">Last updated: June 2026</p>
+        <p className="mt-2 text-sm text-muted">Last updated: July 2026</p>
 
         <div className="mt-8 space-y-5 text-base leading-relaxed text-slate">
           <p>
@@ -40,6 +40,28 @@ export default function PrivacyPage() {
             , we&apos;ll use the details you send us only to reply to your
             enquiry and discuss working together. We won&apos;t add you to any
             mailing list, and we won&apos;t share your details with anyone else.
+          </p>
+          {/* Anchor target for the audit form's consent link — scroll-mt clears the sticky header. */}
+          <p id="audit-form" className="scroll-mt-24">
+            If you fill in our{" "}
+            <a
+              href="/free-audit"
+              className="font-medium text-mint-deep underline-offset-4 hover:underline"
+            >
+              audit form
+            </a>
+            , we use your details only to prepare your write-up and get back
+            to you. Your answers are stored in a private, access-restricted
+            spreadsheet in our Google Workspace — never sold or passed on. We
+            keep enquiry details for up to 12 months, then delete them. You
+            can ask us to remove your details at any time by emailing{" "}
+            <a
+              href={`mailto:${site.email}`}
+              className="font-medium text-mint-deep underline-offset-4 hover:underline"
+            >
+              {site.email}
+            </a>
+            .
           </p>
           <p>
             To ask what we hold about you, or to have it deleted, just email us

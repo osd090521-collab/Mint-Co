@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LogoLockup } from "./compass";
-import { primaryCta } from "../site.config";
 
 const navLinks = [
   { href: "/services", label: "Services" },
@@ -14,7 +13,6 @@ const navLinks = [
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
-  const cta = primaryCta("header");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8);
@@ -46,12 +44,18 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <a
-          href={cta.href}
+        {/*
+          Points at the intake wizard, not mailto/primaryCta (decision 11,
+          Intake Plan v2.1) — a second "Free audit" nav item beside a mailto
+          link would be two near-identical audit links. Mailto stays primary
+          in the hero, CTA bands and sticky mobile CTA.
+        */}
+        <Link
+          href="/free-audit?ref=nav"
           className="text-sm font-medium text-mint-deep underline underline-offset-4"
         >
-          {cta.label}
-        </a>
+          Get my free audit
+        </Link>
       </div>
       {/*
         Compact mobile nav row — four short links fit at 375px, so a

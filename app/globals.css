@@ -20,6 +20,7 @@
   --color-tint: #eaf3ef; /* rare hairline-bordered mint panel */
   --color-brass: #b98b5e; /* hairline accents only (<5%) */
   --color-line: #e4eae6; /* borders / dividers */
+  --color-error: #a34a26; /* form errors — desaturated terracotta, ≥4.5:1 on bg AND warm */
 
   --font-display: var(--font-fraunces);
   --font-sans: var(--font-geist-sans);
@@ -140,6 +141,49 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
 .marquee-track:hover,
 .marquee-track:focus-within {
   animation-play-state: paused;
+}
+
+/*
+  Intake wizard (/free-audit) — step transitions (a settle, not a slide),
+  chip-select pulse, and the indeterminate sending bar. All are flattened
+  to near-instant by the global reduced-motion rule below.
+*/
+@keyframes step-in-fwd {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+}
+@keyframes step-in-back {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+.step-in-fwd {
+  animation: step-in-fwd 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+.step-in-back {
+  animation: step-in-back 220ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes chip-pulse {
+  50% {
+    transform: scale(1.03);
+  }
+}
+[data-chip][aria-checked="true"] {
+  animation: chip-pulse 100ms ease-out;
+}
+@keyframes bar-indeterminate {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(350%);
+  }
+}
+.bar-indeterminate {
+  animation: bar-indeterminate 1.1s ease-in-out infinite;
 }
 
 /* Restrained motion, honoured for reduced-motion users */
