@@ -1,14 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { Cta } from "./Cta";
 import { primaryCta } from "../site.config";
 
 /**
  * Mobile-only sticky bottom CTA. Appears after the hero scrolls out of view.
  * Respects the iPhone home-indicator safe area.
+ * Suppressed on /free-audit — the visitor is already in the audit flow, and
+ * the wizard pins its own Next bar to the same bottom edge.
  */
 export function MobileCta() {
+  const pathname = usePathname();
   const [visible, setVisible] = useState(false);
   const cta = primaryCta("sticky");
 
@@ -18,6 +22,8 @@ export function MobileCta() {
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  if (pathname === "/free-audit") return null;
 
   return (
     <div

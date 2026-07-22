@@ -62,6 +62,11 @@ export default function Home() {
             )}
           </div>
           <p className="mt-2 text-xs text-muted">{ctaConsequence(cta.href)}</p>
+          <p className="mt-4">
+            <Link href="/free-audit?ref=hero" className={inlineLinkClass}>
+              or tell us about your business →
+            </Link>
+          </p>
           <p className="mt-6 max-w-xl text-sm text-muted">
             Harrow-based, working with businesses across London and the
             UK · clear fixed-price packages · live in 7–10 working days ·
@@ -172,7 +177,7 @@ export default function Home() {
         </section>
       </div>
 
-      <ContactCta />
+      <ContactCta refSource="home" />
     </main>
   );
 }

@@ -15,6 +15,7 @@ const navLinks = [
   { href: "/packages", label: "Packages" },
   { href: "/process", label: "Process" },
   { href: "/about", label: "About" },
+  { href: "/free-audit?ref=footer", label: "Free audit" },
 ];
 
 /** Shared footer — extra bottom clearance on mobile for the sticky CTA. */

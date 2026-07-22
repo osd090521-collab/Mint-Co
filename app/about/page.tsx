@@ -147,7 +147,7 @@ export default function AboutPage() {
         </section>
       )}
 
-      <ContactCta />
+      <ContactCta refSource="about" />
     </main>
   );
 }

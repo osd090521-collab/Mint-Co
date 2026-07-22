@@ -1,9 +1,15 @@
+import Link from "next/link";
 import { Cta } from "./Cta";
 import { Reveal } from "./Reveal";
 import { auditWhatsApp, ctaConsequence, primaryCta, site } from "../site.config";
 
-/** Shared closing CTA band — used at the bottom of every page. */
-export function ContactCta() {
+/**
+ * Shared closing CTA band — used at the bottom of every page.
+ * `refSource` renders the secondary "or tell us about your business →"
+ * link into the intake wizard, tagged `?ref=band-{refSource}` so placement
+ * conversion is measurable (Intake Plan v2.1). Mailto stays primary.
+ */
+export function ContactCta({ refSource }: { refSource?: string }) {
   const whatsApp = auditWhatsApp();
   const cta = primaryCta("band");
 
@@ -36,6 +42,18 @@ export function ContactCta() {
         <Reveal delay={160}>
           <p className="mt-3 text-xs text-muted">{ctaConsequence(cta.href)}</p>
         </Reveal>
+        {refSource && (
+          <Reveal delay={170}>
+            <p className="mt-5 text-base">
+              <Link
+                href={`/free-audit?ref=band-${refSource}`}
+                className="font-medium text-mint-deep underline underline-offset-4"
+              >
+                or tell us about your business →
+              </Link>
+            </p>
+          </Reveal>
+        )}
         <Reveal delay={200}>
           <p className="mx-auto mt-6 max-w-md text-sm text-muted">
             Free, no obligation — and we&apos;ll only use your details to
