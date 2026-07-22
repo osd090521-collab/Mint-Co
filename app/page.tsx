@@ -76,99 +76,101 @@ export default function Home() {
 
       <ServicesMarquee />
 
-      {/* THE PROBLEM — standard padding 64/96 */}
-      <section className="border-y border-line bg-warm">
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal>
-            <h2 className="max-w-3xl text-2xl font-medium leading-snug sm:text-4xl">
-              Brilliant in person. Often invisible online.
-            </h2>
-          </Reveal>
-          <Reveal delay={80}>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
-              Most good local businesses either have no website, or one
-              that&apos;s slow and broken on a phone — which usually
-              isn&apos;t the owner&apos;s fault; they&apos;re too busy running
-              a great business to ever look at their own site on a phone. In
-              ten seconds on a screen, a stranger decides whether to trust
-              you. We make those ten seconds count.
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <div className="sheets">
+        {/* THE PROBLEM — standard padding 64/96 */}
+        <section className="sheet bg-warm">
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+            <Reveal>
+              <h2 className="max-w-3xl text-2xl font-medium leading-snug sm:text-4xl">
+                Brilliant in person. Often invisible online.
+              </h2>
+            </Reveal>
+            <Reveal delay={80}>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
+                Most good local businesses either have no website, or one
+                that&apos;s slow and broken on a phone — which usually
+                isn&apos;t the owner&apos;s fault; they&apos;re too busy running
+                a great business to ever look at their own site on a phone. In
+                ten seconds on a screen, a stranger decides whether to trust
+                you. We make those ten seconds count.
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-      {/* PACKAGES teaser — full detail lives on /packages */}
-      <section>
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal>
-            <Eyebrow>Packages</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
-              Essentials £49/mo · Growth £119/mo · Complete £179/mo — one
-              monthly price, everything included. No setup fee, no minimum
-              term, cancel anytime.
-            </p>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6">
-              <Link href="/packages" className={teaserLinkClass}>
-                See all packages →
-              </Link>
-            </p>
-          </Reveal>
-        </div>
-      </section>
+        {/* PACKAGES teaser — full detail lives on /packages */}
+        <section className="sheet bg-surface">
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+            <Reveal>
+              <Eyebrow>Packages</Eyebrow>
+            </Reveal>
+            <Reveal delay={60}>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
+                Essentials £49/mo · Growth £119/mo · Complete £179/mo — one
+                monthly price, everything included. No setup fee, no minimum
+                term, cancel anytime.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <p className="mt-6">
+                <Link href="/packages" className={teaserLinkClass}>
+                  See all packages →
+                </Link>
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-      {/* WHAT WE DO teaser — full detail lives on /services */}
-      <section className="border-t border-line bg-warm">
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal>
-            <Eyebrow>What we do</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
-              Clean, premium websites, designed mobile-first and built to be
-              found on Google — no template shortcuts, no afterthoughts.
-            </p>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6">
-              <Link href="/services" className={teaserLinkClass}>
-                Explore our services →
-              </Link>
-            </p>
-          </Reveal>
-        </div>
-      </section>
+        {/* WHAT WE DO teaser — full detail lives on /services */}
+        <section className="sheet bg-warm">
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+            <Reveal>
+              <Eyebrow>What we do</Eyebrow>
+            </Reveal>
+            <Reveal delay={60}>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
+                Clean, premium websites, designed mobile-first and built to be
+                found on Google — no template shortcuts, no afterthoughts.
+              </p>
+            </Reveal>
+            <Reveal delay={120}>
+              <p className="mt-6">
+                <Link href="/services" className={teaserLinkClass}>
+                  Explore our services →
+                </Link>
+              </p>
+            </Reveal>
+          </div>
+        </section>
 
-      {/* WHO WE ARE teaser — full detail lives on /about */}
-      <section>
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal>
-            <Eyebrow>Who we are</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <h2 className="mt-6 max-w-3xl text-2xl font-medium leading-snug sm:text-4xl">
-              A three-person studio, building in the open.
-            </h2>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
-              We&apos;re Omar, David and Rodrick — Harrow-based, working
-              with businesses across London and the UK. You&apos;ll deal
-              with us directly, not a call centre.
-            </p>
-          </Reveal>
-          <Reveal delay={180}>
-            <p className="mt-6">
-              <Link href="/about" className={teaserLinkClass}>
-                Meet the studio →
-              </Link>
-            </p>
-          </Reveal>
-        </div>
-      </section>
+        {/* WHO WE ARE teaser — full detail lives on /about */}
+        <section className="sheet bg-surface">
+          <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
+            <Reveal>
+              <Eyebrow>Who we are</Eyebrow>
+            </Reveal>
+            <Reveal delay={60}>
+              <h2 className="mt-6 max-w-3xl text-2xl font-medium leading-snug sm:text-4xl">
+                A three-person studio, building in the open.
+              </h2>
+            </Reveal>
+            <Reveal delay={120}>
+              <p className="mt-6 max-w-2xl text-lg leading-relaxed text-slate">
+                We&apos;re Omar, David and Rodrick — Harrow-based, working
+                with businesses across London and the UK. You&apos;ll deal
+                with us directly, not a call centre.
+              </p>
+            </Reveal>
+            <Reveal delay={180}>
+              <p className="mt-6">
+                <Link href="/about" className={teaserLinkClass}>
+                  Meet the studio →
+                </Link>
+              </p>
+            </Reveal>
+          </div>
+        </section>
+      </div>
 
       <ContactCta />
     </main>

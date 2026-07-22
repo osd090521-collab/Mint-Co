@@ -142,10 +142,54 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
   animation-play-state: paused;
 }
 
+/* Sheet-scroll stack — each section sticks to the top and the next one
+   slides over it like a stack of cards, instead of a flat scroll. */
+.sheets {
+  position: relative;
+}
+.sheet {
+  position: sticky;
+  top: 0;
+  border-top: 1px solid var(--color-line);
+  border-radius: 28px 28px 0 0;
+  box-shadow: 0 -24px 48px -24px rgba(16, 33, 27, 0.16);
+}
+.sheet::before {
+  content: "";
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 56px;
+  height: 4px;
+  border-radius: 99px;
+  background: var(--color-line);
+}
+
+/* Showcase page — work-card hover lift for the browser-mockup grid. */
+.work-card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+.work-card:hover,
+.work-card:focus-within {
+  transform: translateY(-8px);
+  box-shadow: 0 24px 48px -20px rgba(16, 33, 27, 0.24);
+}
+
 /* Restrained motion, honoured for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+  .sheet {
+    position: static;
+    box-shadow: none;
+  }
+  .work-card:hover,
+  .work-card:focus-within {
+    transform: none;
   }
   html[data-js] [data-reveal] {
     opacity: 1;
