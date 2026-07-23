@@ -28,21 +28,40 @@
     padding: 9px 16px; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
 
-  /* ── Rotating emblem, top corner — the plain logo, spinning smoothly, nothing else ── */
+  /* ── Emblem, top corner — the plain logo, static, nothing else ── */
   .emblem-stand {
     position: absolute; top: 34px; right: 7%; z-index: 3;
     display: flex; align-items: center; justify-content: center;
   }
   .emblem-badge {
-    width: 76px; height: 76px; display: block; animation: badgeSpin 7s linear infinite;
+    width: 76px; height: 76px; display: block;
     filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
   }
-  @keyframes badgeSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .emblem-badge { animation: none; } }
   @media (max-width: 640px) { .emblem-stand { position: static; margin: 0 auto 20px; } }
 
   /* ── Emblem watermark — large sparkling granule field behind the hero, reacts to cursor ── */
   #emblemWatermark { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: .5; }
+
+  /* ── Holographic ribbons — chrome/iridescent streaks that sweep across the page,
+     shimmer in place, and drift with scroll (JS adds the per-ribbon parallax transform) ── */
+  @keyframes holoShimmer {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  .holo-ribbon {
+    position: absolute; z-index: 1; pointer-events: none; border-radius: 999px;
+    background: linear-gradient(100deg,
+      rgba(123,47,247,.55), rgba(0,212,255,.5), rgba(255,61,173,.5),
+      rgba(224,169,74,.45), rgba(123,47,247,.55));
+    background-size: 300% 300%;
+    filter: blur(38px);
+    opacity: .55;
+    animation: holoShimmer 14s ease-in-out infinite;
+    will-change: transform, background-position;
+    transition: transform .1s linear;
+  }
+  @media (prefers-reduced-motion: reduce) { .holo-ribbon { animation: none; transition: none; } }
 
   /* ── Hero ── */
   /* ── Glow-dome hero — one big soft radial arc at the top, fading to near-black,
@@ -109,29 +128,40 @@
   .lesson { position: relative; padding: 0 0 40px; }
   .lesson:last-child { padding-bottom: 0; }
   .lesson .lnum {
-    position: absolute; left: -54px; top: 0; width: 36px; height: 36px; border-radius: 50%;
+    position: absolute; left: -56px; top: -2px; width: 40px; height: 40px; border-radius: 16px;
     display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600;
-    color: #fff; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16);
-    backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 0 0 6px #060509;
-    transition: background .35s ease, box-shadow .35s ease, transform .35s ease, border-color .35s ease;
+    color: #fff; border: 1px solid rgba(255,255,255,.28);
+    background: linear-gradient(155deg, rgba(200,160,255,.4), rgba(123,47,247,.22) 55%, rgba(70,20,150,.18));
+    backdrop-filter: blur(12px) saturate(160%); -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow:
+      inset 0 2px 3px rgba(255,255,255,.4),
+      inset 0 -8px 12px rgba(40,10,90,.35),
+      0 6px 16px rgba(0,0,0,.35),
+      0 0 0 6px #060509;
+    transition: background .8s cubic-bezier(.2,.7,.2,1), box-shadow .8s cubic-bezier(.2,.7,.2,1),
+                transform .8s cubic-bezier(.2,.7,.2,1), border-color .8s ease;
   }
-  .lesson .lnum .lnum-text { opacity: 0; transition: opacity .3s ease .1s; }
-  .lesson .lnum .lock-icon { position: absolute; font-size: 13px; opacity: .55; transition: opacity .25s ease, transform .25s ease; }
-  .lesson.unlocked .lnum { transform: scale(1.15); animation: unlockPop .5s ease; }
+  .lesson .lnum .lnum-text { opacity: 0; transition: opacity .5s ease .1s; }
+  .lesson .lnum .lock-icon { position: absolute; font-size: 13px; opacity: .55; transition: opacity .4s ease, transform .4s ease; }
+  .lesson.unlocked .lnum { transform: scale(1.12); animation: unlockPop .8s cubic-bezier(.2,.7,.2,1); }
   .lesson.unlocked .lnum .lnum-text { opacity: 1; }
   .lesson.unlocked .lnum .lock-icon { opacity: 0; transform: scale(.4) rotate(-25deg); }
   .lesson.unlocked .lnum {
-    color: #08070F; border-color: rgba(255,255,255,.4);
-    background: linear-gradient(135deg, #F6E2B0, #E0A94A 55%, #B98B5E);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 6px #060509, 0 0 22px rgba(224,169,74,.55);
+    color: #fff; border-color: rgba(255,255,255,.55);
+    background: linear-gradient(155deg, rgba(220,190,255,.95), rgba(150,70,245,.85) 55%, rgba(95,25,180,.8));
+    box-shadow:
+      inset 0 2px 4px rgba(255,255,255,.8),
+      inset 0 -10px 16px rgba(50,10,110,.5),
+      0 8px 22px rgba(140,60,240,.5),
+      0 0 0 6px #060509,
+      0 0 26px rgba(140,60,240,.45);
   }
-  @keyframes unlockPop { 0%{transform:scale(1);} 45%{transform:scale(1.45);} 100%{transform:scale(1.15);} }
+  @keyframes unlockPop { 0%{transform:scale(1);} 55%{transform:scale(1.22);} 100%{transform:scale(1.12);} }
   .lesson .lcard {
     background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 20px 24px;
     backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
     box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
-    opacity: .45; transition: opacity .45s ease, border-color .45s ease, background .45s ease;
+    opacity: .45; transition: opacity .8s cubic-bezier(.2,.7,.2,1), border-color .8s ease, background .8s ease;
   }
   .lesson.unlocked .lcard { opacity: 1; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.2); }
   .lesson .lcard h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; color: #fff; }
@@ -288,6 +318,8 @@
   <!-- HERO -->
   <header class="hero">
     <div class="mesh"></div>
+    <div class="holo-ribbon" data-depth=".18" style="width:160%; height:130px; top:-10%; left:-30%; transform:rotate(-16deg);"></div>
+    <div class="holo-ribbon" data-depth=".32" style="width:140%; height:90px; top:55%; left:-20%; transform:rotate(11deg); animation-delay:-6s;"></div>
     <canvas id="emblemWatermark" aria-hidden="true"></canvas>
     <div class="emblem-stand">
       <img class="emblem-badge" src="/showcase/showcase-assets/mint-compass-mark.png" alt="Mint & Co">
@@ -312,6 +344,8 @@
 
   <!-- WHY CHOOSE US -->
   <section class="why-us" id="why-us">
+    <div class="holo-ribbon" data-depth=".22" style="width:150%; height:110px; top:10%; left:-25%; transform:rotate(9deg); animation-delay:-3s;"></div>
+    <div class="holo-ribbon" data-depth=".14" style="width:170%; height:140px; bottom:-8%; left:-35%; transform:rotate(-13deg); animation-delay:-9s; opacity:.4;"></div>
     <div class="why-inner">
       <div class="section-head" style="text-align:left;max-width:100%;margin-bottom:44px;">
         <div class="eyebrow">Why choose us</div>
@@ -588,6 +622,28 @@
   </section>
 
 <script>
+  // Holographic ribbons — drift with scroll (each at its own depth/speed) so they feel
+  // like they wrap around the page rather than sit static behind the text.
+  (function () {
+    var ribbons = Array.prototype.slice.call(document.querySelectorAll('.holo-ribbon'));
+    if (!ribbons.length) return;
+    var ticking = false;
+    function apply() {
+      var y = window.scrollY || window.pageYOffset;
+      ribbons.forEach(function (el) {
+        var depth = parseFloat(el.getAttribute('data-depth')) || .2;
+        var baseRotate = el.style.transform.match(/rotate\(([-\d.]+)deg\)/);
+        var rot = baseRotate ? baseRotate[1] : 0;
+        el.style.transform = 'translateY(' + (y * depth) + 'px) rotate(' + rot + 'deg)';
+      });
+      ticking = false;
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { requestAnimationFrame(apply); ticking = true; }
+    }, { passive: true });
+    apply();
+  })();
+
   // Pillars — curtain-wipe reveal (left→right, right→left when .reverse), same technique
   // as the case-study rows: a solid panel shrinks away to unveil the visual as it scrolls in.
   (function () {
