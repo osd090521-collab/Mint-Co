@@ -28,18 +28,41 @@
     padding: 9px 16px; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
 
-  /* ── Emblem on a stand — sparkling granule field, reacts to the cursor ── */
-  .emblem-stand { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; position: relative; z-index: 2; }
-  #emblemCanvas { width: 64px; height: 64px; display: block; margin-bottom: 4px; }
-  .stand-pillar { width: 3px; height: 16px; background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.15)); border-radius: 2px; }
-  .stand-base {
-    width: 46px; height: 9px; border-radius: 50%; margin-top: -2px;
-    background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.4), rgba(255,255,255,.12) 70%);
-    box-shadow: 0 4px 8px rgba(0,0,0,.25);
+  /* ── Rotating emblem, top corner — plain badge, no stand, just lit from two sides ── */
+  .emblem-stand {
+    position: absolute; top: 34px; right: 7%; z-index: 3;
+    display: flex; align-items: center; justify-content: center;
   }
+  .emblem-glow-ring {
+    position: absolute; width: 96px; height: 96px; border-radius: 50%; z-index: 0;
+    background: radial-gradient(circle, rgba(224,169,74,.22), rgba(0,212,255,.14) 55%, transparent 75%);
+    filter: blur(16px); animation: glowPulse 3.4s ease-in-out infinite;
+  }
+  @keyframes glowPulse { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: .85; transform: scale(1.06); } }
+
+  /* Two soft lights floating either side of the badge itself — no visible support */
+  .stand-light {
+    position: absolute; top: 50%; width: 46px; height: 46px; margin-top: -23px; z-index: 0; pointer-events: none;
+    border-radius: 50%; filter: blur(11px); animation: lightPulse 3s ease-in-out infinite;
+  }
+  .stand-light.left { left: -22px; background: radial-gradient(circle, rgba(0,212,255,.45), transparent 72%); }
+  .stand-light.right { right: -22px; background: radial-gradient(circle, rgba(224,169,74,.45), transparent 72%); animation-delay: 1.5s; }
+  @keyframes lightPulse { 0%, 100% { opacity: .5; } 50% { opacity: .9; } }
+
+  .emblem-spin-wrap { perspective: 600px; position: relative; z-index: 1; }
+  .emblem-badge {
+    width: 76px; height: 76px; display: block; animation: badgeSpin 5.5s linear infinite;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
+  }
+  @keyframes badgeSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .emblem-badge, .emblem-glow-ring, .stand-light { animation: none; } }
+  @media (max-width: 640px) { .emblem-stand { position: static; margin: 0 auto 20px; } }
+
+  /* ── Emblem watermark — large sparkling granule field behind the hero, reacts to cursor ── */
+  #emblemWatermark { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: .5; }
 
   /* ── Hero ── */
-  .hero { position: relative; overflow: hidden; background: #08070F; padding: 90px 32px 90px; text-align: center; }
+  .hero { position: relative; overflow: hidden; background: #08070F; padding: 58px 32px 78px; text-align: center; }
   .hero .mesh {
     position: absolute; inset: -10%;
     background: radial-gradient(circle at 25% 25%, rgba(123,47,247,.45), transparent 42%),
@@ -139,6 +162,14 @@
   .pillar.reverse { flex-direction: row-reverse; }
   .pillar .visual { flex: 1 1 320px; min-height: 220px; border-radius: 20px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
   .pillar .visual .num { font-family: 'Fraunces', serif; font-size: 88px; color: rgba(255,255,255,.12); }
+  /* Curtain-wipe reveal — a solid panel that shrinks away to unveil the visual as it scrolls in */
+  .pillar .clip {
+    position: absolute; inset: 0; background: #F6F5F1; transform-origin: left; z-index: 5;
+    transition: transform .9s cubic-bezier(.7,0,.15,1);
+  }
+  .pillar.reverse .clip { transform-origin: right; }
+  .pillar.in .clip { transform: scaleX(0); }
+  @media (prefers-reduced-motion: reduce) { .pillar .clip { transition: none; transform: scaleX(0); } }
   .pillar .visual.p1 { background: #10211B; }
   .pillar .visual.p2 { background: #08070F; }
   .pillar .visual.p2::before {
@@ -239,12 +270,16 @@
   <!-- HERO -->
   <header class="hero">
     <div class="mesh"></div>
-    <div class="hero-inner">
-      <div class="emblem-stand">
-        <canvas id="emblemCanvas" width="128" height="128" role="img" aria-label="Mint & Co"></canvas>
-        <div class="stand-pillar"></div>
-        <div class="stand-base"></div>
+    <canvas id="emblemWatermark" aria-hidden="true"></canvas>
+    <div class="emblem-stand">
+      <div class="emblem-glow-ring"></div>
+      <div class="stand-light left"></div>
+      <div class="stand-light right"></div>
+      <div class="emblem-spin-wrap">
+        <img class="emblem-badge" src="/showcase/showcase-assets/mint-compass-mark.png" alt="Mint & Co">
       </div>
+    </div>
+    <div class="hero-inner">
       <span class="eyebrow">Why Us</span>
       <h1>It's not just a website. <span class="grad">It's a growth system.</span></h1>
       <p>Most agencies stop at design. We build the whole thing: a site that converts, missed calls
@@ -348,8 +383,8 @@
         traffic engine that feeds it — as one connected system, not three separate invoices.</p>
     </div>
 
-    <div class="pillar">
-      <div class="visual p1"><div class="num">01</div></div>
+    <div class="pillar reveal-wipe">
+      <div class="visual p1"><div class="clip"></div><div class="num">01</div></div>
       <div class="body">
         <span class="tag green">The front door</span>
         <h3>A site built to convert, not just look nice</h3>
@@ -363,8 +398,8 @@
       </div>
     </div>
 
-    <div class="pillar reverse">
-      <div class="visual p2"><div class="num">02</div></div>
+    <div class="pillar reverse reveal-wipe">
+      <div class="visual p2"><div class="clip"></div><div class="num">02</div></div>
       <div class="body">
         <span class="tag violet">The safety net</span>
         <h3>Missed-call text-back &amp; instant response</h3>
@@ -378,8 +413,8 @@
       </div>
     </div>
 
-    <div class="pillar">
-      <div class="visual p3"><div class="num">03</div></div>
+    <div class="pillar reveal-wipe">
+      <div class="visual p3"><div class="clip"></div><div class="num">03</div></div>
       <div class="body">
         <span class="tag amber">The traffic engine</span>
         <h3>SEO &amp; digital profile that actually gets found</h3>
@@ -441,6 +476,21 @@
   </section>
 
 <script>
+  // Pillars — curtain-wipe reveal (left→right, right→left when .reverse), same technique
+  // as the case-study rows: a solid panel shrinks away to unveil the visual as it scrolls in.
+  (function () {
+    var wipes = document.querySelectorAll('.reveal-wipe');
+    var wio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          wio.unobserve(entry.target);
+        }
+      });
+    }, { threshold: .3 });
+    wipes.forEach(function (el) { wio.observe(el); });
+  })();
+
   (function () {
     var items = document.querySelectorAll('.reveal');
     var io = new IntersectionObserver(function (entries) {
@@ -503,27 +553,34 @@
     });
   })();
 
-  // Emblem — sparkling granule field sampled from our real logo, reforms when idle,
-  // disperses gently as the cursor approaches. Kept small and restrained (subtle sparkle,
-  // small repel radius, low force) rather than the larger showcase-piece version.
+  // Emblem watermark — large, faint sparkling granule field sampled from our real logo,
+  // sitting behind the hero copy, sitting still until the cursor gets close, then a gentle
+  // local dispersal + sparkle. Restrained: low canvas opacity, soft force, no big blowout.
   (function () {
-    var canvas = document.getElementById('emblemCanvas');
-    if (!canvas) return;
+    var canvas = document.getElementById('emblemWatermark');
+    var hero = document.querySelector('.hero');
+    if (!canvas || !hero) return;
     var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     var ctx = canvas.getContext('2d');
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    var SIZE = 64; // CSS px
-    canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var w = 0, h = 0;
+
+    function size() {
+      w = hero.clientWidth; h = hero.clientHeight;
+      canvas.width = w * dpr; canvas.height = h * dpr;
+      canvas.style.width = w + 'px'; canvas.style.height = h + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    size();
 
     var img = new Image();
     img.crossOrigin = 'anonymous';
     img.src = '/showcase/showcase-assets/mint-compass-mark.png';
     img.onload = function () { boot(buildPoints(img)); };
-    img.onerror = function () { /* fail quiet — stand still shows without the canvas */ };
+    img.onerror = function () { /* fail quiet — hero still reads fine without the watermark */ };
 
     function buildPoints(image) {
-      var S = 96;
+      var S = 160;
       var off = document.createElement('canvas');
       off.width = S; off.height = S;
       var octx = off.getContext('2d');
@@ -549,77 +606,84 @@
     var particles = [];
     var pointer = { x: -9999, y: -9999, active: false };
     var angle = 0;
+    var rawPts = null;
 
     function boot(pts) {
-      var scale = (SIZE * 0.86) / 96;
-      particles = pts.map(function (p) {
-        return {
-          bx: p.x * scale, by: p.y * scale, // base position before rotation
-          x: 0, y: 0, hx: 0, hy: 0,
-          r: 0.55 + Math.random() * 0.55,
-          c: p.c,
-          phase: Math.random() * Math.PI * 2,
-          speed: 1 + Math.random() * 1.8,
-          base: 0.6 + Math.random() * 0.4
-        };
-      });
+      rawPts = pts;
+      layout();
 
       function onMove(e) {
-        var r = canvas.getBoundingClientRect();
-        pointer.x = e.clientX - r.left - r.width / 2;
-        pointer.y = e.clientY - r.top - r.height / 2;
+        var r = hero.getBoundingClientRect();
+        pointer.x = e.clientX - r.left;
+        pointer.y = e.clientY - r.top;
         pointer.active = true;
       }
       function onLeave() { pointer.active = false; }
-      document.addEventListener('pointermove', onMove, { passive: true });
-      canvas.addEventListener('pointerleave', onLeave);
-
-      var cx = SIZE / 2, cy = SIZE / 2;
-
-      function frame(t) {
-        if (!reduce) angle += 0.0022; // slow spin of the home formation
-        var cosA = Math.cos(angle), sinA = Math.sin(angle);
-        ctx.clearRect(0, 0, SIZE, SIZE);
-
-        var radius = 26, radiusSq = radius * radius; // small, local repel field
-        for (var i = 0; i < particles.length; i++) {
-          var p = particles[i];
-          p.hx = cx + (p.bx * cosA - p.by * sinA);
-          p.hy = cy + (p.bx * sinA + p.by * cosA);
-          if (!p.x) { p.x = p.hx; p.y = p.hy; }
-
-          if (pointer.active && !reduce) {
-            var dx = p.x - cx - pointer.x, dy = p.y - cy - pointer.y;
-            var d2 = dx * dx + dy * dy;
-            if (d2 < radiusSq) {
-              var d = Math.sqrt(d2) || 0.01;
-              var force = (1 - d / radius) * 14; // gentle, professional — not a big blowout
-              p.x += (dx / d) * force * 0.4;
-              p.y += (dy / d) * force * 0.4;
-            }
-          }
-          p.x += (p.hx - p.x) * 0.09;
-          p.y += (p.hy - p.y) * 0.09;
-
-          var twinkle = reduce ? p.base : p.base + Math.sin((t || 0) * 0.001 * p.speed + p.phase) * (1 - p.base) * 0.85;
-          ctx.globalAlpha = Math.max(0.25, Math.min(1, twinkle));
-          var sparkle = !reduce && twinkle > (p.base + (1 - p.base) * 0.8);
-          if (sparkle) {
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255,255,255,.8)';
-            ctx.arc(p.x, p.y, p.r * 1.6, 0, Math.PI * 2);
-            ctx.fill();
-          }
-          ctx.beginPath();
-          ctx.fillStyle = p.c;
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fill();
-        }
-        ctx.globalAlpha = 1;
-        if (!reduce) requestAnimationFrame(frame);
-      }
+      hero.addEventListener('pointermove', onMove, { passive: true });
+      hero.addEventListener('pointerleave', onLeave);
+      window.addEventListener('resize', function () { size(); layout(); });
 
       if (reduce) { frame(0); } else { requestAnimationFrame(frame); }
+    }
+
+    function layout() {
+      var scale = (Math.min(w, h) * 0.5) / 160; // ambient accent, not competing with the headline
+      particles = rawPts.map(function (p) {
+        return {
+          bx: p.x * scale, by: p.y * scale,
+          x: 0, y: 0, hx: 0, hy: 0,
+          r: 1.15 + Math.random() * 1.05,
+          c: p.c,
+          phase: Math.random() * Math.PI * 2,
+          speed: 0.8 + Math.random() * 1.6,
+          base: 0.7 + Math.random() * 0.3
+        };
+      });
+    }
+
+    function frame(t) {
+      if (!particles.length) { if (!reduce) requestAnimationFrame(frame); return; }
+      if (!reduce) angle += 0.0009; // very slow drift — a watermark, not a spinner
+      var cosA = Math.cos(angle), sinA = Math.sin(angle);
+      var cx = w * 0.15, cy = h * 0.6; // off to the side, clear of the centered headline
+      ctx.clearRect(0, 0, w, h);
+
+      var radius = 130, radiusSq = radius * radius;
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.hx = cx + (p.bx * cosA - p.by * sinA);
+        p.hy = cy + (p.bx * sinA + p.by * cosA);
+        if (!p.x) { p.x = p.hx; p.y = p.hy; }
+
+        if (pointer.active && !reduce) {
+          var dx = p.x - pointer.x, dy = p.y - pointer.y;
+          var d2 = dx * dx + dy * dy;
+          if (d2 < radiusSq) {
+            var d = Math.sqrt(d2) || 0.01;
+            var force = (1 - d / radius) * 30; // gentle, professional — not a big blowout
+            p.x += (dx / d) * force * 0.4;
+            p.y += (dy / d) * force * 0.4;
+          }
+        }
+        p.x += (p.hx - p.x) * 0.06;
+        p.y += (p.hy - p.y) * 0.06;
+
+        var twinkle = reduce ? p.base : p.base + Math.sin((t || 0) * 0.001 * p.speed + p.phase) * (1 - p.base) * 0.85;
+        ctx.globalAlpha = Math.max(0.15, Math.min(1, twinkle));
+        var sparkle = !reduce && twinkle > (p.base + (1 - p.base) * 0.82);
+        if (sparkle) {
+          ctx.beginPath();
+          ctx.fillStyle = 'rgba(255,255,255,.75)';
+          ctx.arc(p.x, p.y, p.r * 1.7, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.fillStyle = p.c;
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      if (!reduce) requestAnimationFrame(frame);
     }
   })();
 </script>
