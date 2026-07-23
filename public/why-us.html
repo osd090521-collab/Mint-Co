@@ -145,9 +145,24 @@
     backdrop-filter: blur(6px); transition: transform .2s ease, border-color .2s ease;
   }
   .cap-card:hover { transform: translateY(-3px); border-color: rgba(255,255,255,.25); }
+  .cap-card .cap-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
   .cap-card .icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; margin-bottom: 12px; }
   .cap-card h4 { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 6px; }
   .cap-card p { font-size: 12px; color: rgba(255,255,255,.6); line-height: 1.55; margin: 0; }
+  .cap-toggle {
+    flex-shrink: 0; width: 24px; height: 24px; border-radius: 50%; border: 1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.06); color: #fff; font-size: 10px; cursor: pointer; display: flex;
+    align-items: center; justify-content: center; transition: transform .3s ease, background .2s ease, border-color .2s ease;
+  }
+  .cap-toggle:hover { background: rgba(255,255,255,.16); border-color: rgba(255,255,255,.4); }
+  .cap-card.open .cap-toggle { transform: rotate(180deg); background: rgba(255,255,255,.2); }
+  .cap-more { max-height: 0; overflow: hidden; opacity: 0; margin-top: 0; transition: max-height .35s ease, opacity .3s ease, margin-top .35s ease; }
+  .cap-more p {
+    font-size: 11.5px; line-height: 1.65; color: rgba(255,255,255,.72); margin: 0; padding-top: 12px;
+    border-top: 1px solid rgba(255,255,255,.12);
+  }
+  .cap-card.open .cap-more { max-height: 260px; opacity: 1; margin-top: 10px; }
+  @media (prefers-reduced-motion: reduce) { .cap-toggle, .cap-more { transition: none; } }
   .cap-card .tag { display: inline-block; margin-top: 10px; font-size: 9.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: rgba(255,255,255,.45); }
 
   /* ── Section head ── */
@@ -357,19 +372,116 @@
 
       <!-- FULL CAPABILITY STACK -->
       <div class="cap-grid" style="margin-top:36px;">
-        <div class="cap-card reveal"><div class="icon" style="background:#1E8E68;">🌐</div><h4>Website design &amp; build</h4><p>A site built to convert, in the style that fits your brand.</p><span class="tag">Core</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#7B2FF7;">📞</div><h4>Missed-call text-back</h4><p>Auto-SMS within seconds of any missed call, every time.</p><span class="tag">Core</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#B98B5E;">🔍</div><h4>Local SEO &amp; digital profile</h4><p>Google Business Profile, structured data, ranking setup.</p><span class="tag">Core</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#00A3C4;">🎯</div><h4>Lead generation</h4><p>Systems that actively find and qualify new customers, not just wait for them.</p><span class="tag">Growth</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#6A22D6;">🎙️</div><h4>AI voice agent bookings</h4><p>An AI that answers the phone and books the job when you can't pick up.</p><span class="tag">Top spec</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#D6417A;">📱</div><h4>Social media content generation</h4><p>Ongoing content produced and scheduled so your profiles stay active.</p><span class="tag">Growth</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#C4581E;">📣</div><h4>Advertising agents &amp; ad campaigns</h4><p>Automated campaign management across Google &amp; Meta, tuned to bookings not clicks.</p><span class="tag">Growth</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#176B4F;">💳</div><h4>Payments</h4><p>Deposits, packages, or full payment taken securely, built into the site.</p><span class="tag">Core</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#4B4BD6;">🤖</div><h4>Agentic workflows</h4><p>Custom AI automations handling the repetitive admin behind the scenes.</p><span class="tag">Top spec</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#A66A1E;">📅</div><h4>Automated call bookings &amp; reminders</h4><p>Outbound reminders and rebooking calls handled without lifting a phone.</p><span class="tag">Top spec</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#E0A94A;">⭐</div><h4>5-star review funnel</h4><p>Happy customers routed to leave a public review; unhappy ones caught privately first.</p><span class="tag">Growth</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#00D4FF;">💬</div><h4>Website AI assistant</h4><p>A chat assistant on your site that answers questions and books around the clock.</p><span class="tag">Top spec</span></div>
-        <div class="cap-card reveal"><div class="icon" style="background:#22C55E;">🟢</div><h4>WhatsApp business system</h4><p>Auto-replies and booking straight through WhatsApp, where a lot of customers already are.</p><span class="tag">Top spec</span></div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#1E8E68;">🌐</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Website design & build">▾</button></div>
+          <h4>Website design &amp; build</h4><p>A site built to convert, in the style that fits your brand.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>A fast, mobile-first website designed around booking and trust, not just looks — it's what turns visitors into enquiries instead of bounces. We build it in your brand's colours and tone, then wire every other system on this list straight into it, not bolted on separately.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#7B2FF7;">📞</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Missed-call text-back">▾</button></div>
+          <h4>Missed-call text-back</h4><p>Auto-SMS within seconds of any missed call, every time.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>An automatic text fires within seconds of any missed call, naming your business and the next step — so a warm lead doesn't call the next name on Google while you're busy. We wire it into your existing business number; no new number to hand out.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#B98B5E;">🔍</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Local SEO & digital profile">▾</button></div>
+          <h4>Local SEO &amp; digital profile</h4><p>Google Business Profile, structured data, ranking setup.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Your Google Business Profile, structured data and local listings set up so you actually appear in nearby searches. Most customers pick from the first few results they see — this is what gets you on that shortlist. We manage it monthly so it doesn't quietly drift out of date.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#00A3C4;">🎯</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Lead generation">▾</button></div>
+          <h4>Lead generation</h4><p>Systems that actively find and qualify new customers, not just wait for them.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>Outbound and inbound systems that actively find new customers instead of waiting for them to search. Useful once your site is converting well and you want more traffic hitting it. Built on top of your existing booking setup so new leads flow into the same pipeline.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#6A22D6;">🎙️</div><button class="cap-toggle" aria-expanded="false" aria-label="More about AI voice agent bookings">▾</button></div>
+          <h4>AI voice agent bookings</h4><p>An AI that answers the phone and books the job when you can't pick up.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>An AI phone agent answers calls, handles common questions, and books the job when you can't pick up — so a call outside hours still turns into a booking. It connects directly to your live calendar, so it never double-books a slot.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#D6417A;">📱</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Social media content generation">▾</button></div>
+          <h4>Social media content generation</h4><p>Ongoing content produced and scheduled so your profiles stay active.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>Ongoing content produced and scheduled so your profiles stay active without you writing a single post. Consistent posting keeps your brand visible between visits and builds trust before someone reaches your site. Tone and visuals match your actual brand kit, not a generic template.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#C4581E;">📣</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Advertising agents & ad campaigns">▾</button></div>
+          <h4>Advertising agents &amp; ad campaigns</h4><p>Automated campaign management across Google &amp; Meta, tuned to bookings not clicks.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>Automated campaign management across Google and Meta, tuned toward bookings rather than raw clicks — the fastest way to put paid traffic in front of people already searching for what you do. Every campaign links back to the same tracking system, so you see real cost-per-booking, not vanity metrics.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#176B4F;">💳</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Payments">▾</button></div>
+          <h4>Payments</h4><p>Deposits, packages, or full payment taken securely, built into the site.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Secure deposit, package, or full payment collection built directly into your site via Stripe. It cuts down no-shows and gets money moving before the job even starts. Payments land straight in your own account — we never sit in the middle of your cash.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#4B4BD6;">🤖</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Agentic workflows">▾</button></div>
+          <h4>Agentic workflows</h4><p>Custom AI automations handling the repetitive admin behind the scenes.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>Custom AI automations that handle the repetitive admin behind the scenes — chasing paperwork, updating records, following up leads. Frees up hours a week that would otherwise go into manual admin. Built around your actual process, not a generic bot.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#A66A1E;">📅</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Automated call bookings & reminders">▾</button></div>
+          <h4>Automated call bookings &amp; reminders</h4><p>Outbound reminders and rebooking calls handled without lifting a phone.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>Outbound reminder calls and rebooking prompts handled automatically, without anyone lifting a phone — fewer no-shows and more repeat visits, with no extra admin. Reads straight from your live booking calendar, so reminders always match the real schedule.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#E0A94A;">⭐</div><button class="cap-toggle" aria-expanded="false" aria-label="More about 5-star review funnel">▾</button></div>
+          <h4>5-star review funnel</h4><p>Happy customers routed to leave a public review; unhappy ones caught privately first.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>Happy customers get routed to leave a public review; unhappy ones are caught privately first so issues get fixed before they go public. Builds a stronger review score steadily over time instead of leaving it to chance. Triggers automatically after each booking, so nothing depends on you remembering to ask.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#00D4FF;">💬</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Website AI assistant">▾</button></div>
+          <h4>Website AI assistant</h4><p>A chat assistant on your site that answers questions and books around the clock.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>A chat assistant live on your site that answers common questions and can book directly, any time of day — catching visitors who'd otherwise leave rather than wait for a reply. Trained on your actual services and pricing, not a generic script.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#22C55E;">🟢</div><button class="cap-toggle" aria-expanded="false" aria-label="More about WhatsApp business system">▾</button></div>
+          <h4>WhatsApp business system</h4><p>Auto-replies and booking straight through WhatsApp, where a lot of customers already are.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>Auto-replies and booking handled straight through WhatsApp, meeting people on the channel they already use instead of asking them to switch to email or a form. Messages and bookings sync into the same system as your calls and site, so nothing gets missed.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#0EA5E9;">⚡</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Technical SEO & site speed">▾</button></div>
+          <h4>Technical SEO &amp; site speed</h4><p>The behind-the-scenes fixes that decide whether Google can rank you at all.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Page speed, crawlability, mobile performance and Core Web Vitals — the technical health that decides whether Google can rank you at all. A beautiful site that loads slowly or can't be indexed properly never gets seen. Audited at launch and checked as the site grows.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#7C3AED;">✍️</div><button class="cap-toggle" aria-expanded="false" aria-label="More about SEO content & blog engine">▾</button></div>
+          <h4>SEO content &amp; blog engine</h4><p>Ongoing, search-optimised content published to keep you climbing.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>Ongoing, search-optimised articles and pages published to your site to keep it climbing in relevant searches over time. SEO compounds — the more genuinely useful content you publish, the more ways people find you. Every piece is built around real search terms your customers use, not filler.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#B98B5E;">📊</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Local rank tracking & monitoring">▾</button></div>
+          <h4>Local rank tracking &amp; monitoring</h4><p>Monthly tracking of where you actually rank, so slips get caught early.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Monthly tracking of where you actually rank for the searches that matter, so slips get caught early instead of discovered months later. Turns SEO from a one-off setup into something we actively manage. You get a plain-English report, not a spreadsheet full of jargon.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#1E8E68;">🗓️</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Smart booking calendar">▾</button></div>
+          <h4>Smart booking calendar</h4><p>Real-time scheduling with staff assignment and no-show protection.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>A real-time booking calendar with staff/resource assignment, buffer times and no-show protection built in — what actually lets customers book themselves in without a phone call. Syncs with your existing calendar so double-bookings can't happen.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#F59E0B;">🔁</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Waitlist & cancellation autofill">▾</button></div>
+          <h4>Waitlist &amp; cancellation autofill</h4><p>Cancelled slots get offered to the next person automatically.</p><span class="tag">Top spec</span>
+          <div class="cap-more"><p>When a slot cancels, the next person on your waitlist is offered it automatically — turning a lost booking into a saved one instead of empty time on the calendar. Runs off the same booking system, so there's nothing extra to manage.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#DB2777;">🎨</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Brand identity design">▾</button></div>
+          <h4>Brand identity design</h4><p>Logo, colour palette and typography, built out properly.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Logo, colour palette and typography system built out properly, not just picked to match a template. A consistent identity is what makes a business look established rather than thrown together. Everything else — the site, socials, ads — pulls from this one brand kit.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#0369A1;">📧</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Business email & domain setup">▾</button></div>
+          <h4>Business email &amp; domain setup</h4><p>A proper business email address, set up correctly so it lands in inboxes.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>A proper business email address (you@yourbusiness.co.uk) set up correctly with SPF/DKIM/DMARC so it actually lands in inboxes instead of spam. A small detail that quietly signals legitimacy to every customer who emails you. We handle the DNS setup so nothing breaks your existing domain.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#475569;">🛡️</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Hosting, uptime & security">▾</button></div>
+          <h4>Hosting, uptime &amp; security</h4><p>Managed hosting with SSL, backups and uptime monitoring.</p><span class="tag">Core</span>
+          <div class="cap-more"><p>Managed hosting with SSL, automatic backups and uptime monitoring, so the site simply stays up. A site that's down is a business that's invisible — this is the insurance policy under everything else. We're alerted the moment something goes wrong, usually before you'd notice.</p></div>
+        </div>
+        <div class="cap-card reveal">
+          <div class="cap-top"><div class="icon" style="background:#059669;">📈</div><button class="cap-toggle" aria-expanded="false" aria-label="More about Analytics & reporting dashboard">▾</button></div>
+          <h4>Analytics &amp; reporting dashboard</h4><p>Traffic, bookings, calls and reviews, in one place, in plain English.</p><span class="tag">Growth</span>
+          <div class="cap-more"><p>A simple dashboard showing traffic, bookings, calls and reviews in one place, in plain English. Answers "is this actually working?" without digging through five different tools. We set the benchmarks with you early so the numbers mean something from month one.</p></div>
+        </div>
       </div>
     </div>
   </section>
@@ -685,6 +797,17 @@
       ctx.globalAlpha = 1;
       if (!reduce) requestAnimationFrame(frame);
     }
+  })();
+
+  // Capability cards — press the ^ to expand what it is / how it helps / how we integrate it.
+  (function () {
+    document.querySelectorAll('.cap-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var card = btn.closest('.cap-card');
+        var open = card.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
   })();
 </script>
 </body>
