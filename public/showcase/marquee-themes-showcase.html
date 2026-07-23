@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Marquee Banner — 13 Theme Variations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@500;600&family=Fraunces:ital,opsz,wght@0,9..144,500;1,9..144,500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F6F5F1; color: #10211B; font-family: 'Inter', sans-serif; padding: 40px 0 120px; }
+  .page-head { max-width: 780px; margin: 0 auto 48px; padding: 0 24px; text-align: center; }
+  .page-head h1 { font-size: 30px; font-weight: 700; margin: 0 0 10px; }
+  .page-head p { font-size: 14.5px; color: #566761; line-height: 1.6; margin: 0; }
+
+  .theme-block { max-width: 1300px; margin: 0 auto 44px; padding: 0 24px; }
+  .theme-label { display: flex; align-items: baseline; gap: 10px; margin-bottom: 12px; padding-left: 4px; }
+  .theme-label .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; font-weight: 600; color: #1e8e68; background: rgba(30,142,104,.1); padding: 3px 9px; border-radius: 20px; }
+  .theme-label h2 { font-size: 15.5px; font-weight: 700; margin: 0; }
+  .theme-label .tag { font-size: 12px; color: #9A968A; }
+
+  .marquee-wrap { overflow: hidden; border-radius: 14px; position: relative; }
+  .marquee-track { display: flex; width: max-content; align-items: center; will-change: transform; }
+  .mq-group { display: flex; flex-shrink: 0; align-items: center; }
+  .mq-item { display: flex; align-items: center; white-space: nowrap; }
+  .mq-text { padding: 0 22px; font-size: 14px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; }
+  .mq-amp { font-size: 17px; }
+
+  @keyframes mq-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { animation: mq-scroll 26s linear infinite; }
+  .marquee-track:hover { animation-play-state: paused; }
+  @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+  /* ============ 1. MIDNIGHT EMERALD (refined default) ============ */
+  .t1 .marquee-wrap { background: #0C1C16; padding: 18px 0; }
+  .t1 .mq-text { color: #F5F4EF; }
+  .t1 .mq-amp { color: #2FBE85; }
+  .t1 .marquee-wrap::after { content:""; position:absolute; inset:0; background: radial-gradient(ellipse at 20% 50%, rgba(47,190,133,.10), transparent 60%); pointer-events:none; }
+
+  /* ============ 2. OBSIDIAN GOLD (luxury) ============ */
+  .t2 .marquee-wrap { background: #0A0A0A; padding: 18px 0; border: 1px solid #2A2418; }
+  .t2 .mq-text { color: #EDE6D6; font-weight: 500; letter-spacing: .18em; }
+  .t2 .mq-amp { color: #C9A24B; }
+
+  /* ============ 3. ARCTIC MINIMAL (light, editorial) ============ */
+  .t3 .marquee-wrap { background: #FFFFFF; padding: 18px 0; border: 1px solid #E7E4DA; }
+  .t3 .mq-text { color: #10211B; }
+  .t3 .mq-amp { color: #B98B5E; }
+
+  /* ============ 4. DEEP NAVY TECH (SaaS/software) ============ */
+  .t4 .marquee-wrap { background: linear-gradient(135deg,#060B18,#0B1530); padding: 18px 0; }
+  .t4 .mq-text { color: #DCE6F5; font-family: 'Space Grotesk', sans-serif; }
+  .t4 .mq-amp { color: #4FA8FF; text-shadow: 0 0 12px rgba(79,168,255,.6); }
+
+  /* ============ 5. TERRACOTTA EDITORIAL (warm, human) ============ */
+  .t5 .marquee-wrap { background: #F4EEE4; padding: 18px 0; border: 1px solid #E4D9C6; }
+  .t5 .mq-text { color: #5C2E1B; }
+  .t5 .mq-amp { color: #B5502E; }
+
+  /* ============ 6. MONO TERMINAL (dev/technical) ============ */
+  .t6 .marquee-wrap { background: #000; padding: 18px 0; }
+  .t6 .mq-text { color: #B8FFD9; font-family: 'JetBrains Mono', monospace; font-weight: 500; letter-spacing: .06em; }
+  .t6 .mq-text::before { content: "> "; color: #33E895; }
+  .t6 .mq-amp { color: #33E895; font-family: 'JetBrains Mono', monospace; }
+
+  /* ============ 7. ROSE QUARTZ (soft premium) ============ */
+  .t7 .marquee-wrap { background: linear-gradient(120deg,#FCEEF3,#F7E7EF); padding: 18px 0; }
+  .t7 .mq-text { color: #6B2A44; }
+  .t7 .mq-amp { color: #D4487A; }
+
+  /* ============ 8. CARBON STEEL (industrial/premium) ============ */
+  .t8 .marquee-wrap { background: repeating-linear-gradient(135deg, #1A1D1F 0px, #1A1D1F 2px, #17191B 2px, #17191B 4px); padding: 18px 0; border-top: 2px solid #3A3F42; border-bottom: 2px solid #3A3F42; }
+  .t8 .mq-text { color: #E4E6E7; }
+  .t8 .mq-amp { color: #E0A835; }
+
+  /* ============ 9. GLASS (glassmorphism, needs backdrop) ============ */
+  .t9-bg { background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&auto=format&fit=crop&q=70') center/cover; border-radius: 14px; padding: 26px 0; position: relative; }
+  .t9-bg::before { content:""; position:absolute; inset:0; background: linear-gradient(120deg, rgba(20,10,40,.55), rgba(0,20,40,.5)); border-radius: 14px; }
+  .t9 .marquee-wrap { background: rgba(255,255,255,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.28); padding: 16px 0; margin: 0 16px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.2); position: relative; }
+  .t9 .mq-text { color: #FFFFFF; text-shadow: 0 1px 4px rgba(0,0,0,.3); }
+  .t9 .mq-amp { color: #7EE8C6; }
+
+  /* ============ 10. INTERACTIVE COLOR-SHIFT (aurora, animated hue) ============ */
+  .t10 .marquee-wrap { background: #0A0E14; padding: 18px 0; position: relative; overflow: hidden; }
+  .t10 .marquee-wrap::before {
+    content: ""; position: absolute; inset: -40%;
+    background: conic-gradient(from 0deg, #7B2FF7, #00D4FF, #1E8E68, #FF3DAD, #7B2FF7);
+    filter: blur(60px); opacity: .35;
+    animation: t10-spin 10s linear infinite;
+  }
+  @keyframes t10-spin { to { transform: rotate(360deg); } }
+  .t10 .mq-text { position: relative; color: #F5F3FF; }
+  .t10 .mq-amp { position: relative; background: linear-gradient(90deg,#00D4FF,#7B2FF7,#FF3DAD,#00D4FF); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: t10-hue 4s linear infinite; font-weight: 700; }
+  @keyframes t10-hue { to { background-position: 300% 0; } }
+  @media (prefers-reduced-motion: reduce) { .t10 .marquee-wrap::before, .t10 .mq-amp { animation: none; } }
+
+  /* ============ 11. INTERACTIVE — cursor-reactive spotlight + shifting text gradient ============ */
+  .t11 .marquee-wrap { background: #0D1117; padding: 18px 0; position: relative; --mx: 50%; --my: 50%; }
+  .t11 .marquee-wrap::before {
+    content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 14px;
+    background: radial-gradient(320px circle at var(--mx) var(--my), rgba(30,142,104,.28), transparent 65%);
+    transition: background .05s linear;
+  }
+  .t11 .mq-text {
+    position: relative;
+    background: linear-gradient(90deg, #F5F4EF, #1e8e68, #4FA8FF, #F5F4EF);
+    background-size: 300% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    animation: t11-shift 8s ease-in-out infinite;
+  }
+  @keyframes t11-shift { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+  .t11 .mq-amp { position: relative; color: #4FA8FF; }
+  @media (prefers-reduced-motion: reduce) { .t11 .mq-text { animation: none; } }
+
+  /* ============ 12. APPLE FROST — Vision Pro-grade glass, restrained motion ============ */
+  .t12-bg { position: relative; border-radius: 16px; padding: 30px 0; background: linear-gradient(135deg,#F4F4F6,#EDEEF2); overflow: hidden; }
+  .t12-blob { position: absolute; border-radius: 50%; filter: blur(50px); opacity: .55; animation: t12-drift 18s ease-in-out infinite; }
+  .t12-blob.a { width: 260px; height: 260px; background: radial-gradient(circle,#A8C8FF,transparent 70%); top: -60px; left: 8%; }
+  .t12-blob.b { width: 300px; height: 300px; background: radial-gradient(circle,#E3B8F5,transparent 70%); bottom: -100px; left: 40%; animation-delay: -6s; }
+  .t12-blob.c { width: 240px; height: 240px; background: radial-gradient(circle,#B8F0DC,transparent 70%); top: -40px; right: 6%; animation-delay: -12s; }
+  @keyframes t12-drift { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(14px,-10px) scale(1.06); } }
+  .t12 .marquee-wrap { position: relative; background: rgba(255,255,255,.55); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid rgba(255,255,255,.6); box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 20px 50px rgba(30,40,60,.10); padding: 17px 0; margin: 0 16px; border-radius: 14px; }
+  .t12 .mq-text { color: #1D1D1F; font-weight: 590; letter-spacing: -0.01em; text-transform: none; font-size: 15px; }
+  .t12 .mq-amp { color: #0071E3; font-weight: 600; }
+  @media (prefers-reduced-motion: reduce) { .t12-blob { animation: none; } }
+
+  /* ============ 13. PINTEREST BLOOM — painterly color-blocked collage, glass card, serif accent ============ */
+  .t13-bg { position: relative; border-radius: 16px; padding: 30px 0; overflow: hidden; background: #FBF7F0; }
+  .t13-blob { position: absolute; border-radius: 44% 56% 62% 38%/48% 42% 58% 52%; filter: blur(42px); opacity: .75; animation: t13-morph 16s ease-in-out infinite; }
+  .t13-blob.a { width: 280px; height: 260px; background: radial-gradient(circle,#F2B9A6,transparent 72%); top: -70px; left: 4%; }
+  .t13-blob.b { width: 320px; height: 300px; background: radial-gradient(circle,#9FD9C4,transparent 72%); bottom: -110px; left: 36%; animation-delay: -5s; }
+  .t13-blob.c { width: 260px; height: 240px; background: radial-gradient(circle,#F5D68A,transparent 72%); top: -50px; right: 8%; animation-delay: -10s; }
+  .t13-blob.d { width: 220px; height: 220px; background: radial-gradient(circle,#D6A9E0,transparent 72%); bottom: -80px; right: 22%; animation-delay: -13s; }
+  @keyframes t13-morph { 0%,100% { border-radius: 44% 56% 62% 38%/48% 42% 58% 52%; transform: scale(1); } 50% { border-radius: 58% 42% 40% 60%/54% 60% 40% 46%; transform: scale(1.08); } }
+  .t13 .marquee-wrap { position: relative; background: rgba(255,255,255,.5); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255,255,255,.65); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 24px 60px rgba(90,60,40,.12); padding: 18px 0; margin: 0 16px; border-radius: 14px; }
+  .t13 .mq-text { color: #4A2E22; font-weight: 600; letter-spacing: .04em; text-transform: none; font-size: 15px; }
+  .t13 .mq-amp { font-family: 'Fraunces', serif; font-style: italic; font-weight: 500; font-size: 20px; color: #C9633B; }
+  @media (prefers-reduced-motion: reduce) { .t13-blob { animation: none; } }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Ticker Banner — 13 Theme Directions</h1>
+  <p>Same "Clean, premium websites & Built to work beautifully on mobile & Built to be found on Google" copy, restyled 13 ways, from restrained to fully interactive. Hover any strip to pause it — same accessibility contract as the live component (duplicate track + <code>-50%</code> shift, reduced-motion kill switch).</p>
+</div>
+
+<!-- 1 -->
+<div class="theme-block t13">
+  <div class="theme-label"><h2>Pinterest Bloom</h2><span class="tag">— premium, painterly color-blocked collage behind glass, serif "&"</span></div>
+  <div class="t13-bg">
+    <div class="t13-blob a"></div><div class="t13-blob b"></div><div class="t13-blob c"></div><div class="t13-blob d"></div>
+    <div class="marquee-wrap"><div class="marquee-track" id="track13"></div></div>
+  </div>
+</div>
+
+<div class="theme-block t12">
+  <div class="theme-label"><h2>Apple Frost</h2><span class="tag">— premium, Vision Pro-grade glass, restrained ambient motion</span></div>
+  <div class="t12-bg">
+    <div class="t12-blob a"></div><div class="t12-blob b"></div><div class="t12-blob c"></div>
+    <div class="marquee-wrap"><div class="marquee-track" id="track12"></div></div>
+  </div>
+</div>
+
+<!-- 13 — PINTEREST BLOOM -->
+<div class="theme-block t11">
+  <div class="theme-label"><h2>Spotlight Drift</h2><span class="tag">— interactive, cursor-tracked glow + slow gradient-shifting text</span></div>
+  <div class="marquee-wrap" id="spotlightWrap"><div class="marquee-track" id="track11"></div></div>
+</div>
+
+<!-- 12 — APPLE FROST -->
+<div class="theme-block t10">
+  <div class="theme-label"><h2>Aurora Shift</h2><span class="tag">— interactive, ambient conic-gradient hue rotation, "&" gradient-cycles</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track10"></div></div>
+</div>
+
+<!-- 11 — INTERACTIVE CURSOR SPOTLIGHT -->
+<div class="theme-block t9">
+  <div class="theme-label"><h2>Glass</h2><span class="tag">— glassmorphism over photography</span></div>
+  <div class="t9-bg"><div class="marquee-wrap"><div class="marquee-track" id="track9"></div></div></div>
+</div>
+
+<!-- 10 — INTERACTIVE COLOR SHIFT -->
+<div class="theme-block t8">
+  <div class="theme-label"><h2>Carbon Steel</h2><span class="tag">— industrial, engineering-grade</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track8"></div></div>
+</div>
+
+<!-- 9 — GLASS -->
+<div class="theme-block t7">
+  <div class="theme-label"><h2>Rose Quartz</h2><span class="tag">— soft premium, beauty/wellness verticals</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track7"></div></div>
+</div>
+
+<!-- 8 -->
+<div class="theme-block t6">
+  <div class="theme-label"><h2>Mono Terminal</h2><span class="tag">— dev/technical, AI-engineering studio</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track6"></div></div>
+</div>
+
+<!-- 7 -->
+<div class="theme-block t5">
+  <div class="theme-label"><h2>Terracotta Editorial</h2><span class="tag">— warm, human, handcrafted</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track5"></div></div>
+</div>
+
+<!-- 6 -->
+<div class="theme-block t4">
+  <div class="theme-label"><h2>Deep Navy Tech</h2><span class="tag">— SaaS / software studio feel</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track4"></div></div>
+</div>
+
+<!-- 5 -->
+<div class="theme-block t3">
+  <div class="theme-label"><h2>Arctic Minimal</h2><span class="tag">— light, editorial, quiet confidence</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track3"></div></div>
+</div>
+
+<!-- 4 -->
+<div class="theme-block t2">
+  <div class="theme-label"><h2>Obsidian Gold</h2><span class="tag">— luxury, high-end retail</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track2"></div></div>
+</div>
+
+<!-- 3 -->
+<div class="theme-block t1">
+  <div class="theme-label"><h2>Midnight Emerald</h2><span class="tag">— refined version of current default</span></div>
+  <div class="marquee-wrap"><div class="marquee-track" id="track1"></div></div>
+</div>
+
+<!-- 2 -->
+<script>
+  var services = ["Clean, premium websites", "Built to work beautifully on mobile", "Built to be found on Google"];
+
+  function buildGroup() {
+    var group = document.createElement('div');
+    group.className = 'mq-group';
+    services.forEach(function (s) {
+      var item = document.createElement('span');
+      item.className = 'mq-item';
+      item.innerHTML = '<span class="mq-text">' + s + '</span><span class="mq-amp">&amp;</span>';
+      group.appendChild(item);
+    });
+    return group;
+  }
+
+  for (var i = 1; i <= 13; i++) {
+    var track = document.getElementById('track' + i);
+    if (!track) continue;
+    track.appendChild(buildGroup());
+    var hidden = buildGroup();
+    hidden.setAttribute('aria-hidden', 'true');
+    track.appendChild(hidden);
+  }
+
+  // Spotlight cursor tracking for theme 11
+  var spotlightWrap = document.getElementById('spotlightWrap');
+  if (spotlightWrap) {
+    spotlightWrap.addEventListener('mousemove', function (e) {
+      var r = spotlightWrap.getBoundingClientRect();
+      var x = ((e.clientX - r.left) / r.width) * 100;
+      var y = ((e.clientY - r.top) / r.height) * 100;
+      spotlightWrap.style.setProperty('--mx', x + '%');
+      spotlightWrap.style.setProperty('--my', y + '%');
+    });
+  }
+</script>
+
+</body>
+</html>

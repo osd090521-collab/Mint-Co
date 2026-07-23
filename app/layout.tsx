@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Geist, JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { Fraunces, Geist } from "next/font/google";
 import "./globals.css";
 import { Footer } from "./components/Footer";
 import { Header } from "./components/Header";
@@ -16,22 +16,7 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
-  style: ["normal", "italic"],
   axes: ["opsz", "SOFT"],
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-space-grotesk",
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  display: "swap",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  variable: "--font-jetbrains-mono",
-  subsets: ["latin"],
-  weight: ["500", "600"],
-  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -118,7 +103,7 @@ export default function RootLayout({
   return (
     <html
       lang="en-GB"
-      className={`${geistSans.variable} ${fraunces.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${fraunces.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col bg-bg text-slate">
         <script

@@ -4,7 +4,6 @@ import { Cta } from "./components/Cta";
 import { Eyebrow } from "./components/Eyebrow";
 import { Reveal } from "./components/Reveal";
 import { ServicesMarquee } from "./components/ServicesMarquee";
-import { ServicesMarqueeGallery } from "./components/ServicesMarqueeGallery";
 import {
   auditWhatsApp,
   ctaConsequence,
@@ -81,7 +80,6 @@ export default function Home() {
       </section>
 
       <ServicesMarquee />
-      <ServicesMarqueeGallery />
 
       <div className="sheets">
         {/* THE PROBLEM — standard padding 64/96 */}
