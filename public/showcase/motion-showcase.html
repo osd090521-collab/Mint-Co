@@ -283,6 +283,53 @@
     .sheet { scroll-behavior: auto; }
   }
 
+  /* ---------- select-to-cart — pick the feature you like, send the list straight through ---------- */
+  .pick-btn {
+    display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(30,142,104,.08); border: 1.5px solid #C9E3D6; color: #1e8e68; font-size: 13px; font-weight: 800;
+    margin-right: 8px; vertical-align: 3px; cursor: pointer; flex-shrink: 0;
+    transition: all .2s cubic-bezier(.2,.7,.2,1);
+  }
+  .pick-btn:hover { transform: scale(1.15); border-color: #1e8e68; }
+  .pick-btn.on { background: linear-gradient(135deg, #1e8e68, #176b4f); border-color: #176b4f; color: #fff; }
+  .feature-section.is-picked { background: rgba(30,142,104,.04); }
+
+  .cart-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; align-items: center; gap: 8px;
+    background: #10211B; color: #fff; border: none; border-radius: 30px; padding: 12px 18px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .cart-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .cart-fab .cart-count {
+    background: #1e8e68; min-width: 20px; height: 20px; border-radius: 10px; font-size: 11.5px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
+  .cart-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 500; width: min(320px, calc(100vw - 48px)); background: #fff;
+    border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.2); border: 1px solid #E7E4DA; overflow: hidden;
+    opacity: 0; transform: translateY(12px) scale(.97); pointer-events: none; transition: all .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .cart-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .cart-panel-head { padding: 16px 18px 12px; border-bottom: 1px solid #E7E4DA; }
+  .cart-panel-head h4 { font-size: 14.5px; font-weight: 700; margin: 0 0 2px; }
+  .cart-panel-head p { font-size: 12px; color: #6B6B63; margin: 0; }
+  .cart-items { list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
+  .cart-items li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px;
+    font-size: 13px; font-weight: 600; border-radius: 8px;
+  }
+  .cart-items li:hover { background: #F6F5F1; }
+  .cart-items button { background: none; border: none; color: #B0AEA1; font-size: 15px; cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .cart-items button:hover { color: #a34a26; }
+  .cart-empty { padding: 22px 18px; text-align: center; font-size: 12.5px; color: #9A968A; }
+  .cart-send {
+    display: block; width: calc(100% - 24px); margin: 6px 12px 12px; text-align: center; text-decoration: none;
+    background: linear-gradient(135deg, #1e8e68, #176b4f); color: #fff; font-size: 13.5px; font-weight: 700;
+    padding: 11px; border-radius: 10px; transition: transform .2s ease;
+  }
+  .cart-send:hover { transform: translateY(-1px); }
+  .cart-send.disabled { pointer-events: none; opacity: .4; }
+
 </style>
 </head>
 <body>
@@ -322,8 +369,8 @@
 </div>
 
 <!-- Custom Cursor Demo -->
-<div class="feature-section reveal" data-d="1">
-  <h2>Custom Cursor System</h2>
+<div class="feature-section reveal pickable" data-d="1" data-model="Custom Cursor System">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Custom Cursor System to selection">+</span>Custom Cursor System</h2>
   <div class="feature-demo">
     <p>Move your mouse around — you'll see a custom cursor with a dot, ring, and glowing aura. It responds to hover states on interactive elements.</p>
     <button class="shine-btn">Hover to see the cursor expand</button>
@@ -331,8 +378,8 @@
 </div>
 
 <!-- Rotating Badges -->
-<div class="feature-section reveal" data-d="2">
-  <h2>Rotating Elements</h2>
+<div class="feature-section reveal pickable" data-d="2" data-model="Rotating Elements">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Rotating Elements to selection">+</span>Rotating Elements</h2>
   <div class="feature-demo">
     <p>Badges and elements can rotate continuously to draw attention:</p>
     <div style="margin-top: 20px;">
@@ -343,8 +390,8 @@
 </div>
 
 <!-- Glow Effects -->
-<div class="feature-section reveal" data-d="3">
-  <h2>Glow & Shine Effects</h2>
+<div class="feature-section reveal pickable" data-d="3" data-model="Glow &amp; Shine Effects">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Glow &amp; Shine Effects to selection">+</span>Glow & Shine Effects</h2>
   <div class="feature-demo">
     <p class="glow-text">Text with a subtle glow emanates premium quality.</p>
     <p>And buttons with shine-sweep on hover:</p>
@@ -353,16 +400,16 @@
 </div>
 
 <!-- Theme Toggle Demo -->
-<div class="feature-section reveal" data-d="4">
-  <h2>Light / Dark Theme</h2>
+<div class="feature-section reveal pickable" data-d="4" data-model="Light / Dark Theme">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Light / Dark Theme to selection">+</span>Light / Dark Theme</h2>
   <div class="feature-demo">
     <p>Click the moon/sun button in the bottom-right to toggle between light and dark themes. The entire page adapts smoothly.</p>
   </div>
 </div>
 
 <!-- Before/After Slider Demo -->
-<div class="feature-section reveal" data-d="5">
-  <h2>Before/After Comparison</h2>
+<div class="feature-section reveal pickable" data-d="5" data-model="Before/After Comparison">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Before/After Comparison to selection">+</span>Before/After Comparison</h2>
   <div class="feature-demo" style="text-align: center;">
     <p>Before and after comparisons show transformation clearly:</p>
     <div class="before-after">
@@ -387,8 +434,8 @@
 </div>
 
 <!-- Layout Switcher Demo -->
-<div class="feature-section reveal" data-d="6">
-  <h2>Design System Flexibility</h2>
+<div class="feature-section reveal pickable" data-d="6" data-model="Design System Flexibility">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Design System Flexibility to selection">+</span>Design System Flexibility</h2>
   <div class="feature-demo">
     <p>Switch between 6 different layout approaches to see how the same components work across different industries:</p>
     <div class="layout-tabs">
@@ -404,8 +451,8 @@
 </div>
 
 <!-- Book Page Flip Demo -->
-<div class="feature-section reveal" data-d="7">
-  <h2>Book / Page Flip Effect</h2>
+<div class="feature-section reveal pickable" data-d="7" data-model="Book / Page Flip Effect">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Book / Page Flip Effect to selection">+</span>Book / Page Flip Effect</h2>
   <div class="feature-demo">
     <p>Scroll through this section to see pages flip like a book:</p>
     <div class="book-flip-container">
@@ -426,8 +473,8 @@
 </div>
 
 <!-- Live Work Preview -->
-<div class="feature-section reveal" data-d="8">
-  <h2>Real Work: Range Automotive</h2>
+<div class="feature-section reveal pickable" data-d="8" data-model="Real Work: Range Automotive">
+  <h2><span class="pick-btn" role="button" tabindex="0" aria-label="Add Real Work: Range Automotive to selection">+</span>Real Work: Range Automotive</h2>
   <div class="feature-demo">
     <p>Here's a real project we built — a mobile mechanic service website:</p>
     <div style="margin-top: 20px; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
@@ -444,6 +491,19 @@
 <div class="showcase-nav">
   <a href="index.html">← Back to showcase</a>
   <a href="index.html" class="next">Back to main showcase →</a>
+</div>
+
+<!-- SELECTION CART — pick the features you like, send the list straight through -->
+<button type="button" class="cart-fab" id="cartFab" aria-label="Open selection cart">
+  🛒 <span>Selection</span> <span class="cart-count" id="cartCount">0</span>
+</button>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h4>Your selection</h4>
+    <p>Pick what you like, we'll get it sent through.</p>
+  </div>
+  <ul class="cart-items" id="cartItems"></ul>
+  <a href="#" class="cart-send disabled" id="cartSend" target="_blank" rel="noopener">Send selection →</a>
 </div>
 
 <script>
@@ -538,6 +598,97 @@
   var theme = localStorage.getItem('theme') || 'light';
   document.documentElement.dataset.theme = theme;
   document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+
+  // Selection cart — pick the features you like, send the list straight through.
+  // Shares sessionStorage with the showcase hub and other showcase pages.
+  (function () {
+    var fab = document.getElementById('cartFab');
+    var panel = document.getElementById('cartPanel');
+    var itemsEl = document.getElementById('cartItems');
+    var countEl = document.getElementById('cartCount');
+    var sendEl = document.getElementById('cartSend');
+    if (!fab || !panel) return;
+
+    var STORAGE_KEY = 'mintco-showcase-selection';
+    var selection = [];
+    try { selection = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; } catch (e) { selection = []; }
+
+    function pickables() { return document.querySelectorAll('.pickable[data-model]'); }
+    function save() {
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(selection)); } catch (e) {}
+    }
+    function syncItemStates() {
+      pickables().forEach(function (item) {
+        var name = item.getAttribute('data-model');
+        var on = selection.indexOf(name) !== -1;
+        item.classList.toggle('is-picked', on);
+        var btn = item.querySelector('.pick-btn');
+        if (btn) { btn.classList.toggle('on', on); btn.textContent = on ? '✓' : '+'; }
+      });
+    }
+    function render() {
+      countEl.textContent = selection.length;
+      itemsEl.innerHTML = '';
+      if (!selection.length) {
+        itemsEl.innerHTML = '<li class="cart-empty">Nothing selected yet — hit + on anything you like the look of.</li>';
+      } else {
+        selection.forEach(function (name) {
+          var li = document.createElement('li');
+          var span = document.createElement('span');
+          span.textContent = name;
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.setAttribute('aria-label', 'Remove ' + name);
+          rm.textContent = '×';
+          rm.addEventListener('click', function () { toggle(name); });
+          li.appendChild(span);
+          li.appendChild(rm);
+          itemsEl.appendChild(li);
+        });
+      }
+      if (selection.length) {
+        var text = "Hi! I'd like to customize my website with these options:\n\n" +
+          selection.map(function (n) { return '• ' + n; }).join('\n') +
+          "\n\nCan we chat about building something like this?";
+        sendEl.href = 'https://wa.me/447504828622?text=' + encodeURIComponent(text);
+        sendEl.classList.remove('disabled');
+      } else {
+        sendEl.href = '#';
+        sendEl.classList.add('disabled');
+      }
+      syncItemStates();
+      save();
+    }
+    function toggle(name) {
+      var idx = selection.indexOf(name);
+      if (idx === -1) selection.push(name); else selection.splice(idx, 1);
+      render();
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pick-btn');
+      if (!btn) return;
+      var item = btn.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (!e.target.classList || !e.target.classList.contains('pick-btn')) return;
+      var item = e.target.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    fab.addEventListener('click', function () { panel.classList.toggle('open'); });
+    document.addEventListener('click', function (e) {
+      if (!panel.contains(e.target) && !fab.contains(e.target)) panel.classList.remove('open');
+    });
+    render();
+  })();
 </script>
 
 

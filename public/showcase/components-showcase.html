@@ -100,7 +100,7 @@
 
   /* ── CARDS ── */
   .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
-  .card { border-radius: 14px; padding: 20px; }
+  .card { position: relative; border-radius: 14px; padding: 20px; }
   .card-service { background: #FAFAF7; border-top: 3px solid #1E8E68; }
   .card-service .n { color: #B98B5E; font-size: 10.5px; font-weight: 700; margin-bottom: 8px; }
   .card-service .t { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
@@ -116,7 +116,7 @@
 
   /* ── TESTIMONIALS ── */
   .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
-  .testi { background: #FAFAF7; border-radius: 14px; padding: 20px; }
+  .testi { position: relative; background: #FAFAF7; border-radius: 14px; padding: 20px; }
   .testi .stars { color: #E0A94A; font-size: 13px; margin-bottom: 10px; }
   .testi p { font-size: 13px; color: #3D3D38; line-height: 1.6; margin: 0 0 14px; }
   .testi .who { display: flex; align-items: center; gap: 10px; }
@@ -247,10 +247,78 @@
     .sheet { scroll-behavior: auto; }
   }
 
+  /* ---------- select-to-cart — pick the style you like, send the list straight through ---------- */
+  .panel { position: relative; }
+  .pick-btn {
+    display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(30,142,104,.08); border: 1.5px solid #C9E3D6; color: #1e8e68; font-size: 12px; font-weight: 800;
+    margin-right: 6px; vertical-align: -3px; cursor: pointer; flex-shrink: 0;
+    transition: all .2s cubic-bezier(.2,.7,.2,1);
+  }
+  .pick-btn:hover { transform: scale(1.15); border-color: #1e8e68; }
+  .pick-btn.on { background: linear-gradient(135deg, #1e8e68, #176b4f); border-color: #176b4f; color: #fff; }
+  .swatch-dark .pick-btn { background: rgba(255,255,255,.1); border-color: rgba(255,255,255,.35); color: #fff; }
+  .is-picked { outline: 2px solid rgba(30,142,104,.4); outline-offset: -2px; border-radius: 18px; }
+  .footer-block { position: relative; }
+  .pick-btn.abs {
+    position: absolute; top: 14px; right: 14px; z-index: 3; width: 28px; height: 28px; margin: 0;
+    background: rgba(255,255,255,.9); box-shadow: 0 4px 10px rgba(0,0,0,.1);
+  }
+  .footer-dark .pick-btn.abs { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.3); color: #fff; }
+
+  .cart-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; align-items: center; gap: 8px;
+    background: #10211B; color: #fff; border: none; border-radius: 30px; padding: 12px 18px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .cart-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .cart-fab .cart-count {
+    background: #1e8e68; min-width: 20px; height: 20px; border-radius: 10px; font-size: 11.5px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
+  .cart-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 500; width: min(320px, calc(100vw - 48px)); background: #fff;
+    border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.2); border: 1px solid #E7E4DA; overflow: hidden;
+    opacity: 0; transform: translateY(12px) scale(.97); pointer-events: none; transition: all .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .cart-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .cart-panel-head { padding: 16px 18px 12px; border-bottom: 1px solid #E7E4DA; }
+  .cart-panel-head h4 { font-size: 14.5px; font-weight: 700; margin: 0 0 2px; }
+  .cart-panel-head p { font-size: 12px; color: #6B6B63; margin: 0; }
+  .cart-items { list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
+  .cart-items li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px;
+    font-size: 13px; font-weight: 600; border-radius: 8px;
+  }
+  .cart-items li:hover { background: #F6F5F1; }
+  .cart-items button { background: none; border: none; color: #B0AEA1; font-size: 15px; cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .cart-items button:hover { color: #a34a26; }
+  .cart-empty { padding: 22px 18px; text-align: center; font-size: 12.5px; color: #9A968A; }
+  .cart-send {
+    display: block; width: calc(100% - 24px); margin: 6px 12px 12px; text-align: center; text-decoration: none;
+    background: linear-gradient(135deg, #1e8e68, #176b4f); color: #fff; font-size: 13.5px; font-weight: 700;
+    padding: 11px; border-radius: 10px; transition: transform .2s ease;
+  }
+  .cart-send:hover { transform: translateY(-1px); }
+  .cart-send.disabled { pointer-events: none; opacity: .4; }
+
+  /* Individual buttons pick their own way in, not the whole style group at once */
+  .btn-pick { position: relative; display: inline-flex; }
+  .btn-pick .pick-btn {
+    position: absolute; top: -8px; right: -8px; z-index: 3; margin: 0;
+    background: #fff; box-shadow: 0 2px 6px rgba(0,0,0,.18);
+  }
+  .swatch-dark .btn-pick .pick-btn { background: #1A1A2E; border-color: rgba(255,255,255,.35); color: #fff; }
+  .btn-pick.is-picked .pick-btn { box-shadow: 0 2px 8px rgba(30,142,104,.4); }
 </style>
 </head>
 <body>
 <a href="index.html" style="position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#10211B;color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25);">&larr; Back to showcase</a>
+<button class="theme-toggle" id="theme-btn">🌙</button>
+<div id="progress"></div>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-glow"></div>
 
   <div class="intro">
     <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
@@ -283,35 +351,35 @@
     <div class="panel">
       <div class="panel-label">Warm &amp; Trusted</div>
       <div class="row">
-        <button class="btn btn-warm-primary">Book now</button>
-        <button class="btn btn-warm-secondary">Learn more</button>
-        <button class="btn btn-warm-outline">View services</button>
+        <span class="btn-pick pickable" data-model="Book now — Warm & Trusted"><button class="btn btn-warm-primary">Book now</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Book now (Warm & Trusted) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Learn more — Warm & Trusted"><button class="btn btn-warm-secondary">Learn more</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Learn more (Warm & Trusted) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="View services — Warm & Trusted"><button class="btn btn-warm-outline">View services</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add View services (Warm & Trusted) to selection">+</span></span>
         <button class="btn btn-warm-ghost">Cancel</button>
         <button class="btn btn-warm-disabled" disabled>Fully booked</button>
-        <button class="btn btn-warm-primary btn-sm">Small</button>
-        <button class="btn btn-warm-primary btn-lg">Large button</button>
-        <button class="btn btn-warm-primary btn-icon">→</button>
+        <span class="btn-pick pickable" data-model="Small button — Warm & Trusted"><button class="btn btn-warm-primary btn-sm">Small</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Small button (Warm & Trusted) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Large button — Warm & Trusted"><button class="btn btn-warm-primary btn-lg">Large button</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Large button (Warm & Trusted) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Icon button — Warm & Trusted"><button class="btn btn-warm-primary btn-icon">→</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Icon button (Warm & Trusted) to selection">+</span></span>
       </div>
     </div>
 
     <div class="panel swatch-dark">
       <div class="panel-label" style="color:#8B86A8">Bold &amp; Futuristic / Nebula</div>
       <div class="row">
-        <button class="btn btn-neb-primary">Book now</button>
-        <button class="btn btn-neb-glow">Get started</button>
-        <button class="btn btn-neb-outline">View services</button>
-        <button class="btn btn-neb-primary btn-sm">Small</button>
-        <button class="btn btn-neb-primary btn-lg">Large button</button>
-        <button class="btn btn-neb-primary btn-icon">→</button>
+        <span class="btn-pick pickable" data-model="Book now — Bold & Futuristic"><button class="btn btn-neb-primary">Book now</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Book now (Bold & Futuristic) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Get started — Bold & Futuristic"><button class="btn btn-neb-glow">Get started</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Get started (Bold & Futuristic) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="View services — Bold & Futuristic"><button class="btn btn-neb-outline">View services</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add View services (Bold & Futuristic) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Small button — Bold & Futuristic"><button class="btn btn-neb-primary btn-sm">Small</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Small button (Bold & Futuristic) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Large button — Bold & Futuristic"><button class="btn btn-neb-primary btn-lg">Large button</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Large button (Bold & Futuristic) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Icon button — Bold & Futuristic"><button class="btn btn-neb-primary btn-icon">→</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Icon button (Bold & Futuristic) to selection">+</span></span>
       </div>
     </div>
 
     <div class="panel">
       <div class="panel-label">Minimal &amp; Simple</div>
       <div class="row">
-        <button class="btn btn-min-primary">Book now</button>
-        <button class="btn btn-min-outline">Learn more</button>
-        <button class="btn btn-min-underline">View all services</button>
+        <span class="btn-pick pickable" data-model="Book now — Minimal & Simple"><button class="btn btn-min-primary">Book now</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Book now (Minimal & Simple) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Learn more — Minimal & Simple"><button class="btn btn-min-outline">Learn more</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add Learn more (Minimal & Simple) to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="View all services — Minimal & Simple"><button class="btn btn-min-underline">View all services</button><span class="pick-btn" role="button" tabindex="0" aria-label="Add View all services (Minimal & Simple) to selection">+</span></span>
       </div>
     </div>
   </div>
@@ -323,8 +391,8 @@
       <p>Booking forms, contact forms, enquiry boxes — clean fields with clear labels, built to
         feel quick to fill in on mobile.</p>
     </div>
-    <div class="panel">
-      <div class="panel-label">Booking form example</div>
+    <div class="panel pickable" data-model="Booking form style">
+      <div class="panel-label"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Booking form style to selection">+</span>Booking form example</div>
       <div class="field-row" style="margin-bottom:14px;">
         <div class="field"><label>Full name</label><input type="text" placeholder="Jane Smith"></div>
         <div class="field"><label>Phone number</label><input type="text" placeholder="07123 456789"></div>
@@ -353,16 +421,16 @@
       <h2>Navigation bars</h2>
       <p>What sits at the top of every page — logo, links, book button.</p>
     </div>
-    <div class="panel">
-      <div class="panel-label">Light</div>
+    <div class="panel pickable" data-model="Light navbar">
+      <div class="panel-label"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Light navbar to selection">+</span>Light</div>
       <div class="navbar navbar-light">
         <div class="nav-logo">Your Business</div>
         <div class="nav-links"><span>Services</span><span>Reviews</span><span>About</span><span>Contact</span></div>
         <button class="btn btn-warm-primary btn-sm">Book now</button>
       </div>
     </div>
-    <div class="panel" style="background:transparent;box-shadow:none;padding:0;">
-      <div class="panel-label">Dark</div>
+    <div class="panel pickable" data-model="Dark navbar" style="background:transparent;box-shadow:none;padding:0;">
+      <div class="panel-label"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Dark navbar to selection">+</span>Dark</div>
       <div class="navbar navbar-dark">
         <div class="nav-logo">Your Business</div>
         <div class="nav-links"><span>Services</span><span>Reviews</span><span>About</span><span>Contact</span></div>
@@ -381,17 +449,17 @@
     <div class="panel">
       <div class="panel-label">Service cards</div>
       <div class="cards-grid">
-        <div class="card card-service"><div class="n">01</div><div class="t">Cuts &amp; styling</div><div class="d">From £25 · 45 min</div></div>
-        <div class="card card-service"><div class="n">02</div><div class="t">Colour</div><div class="d">From £45 · 90 min</div></div>
-        <div class="card card-service"><div class="n">03</div><div class="t">Treatments</div><div class="d">From £20 · 30 min</div></div>
+        <div class="card card-service pickable" data-model="Service card — Cuts & styling"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Cuts & styling service card to selection">+</span><div class="n">01</div><div class="t">Cuts &amp; styling</div><div class="d">From £25 · 45 min</div></div>
+        <div class="card card-service pickable" data-model="Service card — Colour"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Colour service card to selection">+</span><div class="n">02</div><div class="t">Colour</div><div class="d">From £45 · 90 min</div></div>
+        <div class="card card-service pickable" data-model="Service card — Treatments"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Treatments service card to selection">+</span><div class="n">03</div><div class="t">Treatments</div><div class="d">From £20 · 30 min</div></div>
       </div>
     </div>
     <div class="panel">
       <div class="panel-label">Stat cards</div>
       <div class="cards-grid">
-        <div class="card card-stat"><div class="v">4.9★</div><div class="l">Average rating</div></div>
-        <div class="card card-stat"><div class="v">1,200+</div><div class="l">Happy customers</div></div>
-        <div class="card card-stat"><div class="v">8 yrs</div><div class="l">In business</div></div>
+        <div class="card card-stat pickable" data-model="Stat card — Average rating"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Average rating stat card to selection">+</span><div class="v">4.9★</div><div class="l">Average rating</div></div>
+        <div class="card card-stat pickable" data-model="Stat card — Happy customers"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Happy customers stat card to selection">+</span><div class="v">1,200+</div><div class="l">Happy customers</div></div>
+        <div class="card card-stat pickable" data-model="Stat card — In business"><span class="pick-btn abs" role="button" tabindex="0" aria-label="Add In business stat card to selection">+</span><div class="v">8 yrs</div><div class="l">In business</div></div>
       </div>
     </div>
   </div>
@@ -404,19 +472,22 @@
     </div>
     <div class="panel">
       <div class="cards-grid">
-        <div class="card card-price">
+        <div class="card card-price pickable" data-model="Pricing card — Essentials">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Essentials pricing card to selection">+</span>
           <div class="t">Essentials</div>
           <div class="p">£25 <span>/ visit</span></div>
           <ul><li>✓ Consultation</li><li>✓ Wash &amp; finish</li><li>✓ Aftercare tips</li></ul>
           <button class="btn btn-warm-outline" style="background:#fff;">Book Essentials</button>
         </div>
-        <div class="card card-price" style="background:#176B4F;">
+        <div class="card card-price pickable" data-model="Pricing card — Signature" style="background:#176B4F;">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Signature pricing card to selection">+</span>
           <div class="t">Most popular · Signature</div>
           <div class="p">£45 <span>/ visit</span></div>
           <ul><li>✓ Everything in Essentials</li><li>✓ Premium products</li><li>✓ 15% off next visit</li></ul>
           <button class="btn btn-warm-primary" style="background:#fff;color:#176B4F;">Book Signature</button>
         </div>
-        <div class="card card-price">
+        <div class="card card-price pickable" data-model="Pricing card — Full treatment">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Full treatment pricing card to selection">+</span>
           <div class="t">Full treatment</div>
           <div class="p">£75 <span>/ visit</span></div>
           <ul><li>✓ Everything in Signature</li><li>✓ Extended treatment</li><li>✓ Take-home kit</li></ul>
@@ -434,17 +505,20 @@
     </div>
     <div class="panel">
       <div class="testi-grid">
-        <div class="testi">
+        <div class="testi pickable" data-model="Review card — Sarah M.">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Sarah M. review card to selection">+</span>
           <div class="stars">★★★★★</div>
           <p>"Booked online in under a minute and the reminder text meant I never forgot. Exactly what I needed."</p>
           <div class="who"><div class="av"></div><div><div class="name">Sarah M.</div><div class="sub">Google review</div></div></div>
         </div>
-        <div class="testi">
+        <div class="testi pickable" data-model="Review card — James T.">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add James T. review card to selection">+</span>
           <div class="stars">★★★★★</div>
           <p>"The whole site feels premium — matches how good the actual service is. Highly recommend."</p>
           <div class="who"><div class="av"></div><div><div class="name">James T.</div><div class="sub">Google review</div></div></div>
         </div>
-        <div class="testi">
+        <div class="testi pickable" data-model="Review card — Priya K.">
+          <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Priya K. review card to selection">+</span>
           <div class="stars">★★★★★</div>
           <p>"So easy to find opening times and just book straight away, no phone calls needed."</p>
           <div class="who"><div class="av"></div><div><div class="name">Priya K.</div><div class="sub">Google review</div></div></div>
@@ -462,11 +536,11 @@
     </div>
     <div class="panel">
       <div class="row">
-        <span class="badge badge-green"><span class="badge-dot"></span>Open today</span>
-        <span class="badge badge-amber"><span class="badge-dot"></span>2 slots left this week</span>
-        <span class="badge badge-red"><span class="badge-dot"></span>Fully booked Sat</span>
-        <span class="badge badge-green">New client offer</span>
-        <span class="badge badge-amber">Most popular</span>
+        <span class="btn-pick pickable" data-model="Badge — Open today"><span class="badge badge-green"><span class="badge-dot"></span>Open today</span><span class="pick-btn" role="button" tabindex="0" aria-label="Add Open today badge to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Badge — Slots left"><span class="badge badge-amber"><span class="badge-dot"></span>2 slots left this week</span><span class="pick-btn" role="button" tabindex="0" aria-label="Add Slots left badge to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Badge — Fully booked"><span class="badge badge-red"><span class="badge-dot"></span>Fully booked Sat</span><span class="pick-btn" role="button" tabindex="0" aria-label="Add Fully booked badge to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Badge — New client offer"><span class="badge badge-green">New client offer</span><span class="pick-btn" role="button" tabindex="0" aria-label="Add New client offer badge to selection">+</span></span>
+        <span class="btn-pick pickable" data-model="Badge — Most popular"><span class="badge badge-amber">Most popular</span><span class="pick-btn" role="button" tabindex="0" aria-label="Add Most popular badge to selection">+</span></span>
       </div>
     </div>
   </div>
@@ -477,7 +551,8 @@
       <h2>FAQ accordion</h2>
       <p>Answers common questions before customers have to call and ask.</p>
     </div>
-    <div class="panel">
+    <div class="panel pickable" data-model="FAQ accordion">
+      <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add FAQ accordion to selection">+</span>
       <div class="faq-item open" onclick="this.classList.toggle('open')">
         <div class="faq-q">Do I need to pay a deposit to book? <span class="plus">+</span></div>
         <div class="faq-a">No deposit needed for most services — just show up. Some treatments may ask for a small deposit, which we'll always tell you upfront.</div>
@@ -499,7 +574,8 @@
       <h2>Footers</h2>
       <p>Contact info, hours, and links — shown light and dark.</p>
     </div>
-    <div class="footer-block footer-light">
+    <div class="footer-block footer-light pickable" data-model="Light footer">
+      <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Light footer to selection">+</span>
       <div class="footer-cols">
         <div><h4>Your Business</h4><div><span>123 High Street, Harrow</span><span>07123 456789</span><span>hello@yourbusiness.co.uk</span></div></div>
         <div><h4>Hours</h4><div><span>Mon–Fri: 9am–6pm</span><span>Sat: 9am–4pm</span><span>Sun: Closed</span></div></div>
@@ -507,7 +583,8 @@
       </div>
       <div class="footer-bottom" style="color:#566761;"><span>© Your Business 2026</span><span>Harrow · Open today</span></div>
     </div>
-    <div class="footer-block footer-dark" style="margin-top:16px;">
+    <div class="footer-block footer-dark pickable" data-model="Dark footer" style="margin-top:16px;">
+      <span class="pick-btn abs" role="button" tabindex="0" aria-label="Add Dark footer to selection">+</span>
       <div class="footer-cols">
         <div><h4>Your Business</h4><div><span>123 High Street, Harrow</span><span>07123 456789</span><span>hello@yourbusiness.co.uk</span></div></div>
         <div><h4>Hours</h4><div><span>Mon–Fri: 9am–6pm</span><span>Sat: 9am–4pm</span><span>Sun: Closed</span></div></div>
@@ -525,6 +602,19 @@
     <a href="index.html">← Back to showcase</a>
     <a href="backgrounds-showcase.html" class="next">Next: Backgrounds & Effects →</a>
   </div>
+
+<!-- SELECTION CART — pick the styles you like, send the list straight through -->
+<button type="button" class="cart-fab" id="cartFab" aria-label="Open selection cart">
+  🛒 <span>Selection</span> <span class="cart-count" id="cartCount">0</span>
+</button>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h4>Your selection</h4>
+    <p>Pick what you like, we'll get it sent through.</p>
+  </div>
+  <ul class="cart-items" id="cartItems"></ul>
+  <a href="#" class="cart-send disabled" id="cartSend" target="_blank" rel="noopener">Send selection →</a>
+</div>
 
 <script>
   // Buttons — magnetic pull that follows the cursor as it gets close.
@@ -584,6 +674,98 @@
   var theme = localStorage.getItem('theme') || 'light';
   document.documentElement.dataset.theme = theme;
   document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+
+  // Selection cart — pick the styles you like, send the list straight through.
+  // Shares sessionStorage with the showcase hub, so picks made on either page
+  // show up in the same cart.
+  (function () {
+    var fab = document.getElementById('cartFab');
+    var panel = document.getElementById('cartPanel');
+    var itemsEl = document.getElementById('cartItems');
+    var countEl = document.getElementById('cartCount');
+    var sendEl = document.getElementById('cartSend');
+    if (!fab || !panel) return;
+
+    var STORAGE_KEY = 'mintco-showcase-selection';
+    var selection = [];
+    try { selection = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; } catch (e) { selection = []; }
+
+    function pickables() { return document.querySelectorAll('.pickable[data-model]'); }
+    function save() {
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(selection)); } catch (e) {}
+    }
+    function syncItemStates() {
+      pickables().forEach(function (item) {
+        var name = item.getAttribute('data-model');
+        var on = selection.indexOf(name) !== -1;
+        item.classList.toggle('is-picked', on);
+        var btn = item.querySelector('.pick-btn');
+        if (btn) { btn.classList.toggle('on', on); btn.textContent = on ? '✓' : '+'; }
+      });
+    }
+    function render() {
+      countEl.textContent = selection.length;
+      itemsEl.innerHTML = '';
+      if (!selection.length) {
+        itemsEl.innerHTML = '<li class="cart-empty">Nothing selected yet — hit + on anything you like the look of.</li>';
+      } else {
+        selection.forEach(function (name) {
+          var li = document.createElement('li');
+          var span = document.createElement('span');
+          span.textContent = name;
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.setAttribute('aria-label', 'Remove ' + name);
+          rm.textContent = '×';
+          rm.addEventListener('click', function () { toggle(name); });
+          li.appendChild(span);
+          li.appendChild(rm);
+          itemsEl.appendChild(li);
+        });
+      }
+      if (selection.length) {
+        var text = "Hi! I'd like to customize my website with these options:\n\n" +
+          selection.map(function (n) { return '• ' + n; }).join('\n') +
+          "\n\nCan we chat about building something like this?";
+        sendEl.href = 'https://wa.me/447504828622?text=' + encodeURIComponent(text);
+        sendEl.classList.remove('disabled');
+      } else {
+        sendEl.href = '#';
+        sendEl.classList.add('disabled');
+      }
+      syncItemStates();
+      save();
+    }
+    function toggle(name) {
+      var idx = selection.indexOf(name);
+      if (idx === -1) selection.push(name); else selection.splice(idx, 1);
+      render();
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pick-btn');
+      if (!btn) return;
+      var item = btn.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (!e.target.classList || !e.target.classList.contains('pick-btn')) return;
+      var item = e.target.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    fab.addEventListener('click', function () { panel.classList.toggle('open'); });
+    document.addEventListener('click', function (e) {
+      if (!panel.contains(e.target) && !fab.contains(e.target)) panel.classList.remove('open');
+    });
+    render();
+  })();
 
 </script>
 

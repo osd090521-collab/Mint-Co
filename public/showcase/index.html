@@ -290,6 +290,54 @@
     gap: 6px;
   }
 
+  /* ---------- select-to-cart — pick the items inside each folder, send the list as-is ---------- */
+  .pick-btn {
+    display: inline-flex; align-items: center; justify-content: center; width: 18px; height: 18px; border-radius: 50%;
+    background: rgba(30,142,104,.08); border: 1.5px solid #C9E3D6; color: #1e8e68; font-size: 12px; font-weight: 800;
+    margin-right: 6px; vertical-align: -3px; cursor: pointer; flex-shrink: 0;
+    transition: all .2s cubic-bezier(.2,.7,.2,1);
+  }
+  .pick-btn:hover { transform: scale(1.15); border-color: #1e8e68; }
+  .pick-btn.on { background: linear-gradient(135deg, #1e8e68, #176b4f); border-color: #176b4f; color: #fff; }
+  .is-picked { outline: 2px solid rgba(30,142,104,.4); outline-offset: -2px; }
+
+  .cart-fab {
+    position: fixed; bottom: 24px; right: 84px; z-index: 500; display: flex; align-items: center; gap: 8px;
+    background: #10211B; color: #fff; border: none; border-radius: 30px; padding: 12px 18px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .cart-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .cart-fab .cart-count {
+    background: #1e8e68; min-width: 20px; height: 20px; border-radius: 10px; font-size: 11.5px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
+  .cart-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 500; width: min(320px, calc(100vw - 48px)); background: #fff;
+    border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.2); border: 1px solid #E7E4DA; overflow: hidden;
+    opacity: 0; transform: translateY(12px) scale(.97); pointer-events: none; transition: all .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .cart-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .cart-panel-head { padding: 16px 18px 12px; border-bottom: 1px solid #E7E4DA; }
+  .cart-panel-head h4 { font-size: 14.5px; font-weight: 700; margin: 0 0 2px; }
+  .cart-panel-head p { font-size: 12px; color: #6B6B63; margin: 0; }
+  .cart-items { list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
+  .cart-items li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px;
+    font-size: 13px; font-weight: 600; border-radius: 8px;
+  }
+  .cart-items li:hover { background: #F6F5F1; }
+  .cart-items button { background: none; border: none; color: #B0AEA1; font-size: 15px; cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .cart-items button:hover { color: #a34a26; }
+  .cart-empty { padding: 22px 18px; text-align: center; font-size: 12.5px; color: #9A968A; }
+  .cart-send {
+    display: block; width: calc(100% - 24px); margin: 6px 12px 12px; text-align: center; text-decoration: none;
+    background: linear-gradient(135deg, #1e8e68, #176b4f); color: #fff; font-size: 13.5px; font-weight: 700;
+    padding: 11px; border-radius: 10px; transition: transform .2s ease;
+  }
+  .cart-send:hover { transform: translateY(-1px); }
+  .cart-send.disabled { pointer-events: none; opacity: .4; }
+  @media (max-width: 640px) { .cart-fab { right: 24px; bottom: 78px; } .cart-panel { bottom: 140px; } }
+
   /* ---------- BOOK / FOLDER GALLERY — flip through our 7 styles ---------- */
   .book-head { max-width: 720px; margin: 0 auto 36px; text-align: center; padding: 0 24px; }
   .book-head .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
@@ -544,6 +592,19 @@
   </a>
 </div>
 
+<!-- SELECTION CART — pick features you like, send the list straight through as a message -->
+<button type="button" class="cart-fab" id="cartFab" aria-label="Open selection cart">
+  🛒 <span>Selection</span> <span class="cart-count" id="cartCount">0</span>
+</button>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h4>Your selection</h4>
+    <p>Pick what you like, we'll get it sent through.</p>
+  </div>
+  <ul class="cart-items" id="cartItems"></ul>
+  <a href="#" class="cart-send disabled" id="cartSend" target="_blank" rel="noopener">Send selection →</a>
+</div>
+
 <!-- REAL BUILD — an actual live site, browsable right here on desktop and mobile -->
 <div class="proof-head reveal">
   <div class="eyebrow">Crafted with care for each business individually</div>
@@ -581,13 +642,13 @@
 <div class="gallery-scroll" id="galleryScroll">
   <div class="book reveal">
     <div class="book-tabs" role="tablist">
-      <button class="tab active" data-layout="warm" role="tab" aria-selected="true">Warm &amp; Trusted</button>
-      <button class="tab" data-layout="nebula" role="tab" aria-selected="false">Bold &amp; Futuristic</button>
-      <button class="tab" data-layout="photo" role="tab" aria-selected="false">Photo-led</button>
-      <button class="tab" data-layout="editorial" role="tab" aria-selected="false">Editorial</button>
-      <button class="tab" data-layout="glass" role="tab" aria-selected="false">Ultra Futuristic</button>
-      <button class="tab" data-layout="minimal" role="tab" aria-selected="false">Minimal</button>
-      <button class="tab" data-layout="custom" role="tab" aria-selected="false">Custom</button>
+      <button class="tab active pickable" data-layout="warm" data-model="Warm &amp; Trusted style" role="tab" aria-selected="true"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Warm & Trusted to selection">+</span>Warm &amp; Trusted</button>
+      <button class="tab pickable" data-layout="nebula" data-model="Bold &amp; Futuristic style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Bold & Futuristic to selection">+</span>Bold &amp; Futuristic</button>
+      <button class="tab pickable" data-layout="photo" data-model="Photo-led style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Photo-led to selection">+</span>Photo-led</button>
+      <button class="tab pickable" data-layout="editorial" data-model="Editorial style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Editorial to selection">+</span>Editorial</button>
+      <button class="tab pickable" data-layout="glass" data-model="Ultra Futuristic style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Ultra Futuristic to selection">+</span>Ultra Futuristic</button>
+      <button class="tab pickable" data-layout="minimal" data-model="Minimal style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Minimal to selection">+</span>Minimal</button>
+      <button class="tab pickable" data-layout="custom" data-model="Custom style" role="tab" aria-selected="false"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Custom to selection">+</span>Custom</button>
     </div>
     <div class="devices-row">
       <div class="device-frame browser">
@@ -953,7 +1014,11 @@
     window.addEventListener('scroll', onScroll, { passive: true });
     onScroll();
     tabs.forEach(function (tab, i) {
-      tab.addEventListener('click', function () { setActive(i); });
+      tab.addEventListener('click', function () {
+        setActive(i);
+        var model = tab.getAttribute('data-model');
+        if (model && window.mintcoAddPick) window.mintcoAddPick(model);
+      });
     });
     pagerDots.forEach(function (dot, i) {
       dot.addEventListener('click', function () { setPage(i); });
@@ -971,6 +1036,105 @@
     });
     card.addEventListener('mouseleave', function () { card.style.transform = ''; });
   });
+
+  // Selection cart — pick individual customization options from inside each folder
+  // (design styles, and any other .pickable item added later), send the list as-is.
+  (function () {
+    var fab = document.getElementById('cartFab');
+    var panel = document.getElementById('cartPanel');
+    var itemsEl = document.getElementById('cartItems');
+    var countEl = document.getElementById('cartCount');
+    var sendEl = document.getElementById('cartSend');
+    if (!fab || !panel) return;
+
+    var STORAGE_KEY = 'mintco-showcase-selection';
+    var selection = [];
+    try { selection = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; } catch (e) { selection = []; }
+
+    function pickables() { return document.querySelectorAll('.pickable[data-model]'); }
+    function save() {
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(selection)); } catch (e) {}
+    }
+    function syncItemStates() {
+      pickables().forEach(function (item) {
+        var name = item.getAttribute('data-model');
+        var on = selection.indexOf(name) !== -1;
+        item.classList.toggle('is-picked', on);
+        var btn = item.querySelector('.pick-btn');
+        if (btn) { btn.classList.toggle('on', on); btn.textContent = on ? '✓' : '+'; }
+      });
+    }
+    function render() {
+      countEl.textContent = selection.length;
+      itemsEl.innerHTML = '';
+      if (!selection.length) {
+        itemsEl.innerHTML = '<li class="cart-empty">Nothing selected yet — hit + on anything you like the look of.</li>';
+      } else {
+        selection.forEach(function (name) {
+          var li = document.createElement('li');
+          var span = document.createElement('span');
+          span.textContent = name;
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.setAttribute('aria-label', 'Remove ' + name);
+          rm.textContent = '×';
+          rm.addEventListener('click', function () { toggle(name); });
+          li.appendChild(span);
+          li.appendChild(rm);
+          itemsEl.appendChild(li);
+        });
+      }
+      if (selection.length) {
+        var text = "Hi! I'd like to customize my website with these options:\n\n" +
+          selection.map(function (n) { return '• ' + n; }).join('\n') +
+          "\n\nCan we chat about building something like this?";
+        sendEl.href = 'https://wa.me/447504828622?text=' + encodeURIComponent(text);
+        sendEl.classList.remove('disabled');
+      } else {
+        sendEl.href = '#';
+        sendEl.classList.add('disabled');
+      }
+      syncItemStates();
+      save();
+    }
+    function toggle(name) {
+      var idx = selection.indexOf(name);
+      if (idx === -1) selection.push(name); else selection.splice(idx, 1);
+      render();
+    }
+    function addOnly(name) {
+      if (!name || selection.indexOf(name) !== -1) return;
+      selection.push(name);
+      render();
+    }
+    // Exposed so other widgets on the page (e.g. clicking a design-style tab
+    // to preview it) can drop something straight into the basket too.
+    window.mintcoAddPick = addOnly;
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pick-btn');
+      if (!btn) return;
+      var item = btn.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (!e.target.classList || !e.target.classList.contains('pick-btn')) return;
+      var item = e.target.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    fab.addEventListener('click', function () { panel.classList.toggle('open'); });
+    document.addEventListener('click', function (e) {
+      if (!panel.contains(e.target) && !fab.contains(e.target)) panel.classList.remove('open');
+    });
+    render();
+  })();
 
   // Initialize
   initCursor();

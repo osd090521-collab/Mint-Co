@@ -145,7 +145,7 @@
   }
 
   /* ── GLOW LINE DIVIDERS (Seamless.ai style) ── */
-  .glow-lines-wrap { border-radius: 20px; overflow: hidden; background: #0C0A16; padding: 40px 0; }
+  .glow-lines-wrap { position: relative; border-radius: 20px; overflow: hidden; background: #0C0A16; padding: 40px 0; }
   .glow-line { height: 6px; margin: 14px 0; border-radius: 4px; filter: blur(.4px); }
   .glow-line.pink { background: linear-gradient(90deg, transparent, #FF3DAD, #fff, #FF3DAD, transparent); box-shadow: 0 0 24px rgba(255,61,173,.7); }
   .glow-line.cyan { background: linear-gradient(90deg, transparent, #00D4FF, #fff, #00D4FF, transparent); box-shadow: 0 0 24px rgba(0,212,255,.7); }
@@ -249,10 +249,62 @@
     .sheet { scroll-behavior: auto; }
   }
 
+  /* ---------- select-to-cart — pick the effect you like, send the list straight through ---------- */
+  .bg-card .pick-btn, .glow-lines-wrap .pick-btn {
+    position: absolute; top: 10px; right: 10px; z-index: 3;
+    display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(255,255,255,.85); border: 1.5px solid #E7E4DA; color: #1e8e68; font-size: 14px; font-weight: 800;
+    cursor: pointer; transition: all .2s cubic-bezier(.2,.7,.2,1); box-shadow: 0 4px 10px rgba(0,0,0,.15);
+  }
+  .bg-card .pick-btn:hover, .glow-lines-wrap .pick-btn:hover { transform: scale(1.15); border-color: #1e8e68; }
+  .bg-card .pick-btn.on, .glow-lines-wrap .pick-btn.on { background: linear-gradient(135deg, #1e8e68, #176b4f); border-color: #176b4f; color: #fff; }
+  .bg-card.is-picked, .glow-lines-wrap.is-picked { outline: 2px solid #1e8e68; outline-offset: -2px; }
+
+  .cart-fab {
+    position: fixed; bottom: 24px; right: 24px; z-index: 500; display: flex; align-items: center; gap: 8px;
+    background: #10211B; color: #fff; border: none; border-radius: 30px; padding: 12px 18px; font-size: 13.5px; font-weight: 700;
+    cursor: pointer; box-shadow: 0 8px 24px rgba(0,0,0,.25); transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .cart-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,.3); }
+  .cart-fab .cart-count {
+    background: #1e8e68; min-width: 20px; height: 20px; border-radius: 10px; font-size: 11.5px;
+    display: flex; align-items: center; justify-content: center; padding: 0 5px;
+  }
+  .cart-panel {
+    position: fixed; bottom: 84px; right: 24px; z-index: 500; width: min(320px, calc(100vw - 48px)); background: #fff;
+    border-radius: 16px; box-shadow: 0 20px 50px rgba(0,0,0,.2); border: 1px solid #E7E4DA; overflow: hidden;
+    opacity: 0; transform: translateY(12px) scale(.97); pointer-events: none; transition: all .25s cubic-bezier(.2,.7,.2,1);
+  }
+  .cart-panel.open { opacity: 1; transform: translateY(0) scale(1); pointer-events: auto; }
+  .cart-panel-head { padding: 16px 18px 12px; border-bottom: 1px solid #E7E4DA; }
+  .cart-panel-head h4 { font-size: 14.5px; font-weight: 700; margin: 0 0 2px; }
+  .cart-panel-head p { font-size: 12px; color: #6B6B63; margin: 0; }
+  .cart-items { list-style: none; margin: 0; padding: 6px; max-height: 220px; overflow-y: auto; }
+  .cart-items li {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 10px;
+    font-size: 13px; font-weight: 600; border-radius: 8px;
+  }
+  .cart-items li:hover { background: #F6F5F1; }
+  .cart-items button { background: none; border: none; color: #B0AEA1; font-size: 15px; cursor: pointer; line-height: 1; padding: 2px 4px; }
+  .cart-items button:hover { color: #a34a26; }
+  .cart-empty { padding: 22px 18px; text-align: center; font-size: 12.5px; color: #9A968A; }
+  .cart-send {
+    display: block; width: calc(100% - 24px); margin: 6px 12px 12px; text-align: center; text-decoration: none;
+    background: linear-gradient(135deg, #1e8e68, #176b4f); color: #fff; font-size: 13.5px; font-weight: 700;
+    padding: 11px; border-radius: 10px; transition: transform .2s ease;
+  }
+  .cart-send:hover { transform: translateY(-1px); }
+  .cart-send.disabled { pointer-events: none; opacity: .4; }
+
 </style>
 </head>
 <body style="padding-top: 50px;">
 <a href="index.html" style="position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#10211B;color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25);">&larr; Back to showcase</a>
+<button class="theme-toggle" id="theme-btn">🌙</button>
+<div id="progress"></div>
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-glow"></div>
 
   <div class="intro">
     <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
@@ -290,11 +342,13 @@
     </div>
 
     <div class="bg-grid" style="margin-top:18px;">
-      <div class="bg-card" style="background:#08070F;">
+      <div class="bg-card pickable" data-model="Chrome ribbon — looping" style="background:#08070F;">
+        <span class="pick-btn" role="button" tabindex="0" aria-label="Add Chrome ribbon — looping to selection">+</span>
         <div class="flow-loop flow-loop-a"></div>
         <div class="tag">Chrome ribbon — looping</div>
       </div>
-      <div class="bg-card" style="background:#0E0A14;">
+      <div class="bg-card pickable" data-model="Artistic — softer, painterly" style="background:#0E0A14;">
+        <span class="pick-btn" role="button" tabindex="0" aria-label="Add Artistic — softer, painterly to selection">+</span>
         <div class="flow-loop flow-loop-artistic"></div>
         <div class="tag">Artistic — softer, painterly</div>
       </div>
@@ -309,10 +363,10 @@
         premium. Great as a hero backdrop or an accent behind a headline.</p>
     </div>
     <div class="bg-grid">
-      <div class="bg-card bg-holo-1"><div class="blob"></div><div class="tag">Spinning conic swirl</div></div>
-      <div class="bg-card bg-holo-2"><div class="blob"></div><div class="tag">Morphing liquid blob</div></div>
-      <div class="bg-card bg-holo-3"><div class="blob"></div><div class="tag">Drifting glow clusters</div></div>
-      <div class="bg-card bg-holo-4"><div class="blob"></div><div class="tag">Light-mode holographic</div></div>
+      <div class="bg-card bg-holo-1 pickable" data-model="Spinning conic swirl"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Spinning conic swirl to selection">+</span><div class="blob"></div><div class="tag">Spinning conic swirl</div></div>
+      <div class="bg-card bg-holo-2 pickable" data-model="Morphing liquid blob"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Morphing liquid blob to selection">+</span><div class="blob"></div><div class="tag">Morphing liquid blob</div></div>
+      <div class="bg-card bg-holo-3 pickable" data-model="Drifting glow clusters"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Drifting glow clusters to selection">+</span><div class="blob"></div><div class="tag">Drifting glow clusters</div></div>
+      <div class="bg-card bg-holo-4 pickable" data-model="Light-mode holographic"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Light-mode holographic to selection">+</span><div class="blob"></div><div class="tag">Light-mode holographic</div></div>
     </div>
   </div>
 
@@ -324,9 +378,9 @@
         full-page backdrops behind text and cards.</p>
     </div>
     <div class="bg-grid">
-      <div class="bg-card bg-mesh-1"><div class="tag" style="color:#10211B;background:rgba(255,255,255,.6);">Warm &amp; soft</div></div>
-      <div class="bg-card bg-mesh-2"><div class="tag">Nebula / bold</div></div>
-      <div class="bg-card bg-mesh-3"><div class="tag">Sunset / artistic</div></div>
+      <div class="bg-card bg-mesh-1 pickable" data-model="Mesh gradient — Warm &amp; soft"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Warm & soft mesh gradient to selection">+</span><div class="tag" style="color:#10211B;background:rgba(255,255,255,.6);">Warm &amp; soft</div></div>
+      <div class="bg-card bg-mesh-2 pickable" data-model="Mesh gradient — Nebula / bold"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Nebula / bold mesh gradient to selection">+</span><div class="tag">Nebula / bold</div></div>
+      <div class="bg-card bg-mesh-3 pickable" data-model="Mesh gradient — Sunset / artistic"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Sunset / artistic mesh gradient to selection">+</span><div class="tag">Sunset / artistic</div></div>
     </div>
   </div>
 
@@ -338,8 +392,8 @@
         adds a premium, tactile feel.</p>
     </div>
     <div class="bg-grid">
-      <div class="bg-card bg-grain"><div class="tag">Deep green + grain</div></div>
-      <div class="bg-card bg-grain-warm"><div class="tag">Terracotta + grain</div></div>
+      <div class="bg-card bg-grain pickable" data-model="Grain texture — Deep green"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Deep green grain texture to selection">+</span><div class="tag">Deep green + grain</div></div>
+      <div class="bg-card bg-grain-warm pickable" data-model="Grain texture — Terracotta"><span class="pick-btn" role="button" tabindex="0" aria-label="Add Terracotta grain texture to selection">+</span><div class="tag">Terracotta + grain</div></div>
     </div>
   </div>
 
@@ -350,7 +404,8 @@
       <p>Bright, blurred gradient rules — used as section breaks, footer accents, or under a hero
         image, like the pink glow strip on Seamless.ai's footer.</p>
     </div>
-    <div class="glow-lines-wrap">
+    <div class="glow-lines-wrap pickable" data-model="Glow line dividers">
+      <span class="pick-btn" role="button" tabindex="0" aria-label="Add Glow line dividers to selection">+</span>
       <div class="glow-line thin pink"></div>
       <div class="glow-line pink"></div>
       <div class="glow-line thick pink"></div>
@@ -369,10 +424,12 @@
         pricing callouts, quote blocks or a hero CTA card.</p>
     </div>
     <div class="bg-grid">
-      <div class="bg-card bg-holo-1" style="align-items:center;justify-content:center;">
+      <div class="bg-card bg-holo-1 pickable" data-model="Frosted glass over holographic" style="align-items:center;justify-content:center;">
+        <span class="pick-btn" role="button" tabindex="0" aria-label="Add Frosted glass over holographic to selection">+</span>
         <div class="glass-card"><h3>Book in seconds</h3><p>Frosted card sitting on a holographic backdrop — used for a hero CTA.</p></div>
       </div>
-      <div class="bg-card bg-mesh-2" style="align-items:center;justify-content:center;">
+      <div class="bg-card bg-mesh-2 pickable" data-model="Frosted glass over mesh" style="align-items:center;justify-content:center;">
+        <span class="pick-btn" role="button" tabindex="0" aria-label="Add Frosted glass over mesh to selection">+</span>
         <div class="glass-card"><h3>"Best decision we made"</h3><p>A glass quote card over a nebula mesh background.</p></div>
       </div>
     </div>
@@ -386,6 +443,19 @@
     <a href="index.html">← Back to showcase</a>
     <a href="index.html" class="next">Back to main showcase →</a>
   </div>
+
+<!-- SELECTION CART — pick the effects you like, send the list straight through -->
+<button type="button" class="cart-fab" id="cartFab" aria-label="Open selection cart">
+  🛒 <span>Selection</span> <span class="cart-count" id="cartCount">0</span>
+</button>
+<div class="cart-panel" id="cartPanel">
+  <div class="cart-panel-head">
+    <h4>Your selection</h4>
+    <p>Pick what you like, we'll get it sent through.</p>
+  </div>
+  <ul class="cart-items" id="cartItems"></ul>
+  <a href="#" class="cart-send disabled" id="cartSend" target="_blank" rel="noopener">Send selection →</a>
+</div>
 
 <script>
   // Chrome ribbon flow — real scroll-linked vertical parallax (each layer at its own speed),
@@ -462,6 +532,97 @@
   var theme = localStorage.getItem('theme') || 'light';
   document.documentElement.dataset.theme = theme;
   document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+
+  // Selection cart — pick the effects you like, send the list straight through.
+  // Shares sessionStorage with the showcase hub and other showcase pages.
+  (function () {
+    var fab = document.getElementById('cartFab');
+    var panel = document.getElementById('cartPanel');
+    var itemsEl = document.getElementById('cartItems');
+    var countEl = document.getElementById('cartCount');
+    var sendEl = document.getElementById('cartSend');
+    if (!fab || !panel) return;
+
+    var STORAGE_KEY = 'mintco-showcase-selection';
+    var selection = [];
+    try { selection = JSON.parse(sessionStorage.getItem(STORAGE_KEY)) || []; } catch (e) { selection = []; }
+
+    function pickables() { return document.querySelectorAll('.pickable[data-model]'); }
+    function save() {
+      try { sessionStorage.setItem(STORAGE_KEY, JSON.stringify(selection)); } catch (e) {}
+    }
+    function syncItemStates() {
+      pickables().forEach(function (item) {
+        var name = item.getAttribute('data-model');
+        var on = selection.indexOf(name) !== -1;
+        item.classList.toggle('is-picked', on);
+        var btn = item.querySelector('.pick-btn');
+        if (btn) { btn.classList.toggle('on', on); btn.textContent = on ? '✓' : '+'; }
+      });
+    }
+    function render() {
+      countEl.textContent = selection.length;
+      itemsEl.innerHTML = '';
+      if (!selection.length) {
+        itemsEl.innerHTML = '<li class="cart-empty">Nothing selected yet — hit + on anything you like the look of.</li>';
+      } else {
+        selection.forEach(function (name) {
+          var li = document.createElement('li');
+          var span = document.createElement('span');
+          span.textContent = name;
+          var rm = document.createElement('button');
+          rm.type = 'button';
+          rm.setAttribute('aria-label', 'Remove ' + name);
+          rm.textContent = '×';
+          rm.addEventListener('click', function () { toggle(name); });
+          li.appendChild(span);
+          li.appendChild(rm);
+          itemsEl.appendChild(li);
+        });
+      }
+      if (selection.length) {
+        var text = "Hi! I'd like to customize my website with these options:\n\n" +
+          selection.map(function (n) { return '• ' + n; }).join('\n') +
+          "\n\nCan we chat about building something like this?";
+        sendEl.href = 'https://wa.me/447504828622?text=' + encodeURIComponent(text);
+        sendEl.classList.remove('disabled');
+      } else {
+        sendEl.href = '#';
+        sendEl.classList.add('disabled');
+      }
+      syncItemStates();
+      save();
+    }
+    function toggle(name) {
+      var idx = selection.indexOf(name);
+      if (idx === -1) selection.push(name); else selection.splice(idx, 1);
+      render();
+    }
+
+    document.addEventListener('click', function (e) {
+      var btn = e.target.closest('.pick-btn');
+      if (!btn) return;
+      var item = btn.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Enter' && e.key !== ' ') return;
+      if (!e.target.classList || !e.target.classList.contains('pick-btn')) return;
+      var item = e.target.closest('.pickable[data-model]');
+      if (!item) return;
+      e.preventDefault();
+      e.stopPropagation();
+      toggle(item.getAttribute('data-model'));
+    }, true);
+    fab.addEventListener('click', function () { panel.classList.toggle('open'); });
+    document.addEventListener('click', function (e) {
+      if (!panel.contains(e.target) && !fab.contains(e.target)) panel.classList.remove('open');
+    });
+    render();
+  })();
 
 </script>
 
