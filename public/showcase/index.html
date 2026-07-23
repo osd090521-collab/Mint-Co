@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mint & Co — Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+  .intro { text-align: center; padding: 80px 24px 40px; }
+  .intro img { width: 56px; height: 56px; margin-bottom: 20px; }
+  .intro h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 500; margin-bottom: 16px; }
+  .intro p { font-size: 17px; color: #6B6B63; max-width: 54ch; margin: 0 auto; line-height: 1.6; }
+  .links { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 20px 24px 100px; max-width: 1000px; margin: 0 auto; }
+  .link-card {
+    width: 300px; max-width: 100%; background: #fff; border-radius: 20px; padding: 30px 26px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(0,0,0,0.08); text-decoration: none; color: inherit;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .link-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 30px 60px rgba(0,0,0,0.12); }
+  .link-card .n { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
+  .link-card h3 { font-size: 19px; margin-bottom: 8px; }
+  .link-card p { font-size: 13.5px; color: #6B6B63; line-height: 1.6; margin: 0 0 16px; }
+  .link-card .go { font-size: 13px; font-weight: 600; color: #176B4F; }
+</style>
+</head>
+<body>
+  <div class="intro">
+    <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
+    <h1>Mint &amp; Co — Showcase</h1>
+    <p>Everything a client can browse before we build their site: full page styles, individual
+      components, and background/visual effects.</p>
+  </div>
+  <div class="links">
+    <a class="link-card" href="homepage-showcase.html" style="border:2px solid #176B4F;">
+      <div class="n" style="color:#176B4F;">Flagship</div>
+      <h3>Full homepage demo</h3>
+      <p>The complete top-spec build in one real page — nav, hero, features, buttons, pricing, reviews, FAQ and footer, all working together.</p>
+      <div class="go">Open →</div>
+    </a>
+    <a class="link-card" href="design-showcase.html">
+      <div class="n">01</div>
+      <h3>Page styles</h3>
+      <p>Seven complete look-and-feel options, side by side, plus a fully custom tier.</p>
+      <div class="go">Open →</div>
+    </a>
+    <a class="link-card" href="components-showcase.html">
+      <div class="n">02</div>
+      <h3>Components</h3>
+      <p>Buttons, forms, cards, pricing, reviews, FAQ and footers — the actual building blocks.</p>
+      <div class="go">Open →</div>
+    </a>
+    <a class="link-card" href="backgrounds-showcase.html">
+      <div class="n">03</div>
+      <h3>Backgrounds &amp; effects</h3>
+      <p>Holographic blobs, mesh gradients, grain texture and glow-line dividers.</p>
+      <div class="go">Open →</div>
+    </a>
+  </div>
+</body>
+</html>

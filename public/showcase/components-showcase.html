@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mint & Co — Component Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+
+  .intro { text-align: center; padding: 64px 24px 36px; }
+  .intro img { width: 48px; height: 48px; margin-bottom: 18px; }
+  .intro h1 { font-size: clamp(28px, 4.5vw, 42px); font-weight: 500; margin-bottom: 14px; }
+  .intro p { font-size: 16px; color: #6B6B63; max-width: 56ch; margin: 0 auto; line-height: 1.6; }
+
+  /* Sticky section jump-nav */
+  .jumpnav {
+    position: sticky; top: 0; z-index: 20; background: rgba(246,245,241,.92); backdrop-filter: blur(8px);
+    border-bottom: 1px solid #E7E4DA; padding: 14px 24px; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+  }
+  .jumpnav a {
+    font-size: 12.5px; font-weight: 600; color: #566761; text-decoration: none; padding: 7px 14px;
+    border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .15s ease;
+  }
+  .jumpnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
+
+  .section { max-width: 1120px; margin: 0 auto; padding: 64px 24px; }
+  .section + .section { border-top: 1px solid #E7E4DA; }
+  .section-head { margin-bottom: 32px; }
+  .section-head h2 { font-size: 26px; font-weight: 500; margin-bottom: 8px; }
+  .section-head p { font-size: 14px; color: #6B6B63; max-width: 60ch; line-height: 1.6; }
+
+  .panel {
+    background: #fff; border-radius: 18px; padding: 32px; box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+  .panel-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9A9891; margin-bottom: 18px; }
+  .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+
+  /* ── BUTTONS ── */
+  .btn { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+  /* Warm set */
+  .btn-warm-primary { background: #176B4F; color: #fff; padding: 12px 24px; border-radius: 10px; }
+  .btn-warm-primary:hover { background: #135840; }
+  .btn-warm-secondary { background: #F1EFE9; color: #10211B; padding: 12px 24px; border-radius: 10px; }
+  .btn-warm-secondary:hover { background: #E7E4DA; }
+  .btn-warm-outline { background: transparent; color: #176B4F; padding: 11px 23px; border-radius: 10px; border: 1.5px solid #176B4F; }
+  .btn-warm-outline:hover { background: #F1FBF7; }
+  .btn-warm-ghost { background: transparent; color: #566761; padding: 12px 18px; border-radius: 10px; }
+  .btn-warm-ghost:hover { background: #F1EFE9; }
+  .btn-warm-disabled { background: #E7E4DA; color: #B0AEA5; padding: 12px 24px; border-radius: 10px; cursor: not-allowed; }
+  /* Nebula set */
+  .btn-neb-primary { background: #7B2FF7; color: #fff; padding: 12px 24px; border-radius: 10px; box-shadow: 0 6px 18px rgba(123,47,247,.35); }
+  .btn-neb-primary:hover { background: #6a24da; }
+  .btn-neb-outline { background: transparent; color: #00D4FF; padding: 11px 23px; border-radius: 10px; border: 1.5px solid #00D4FF; }
+  .btn-neb-outline:hover { background: rgba(0,212,255,.08); }
+  .btn-neb-glow { background: linear-gradient(90deg,#7B2FF7,#00D4FF); color: #fff; padding: 12px 24px; border-radius: 10px; }
+  /* Minimal set */
+  .btn-min-primary { background: #111; color: #fff; padding: 12px 24px; border-radius: 3px; }
+  .btn-min-primary:hover { background: #333; }
+  .btn-min-underline { background: transparent; color: #111; padding: 0 0 3px; border-bottom: 2px solid #111; border-radius: 0; }
+  .btn-min-outline { background: transparent; color: #111; padding: 11px 23px; border: 1.5px solid #111; border-radius: 3px; }
+  /* Sizes */
+  .btn-sm { padding: 8px 16px !important; font-size: 12.5px; }
+  .btn-lg { padding: 15px 30px !important; font-size: 15.5px; }
+  .btn-icon { width: 42px; height: 42px; padding: 0 !important; border-radius: 50%; justify-content: center; }
+  /* Preview blocks with different backgrounds */
+  .swatch-dark { background: #08070F; border-radius: 12px; padding: 26px; }
+  .swatch-glass { background: #E8ECF4; border-radius: 12px; padding: 26px; }
+
+  /* ── FORMS ── */
+  .field { display: flex; flex-direction: column; gap: 6px; }
+  .field label { font-size: 12.5px; font-weight: 600; color: #4A4A44; }
+  .field input, .field select, .field textarea {
+    font-family: 'Inter', sans-serif; font-size: 14px; padding: 11px 14px; border-radius: 9px;
+    border: 1.5px solid #E1DFD6; background: #FAFAF7; color: #2A2A28; outline: none;
+  }
+  .field input:focus, .field textarea:focus { border-color: #176B4F; background: #fff; }
+  .field-row { display: flex; gap: 14px; flex-wrap: wrap; }
+  .field-row .field { flex: 1; min-width: 180px; }
+  .toggle-row { display: flex; align-items: center; gap: 10px; font-size: 13.5px; color: #4A4A44; }
+  .toggle { width: 38px; height: 22px; border-radius: 20px; background: #E1DFD6; position: relative; }
+  .toggle::after { content: ""; position: absolute; width: 16px; height: 16px; border-radius: 50%; background: #fff; top: 3px; left: 3px; box-shadow: 0 1px 2px rgba(0,0,0,.2); }
+  .toggle.on { background: #176B4F; }
+  .toggle.on::after { left: 19px; }
+
+  /* ── CARDS ── */
+  .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap: 16px; }
+  .card { border-radius: 14px; padding: 20px; }
+  .card-service { background: #FAFAF7; border-top: 3px solid #1E8E68; }
+  .card-service .n { color: #B98B5E; font-size: 10.5px; font-weight: 700; margin-bottom: 8px; }
+  .card-service .t { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+  .card-service .d { font-size: 12.5px; color: #6B6B63; }
+  .card-price { background: #10211B; color: #fff; }
+  .card-price .t { font-size: 13px; opacity: .75; margin-bottom: 6px; }
+  .card-price .p { font-family: 'Fraunces', serif; font-size: 30px; margin-bottom: 10px; }
+  .card-price .p span { font-size: 13px; opacity: .6; font-family: 'Inter', sans-serif; }
+  .card-price ul { list-style: none; padding: 0; margin: 0 0 16px; font-size: 12.5px; opacity: .85; line-height: 2; }
+  .card-stat { background: #fff; border: 1px solid #E7E4DA; text-align: center; }
+  .card-stat .v { font-family: 'Fraunces', serif; font-size: 28px; color: #176B4F; }
+  .card-stat .l { font-size: 12px; color: #6B6B63; margin-top: 4px; }
+
+  /* ── TESTIMONIALS ── */
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
+  .testi { background: #FAFAF7; border-radius: 14px; padding: 20px; }
+  .testi .stars { color: #E0A94A; font-size: 13px; margin-bottom: 10px; }
+  .testi p { font-size: 13px; color: #3D3D38; line-height: 1.6; margin: 0 0 14px; }
+  .testi .who { display: flex; align-items: center; gap: 10px; }
+  .testi .who .av { width: 30px; height: 30px; border-radius: 50%; background: #D8D6CE; }
+  .testi .who .name { font-size: 12.5px; font-weight: 600; }
+  .testi .who .sub { font-size: 11px; color: #9A9891; }
+
+  /* ── BADGES / TAGS ── */
+  .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 20px; }
+  .badge-green { background: #E4F4EC; color: #176B4F; }
+  .badge-amber { background: #FBF0DD; color: #A66A1E; }
+  .badge-red { background: #FBE7E4; color: #B33E2C; }
+  .badge-dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+
+  /* ── NAV BARS ── */
+  .navbar { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-radius: 12px; }
+  .navbar-light { background: #fff; border: 1px solid #E7E4DA; }
+  .navbar-dark { background: #0C0A16; }
+  .nav-logo { font-family: 'Fraunces', serif; font-weight: 600; font-size: 15px; }
+  .navbar-light .nav-logo { color: #10211B; }
+  .navbar-dark .nav-logo { color: #F5F3FF; }
+  .nav-links { display: flex; gap: 20px; font-size: 13px; }
+  .navbar-light .nav-links { color: #566761; }
+  .navbar-dark .nav-links { color: #A8A2C2; }
+
+  /* ── FAQ ACCORDION ── */
+  .faq-item { border-bottom: 1px solid #E7E4DA; padding: 16px 0; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 14.5px; font-weight: 600; cursor: pointer; }
+  .faq-q .plus { color: #9A9891; font-size: 18px; }
+  .faq-a { font-size: 13px; color: #6B6B63; line-height: 1.6; margin-top: 10px; display: none; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .plus { transform: rotate(45deg); }
+
+  /* ── FOOTERS ── */
+  .footer-block { border-radius: 14px; padding: 28px; }
+  .footer-light { background: #F4F0E9; }
+  .footer-dark { background: #0C0A16; color: #6C6784; }
+  .footer-cols { display: flex; gap: 40px; flex-wrap: wrap; margin-bottom: 20px; }
+  .footer-cols h4 { font-size: 12px; font-weight: 700; margin-bottom: 10px; text-transform: uppercase; letter-spacing: .05em; }
+  .footer-light h4 { color: #10211B; }
+  .footer-dark h4 { color: #F5F3FF; }
+  .footer-cols div span { display: block; font-size: 12.5px; margin-bottom: 8px; }
+  .footer-light div span { color: #566761; }
+  .footer-bottom { font-size: 11.5px; display: flex; justify-content: space-between; padding-top: 16px; border-top: 1px solid rgba(0,0,0,.06); }
+  .footer-dark .footer-bottom { border-top-color: rgba(255,255,255,.08); }
+
+  .foot-note { text-align: center; padding: 20px 24px 70px; color: #8A8880; font-size: 13px; max-width: 56ch; margin: 0 auto; }
+
+  /* ── Showcase navigation ── */
+  .showcase-nav { display: flex; justify-content: space-between; align-items: center; padding: 40px 24px; margin-top: 40px; max-width: 1120px; margin-left: auto; margin-right: auto; border-top: 1px solid #E7E4DA; }
+  .showcase-nav a { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #176B4F; text-decoration: none; transition: opacity .2s ease; }
+  .showcase-nav a:hover { opacity: .7; }
+  .showcase-nav .next { margin-left: auto; }
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#10211B;color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25);">&larr; Back to showcase</a>
+
+  <div class="intro">
+    <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
+    <h1>Every piece of your website, up close.</h1>
+    <p>Buttons, forms, cards, reviews, pricing, FAQs and footers — the actual building blocks
+      we'll use across your site, shown in a few different flavours so you can see exactly what
+      customers will click, read and fill in.</p>
+  </div>
+
+  <div class="jumpnav">
+    <a href="#buttons">Buttons</a>
+    <a href="#forms">Forms &amp; inputs</a>
+    <a href="#nav">Navigation</a>
+    <a href="#cards">Cards</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#testimonials">Reviews</a>
+    <a href="#badges">Badges &amp; status</a>
+    <a href="#faq">FAQ</a>
+    <a href="#footer">Footers</a>
+  </div>
+
+  <!-- BUTTONS -->
+  <div class="section" id="buttons">
+    <div class="section-head">
+      <h2>Buttons</h2>
+      <p>Every action on your site — book, call, submit, view more — uses one of these. Shown here
+        across the Warm, Bold/Nebula, and Minimal palettes.</p>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Warm &amp; Trusted</div>
+      <div class="row">
+        <button class="btn btn-warm-primary">Book now</button>
+        <button class="btn btn-warm-secondary">Learn more</button>
+        <button class="btn btn-warm-outline">View services</button>
+        <button class="btn btn-warm-ghost">Cancel</button>
+        <button class="btn btn-warm-disabled" disabled>Fully booked</button>
+        <button class="btn btn-warm-primary btn-sm">Small</button>
+        <button class="btn btn-warm-primary btn-lg">Large button</button>
+        <button class="btn btn-warm-primary btn-icon">→</button>
+      </div>
+    </div>
+
+    <div class="panel swatch-dark">
+      <div class="panel-label" style="color:#8B86A8">Bold &amp; Futuristic / Nebula</div>
+      <div class="row">
+        <button class="btn btn-neb-primary">Book now</button>
+        <button class="btn btn-neb-glow">Get started</button>
+        <button class="btn btn-neb-outline">View services</button>
+        <button class="btn btn-neb-primary btn-sm">Small</button>
+        <button class="btn btn-neb-primary btn-lg">Large button</button>
+        <button class="btn btn-neb-primary btn-icon">→</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-label">Minimal &amp; Simple</div>
+      <div class="row">
+        <button class="btn btn-min-primary">Book now</button>
+        <button class="btn btn-min-outline">Learn more</button>
+        <button class="btn btn-min-underline">View all services</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FORMS -->
+  <div class="section" id="forms">
+    <div class="section-head">
+      <h2>Forms &amp; inputs</h2>
+      <p>Booking forms, contact forms, enquiry boxes — clean fields with clear labels, built to
+        feel quick to fill in on mobile.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Booking form example</div>
+      <div class="field-row" style="margin-bottom:14px;">
+        <div class="field"><label>Full name</label><input type="text" placeholder="Jane Smith"></div>
+        <div class="field"><label>Phone number</label><input type="text" placeholder="07123 456789"></div>
+      </div>
+      <div class="field-row" style="margin-bottom:14px;">
+        <div class="field">
+          <label>Service</label>
+          <select><option>Cuts &amp; styling</option><option>Colour</option><option>Treatments</option></select>
+        </div>
+        <div class="field"><label>Preferred date</label><input type="text" placeholder="Sat 25 July"></div>
+      </div>
+      <div class="field" style="margin-bottom:16px;">
+        <label>Anything we should know?</label>
+        <textarea rows="3" placeholder="Optional notes for your appointment"></textarea>
+      </div>
+      <div class="row" style="justify-content:space-between;">
+        <div class="toggle-row"><div class="toggle on"></div>Text me a reminder</div>
+        <button class="btn btn-warm-primary">Confirm booking</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- NAV -->
+  <div class="section" id="nav">
+    <div class="section-head">
+      <h2>Navigation bars</h2>
+      <p>What sits at the top of every page — logo, links, book button.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Light</div>
+      <div class="navbar navbar-light">
+        <div class="nav-logo">Your Business</div>
+        <div class="nav-links"><span>Services</span><span>Reviews</span><span>About</span><span>Contact</span></div>
+        <button class="btn btn-warm-primary btn-sm">Book now</button>
+      </div>
+    </div>
+    <div class="panel" style="background:transparent;box-shadow:none;padding:0;">
+      <div class="panel-label">Dark</div>
+      <div class="navbar navbar-dark">
+        <div class="nav-logo">Your Business</div>
+        <div class="nav-links"><span>Services</span><span>Reviews</span><span>About</span><span>Contact</span></div>
+        <button class="btn btn-neb-primary btn-sm">Book now</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="section" id="cards">
+    <div class="section-head">
+      <h2>Cards</h2>
+      <p>Service listings, stats, and highlight blocks — the modular pieces that make up most of
+        a page.</p>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Service cards</div>
+      <div class="cards-grid">
+        <div class="card card-service"><div class="n">01</div><div class="t">Cuts &amp; styling</div><div class="d">From £25 · 45 min</div></div>
+        <div class="card card-service"><div class="n">02</div><div class="t">Colour</div><div class="d">From £45 · 90 min</div></div>
+        <div class="card card-service"><div class="n">03</div><div class="t">Treatments</div><div class="d">From £20 · 30 min</div></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-label">Stat cards</div>
+      <div class="cards-grid">
+        <div class="card card-stat"><div class="v">4.9★</div><div class="l">Average rating</div></div>
+        <div class="card card-stat"><div class="v">1,200+</div><div class="l">Happy customers</div></div>
+        <div class="card card-stat"><div class="v">8 yrs</div><div class="l">In business</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="section" id="pricing">
+    <div class="section-head">
+      <h2>Pricing</h2>
+      <p>Service or package pricing, shown clearly with what's included.</p>
+    </div>
+    <div class="panel">
+      <div class="cards-grid">
+        <div class="card card-price">
+          <div class="t">Essentials</div>
+          <div class="p">£25 <span>/ visit</span></div>
+          <ul><li>✓ Consultation</li><li>✓ Wash &amp; finish</li><li>✓ Aftercare tips</li></ul>
+          <button class="btn btn-warm-outline" style="background:#fff;">Book Essentials</button>
+        </div>
+        <div class="card card-price" style="background:#176B4F;">
+          <div class="t">Most popular · Signature</div>
+          <div class="p">£45 <span>/ visit</span></div>
+          <ul><li>✓ Everything in Essentials</li><li>✓ Premium products</li><li>✓ 15% off next visit</li></ul>
+          <button class="btn btn-warm-primary" style="background:#fff;color:#176B4F;">Book Signature</button>
+        </div>
+        <div class="card card-price">
+          <div class="t">Full treatment</div>
+          <div class="p">£75 <span>/ visit</span></div>
+          <ul><li>✓ Everything in Signature</li><li>✓ Extended treatment</li><li>✓ Take-home kit</li></ul>
+          <button class="btn btn-warm-outline" style="background:#fff;">Book Full treatment</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section" id="testimonials">
+    <div class="section-head">
+      <h2>Reviews &amp; testimonials</h2>
+      <p>Real feedback, pulled in from Google, styled to match your site.</p>
+    </div>
+    <div class="panel">
+      <div class="testi-grid">
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"Booked online in under a minute and the reminder text meant I never forgot. Exactly what I needed."</p>
+          <div class="who"><div class="av"></div><div><div class="name">Sarah M.</div><div class="sub">Google review</div></div></div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"The whole site feels premium — matches how good the actual service is. Highly recommend."</p>
+          <div class="who"><div class="av"></div><div><div class="name">James T.</div><div class="sub">Google review</div></div></div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <p>"So easy to find opening times and just book straight away, no phone calls needed."</p>
+          <div class="who"><div class="av"></div><div><div class="name">Priya K.</div><div class="sub">Google review</div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="section" id="badges">
+    <div class="section-head">
+      <h2>Badges &amp; status</h2>
+      <p>Small signals — open now, low availability, new — used across the site to build trust
+        and urgency without shouting.</p>
+    </div>
+    <div class="panel">
+      <div class="row">
+        <span class="badge badge-green"><span class="badge-dot"></span>Open today</span>
+        <span class="badge badge-amber"><span class="badge-dot"></span>2 slots left this week</span>
+        <span class="badge badge-red"><span class="badge-dot"></span>Fully booked Sat</span>
+        <span class="badge badge-green">New client offer</span>
+        <span class="badge badge-amber">Most popular</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FAQ -->
+  <div class="section" id="faq">
+    <div class="section-head">
+      <h2>FAQ accordion</h2>
+      <p>Answers common questions before customers have to call and ask.</p>
+    </div>
+    <div class="panel">
+      <div class="faq-item open" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Do I need to pay a deposit to book? <span class="plus">+</span></div>
+        <div class="faq-a">No deposit needed for most services — just show up. Some treatments may ask for a small deposit, which we'll always tell you upfront.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Can I reschedule or cancel? <span class="plus">+</span></div>
+        <div class="faq-a">Yes, up to 24 hours before your appointment through the confirmation link in your text or email.</div>
+      </div>
+      <div class="faq-item" onclick="this.classList.toggle('open')">
+        <div class="faq-q">Do you take walk-ins? <span class="plus">+</span></div>
+        <div class="faq-a">We prioritise bookings, but walk-ins are welcome if we have availability — check the "open today" badge above.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="section" id="footer">
+    <div class="section-head">
+      <h2>Footers</h2>
+      <p>Contact info, hours, and links — shown light and dark.</p>
+    </div>
+    <div class="footer-block footer-light">
+      <div class="footer-cols">
+        <div><h4>Your Business</h4><div><span>123 High Street, Harrow</span><span>07123 456789</span><span>hello@yourbusiness.co.uk</span></div></div>
+        <div><h4>Hours</h4><div><span>Mon–Fri: 9am–6pm</span><span>Sat: 9am–4pm</span><span>Sun: Closed</span></div></div>
+        <div><h4>Links</h4><div><span>Services</span><span>Reviews</span><span>Book now</span></div></div>
+      </div>
+      <div class="footer-bottom" style="color:#566761;"><span>© Your Business 2026</span><span>Harrow · Open today</span></div>
+    </div>
+    <div class="footer-block footer-dark" style="margin-top:16px;">
+      <div class="footer-cols">
+        <div><h4>Your Business</h4><div><span>123 High Street, Harrow</span><span>07123 456789</span><span>hello@yourbusiness.co.uk</span></div></div>
+        <div><h4>Hours</h4><div><span>Mon–Fri: 9am–6pm</span><span>Sat: 9am–4pm</span><span>Sun: Closed</span></div></div>
+        <div><h4>Links</h4><div><span>Services</span><span>Reviews</span><span>Book now</span></div></div>
+      </div>
+      <div class="footer-bottom"><span>© Your Business 2026</span><span>Harrow · Open today</span></div>
+    </div>
+  </div>
+
+  <p class="foot-note">All of these adapt automatically to whichever look you choose on the style
+    page — colours, fonts and shapes shift together so the whole site feels like one system, not
+    a patchwork. &nbsp;<a href="backgrounds-showcase.html" style="color:#176B4F;font-weight:600;">View backgrounds &amp; effects →</a></p>
+
+  <div class="showcase-nav">
+    <a href="index.html">← Back to showcase</a>
+    <a href="backgrounds-showcase.html" class="next">Next: Backgrounds & Effects →</a>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mint & Co — Flagship Homepage Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+  a { text-decoration: none; }
+  img { max-width: 100%; }
+
+  /* ── Sticky glass nav ── */
+  .site-nav {
+    position: sticky; top: 0; z-index: 50; display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 40px; background: rgba(246,245,241,.85); backdrop-filter: blur(10px); border-bottom: 1px solid #E7E4DA;
+  }
+  .site-nav .logo { display: flex; align-items: center; gap: 9px; font-family: 'Fraunces', serif; font-weight: 600; font-size: 17px; color: #10211B; }
+  .site-nav .logo img { width: 24px; height: 24px; }
+  .site-nav .links { display: flex; gap: 26px; font-size: 13.5px; color: #566761; }
+  .site-nav .links a { color: #566761; }
+  .site-nav .links a:hover { color: #10211B; }
+  .site-nav .cta { display: flex; gap: 10px; align-items: center; }
+
+  /* ── Buttons (system) ── */
+  .btn { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+  .btn-primary { background: #176B4F; color: #fff; padding: 13px 26px; border-radius: 10px; }
+  .btn-primary:hover { background: #135840; }
+  .btn-secondary { background: #F1EFE9; color: #10211B; padding: 13px 26px; border-radius: 10px; }
+  .btn-secondary:hover { background: #E7E4DA; }
+  .btn-outline { background: transparent; color: #176B4F; padding: 12px 25px; border-radius: 10px; border: 1.5px solid #176B4F; }
+  .btn-outline:hover { background: #F1FBF7; }
+  .btn-outline-white { background: transparent; color: #fff; padding: 12px 25px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.5); }
+  .btn-outline-white:hover { background: rgba(255,255,255,.1); }
+  .btn-ghost { background: transparent; color: #566761; padding: 13px 18px; border-radius: 10px; }
+  .btn-ghost:hover { background: #F1EFE9; }
+  .btn-glow { background: linear-gradient(90deg,#7B2FF7,#00D4FF); color: #fff; padding: 13px 26px; border-radius: 10px; box-shadow: 0 8px 24px rgba(123,47,247,.35); }
+  .btn-sm { padding: 9px 18px !important; font-size: 12.5px; }
+  .btn-lg { padding: 16px 32px !important; font-size: 15.5px; }
+
+  /* ── Hero with holographic background ── */
+  .hero {
+    position: relative; overflow: hidden; background: #050308; padding: 110px 40px 100px; text-align: center;
+  }
+  .hero .blob {
+    position: absolute; inset: -25%; border-radius: 50%;
+    background: conic-gradient(from 220deg at 40% 40%, #7B2FF7, #00D4FF, #FF3DAD, #FFB86B, #7B2FF7);
+    filter: blur(70px) saturate(1.3); opacity: .55; animation: spin 22s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hero-inner { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; }
+  .hero .eyebrow {
+    display: inline-block; font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
+    color: #fff; background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(6px);
+    padding: 7px 16px; border-radius: 20px; margin-bottom: 22px;
+  }
+  .hero h1 { font-size: clamp(34px, 5.5vw, 58px); font-weight: 500; color: #fff; line-height: 1.1; margin-bottom: 20px; }
+  .hero h1 .grad { background: linear-gradient(90deg, #00D4FF, #FF3DAD); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero p { font-size: 16.5px; color: rgba(255,255,255,.75); max-width: 52ch; margin: 0 auto 34px; line-height: 1.6; }
+  .hero .cta-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 40px; }
+  .hero .trust { display: flex; gap: 22px; justify-content: center; flex-wrap: wrap; font-size: 12.5px; color: rgba(255,255,255,.6); }
+  .hero .trust span { display: flex; align-items: center; gap: 6px; }
+
+  /* ── Glow divider ── */
+  .divider-glow { height: 2px; margin: 0 auto; width: 60%; background: linear-gradient(90deg, transparent, #00D4FF, transparent); box-shadow: 0 0 20px rgba(0,212,255,.6); position: relative; z-index: 2; }
+
+  /* ── Sections ── */
+  .section { max-width: 1160px; margin: 0 auto; padding: 90px 40px; }
+  .section-head { text-align: center; max-width: 620px; margin: 0 auto 48px; }
+  .section-head .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 12px; }
+  .section-head h2 { font-size: clamp(26px, 3.5vw, 36px); font-weight: 500; margin-bottom: 14px; }
+  .section-head p { font-size: 15px; color: #6B6B63; line-height: 1.6; }
+
+  /* ── Top-spec feature grid ── */
+  .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 18px; }
+  .feature { background: #fff; border-radius: 16px; padding: 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 30px rgba(0,0,0,0.05); }
+  .feature .icon { width: 42px; height: 42px; border-radius: 12px; background: linear-gradient(135deg,#1E8E68,#0E4632); display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 16px; }
+  .feature h3 { font-size: 15.5px; font-weight: 600; margin-bottom: 8px; }
+  .feature p { font-size: 13px; color: #6B6B63; line-height: 1.55; margin: 0; }
+  .feature .badge-spec { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; color: #176B4F; background: #E4F4EC; padding: 4px 9px; border-radius: 10px; margin-top: 12px; }
+
+  /* ── Style teaser strip ── */
+  .style-strip { background: #10211B; border-radius: 22px; padding: 56px 36px; text-align: center; }
+  .style-strip .eyebrow { color: #6FD3AE; }
+  .style-strip h2, .style-strip p { color: #fff; }
+  .style-strip p { color: rgba(255,255,255,.7); }
+  .swatch-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: 30px 0 34px; }
+  .swatch { width: 64px; height: 64px; border-radius: 14px; border: 2px solid rgba(255,255,255,.15); }
+  .swatch.s1 { background: #FAFAF7; }
+  .swatch.s2 { background: linear-gradient(135deg,#0C0A16,#7B2FF7); }
+  .swatch.s3 { background: linear-gradient(135deg,#fff,#c9c9c9); }
+  .swatch.s4 { background: linear-gradient(135deg,#F4EEE4,#B5502E); }
+  .swatch.s5 { background: linear-gradient(135deg,#E8ECF4,#00E5FF); }
+  .swatch.s6 { background: #ffffff; }
+  .swatch.s7 { background: conic-gradient(from 210deg,#FDE8D8,#FCEAF2,#E4EFFC,#E4FCEF); }
+
+  /* ── Pricing ── */
+  .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 20px; }
+  .price-card { background: #fff; border-radius: 18px; padding: 30px 26px; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 30px rgba(0,0,0,0.05); }
+  .price-card.featured { background: #176B4F; color: #fff; transform: translateY(-8px); box-shadow: 0 20px 50px rgba(23,107,79,.3); }
+  .price-card .tier { font-size: 12.5px; font-weight: 700; letter-spacing: .05em; text-transform: uppercase; opacity: .7; margin-bottom: 10px; }
+  .price-card .amt { font-family: 'Fraunces', serif; font-size: 36px; margin-bottom: 4px; }
+  .price-card .amt span { font-size: 13px; font-weight: 400; opacity: .6; font-family: 'Inter',sans-serif; }
+  .price-card .sub { font-size: 12.5px; opacity: .65; margin-bottom: 22px; }
+  .price-card ul { list-style: none; padding: 0; margin: 0 0 26px; font-size: 13px; line-height: 2.1; }
+  .price-card ul li::before { content: "✓ "; }
+  .price-card:not(.featured) { border: 1px solid #E7E4DA; }
+
+  /* ── Testimonials ── */
+  .testi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap: 16px; }
+  .testi { background: #FAFAF7; border-radius: 16px; padding: 22px; }
+  .testi .stars { color: #E0A94A; font-size: 13px; margin-bottom: 10px; }
+  .testi p { font-size: 13.5px; color: #3D3D38; line-height: 1.6; margin: 0 0 16px; }
+  .testi .who { display: flex; align-items: center; gap: 10px; }
+  .testi .who .av { width: 32px; height: 32px; border-radius: 50%; background: #D8D6CE; }
+  .testi .who .name { font-size: 12.5px; font-weight: 600; }
+  .testi .who .sub { font-size: 11px; color: #9A9891; }
+
+  /* ── CTA glass section ── */
+  .cta-section { position: relative; overflow: hidden; border-radius: 26px; background: #08070F; padding: 80px 40px; text-align: center; }
+  .cta-section .mesh {
+    position: absolute; inset: 0;
+    background: radial-gradient(circle at 25% 25%, rgba(123,47,247,.5), transparent 42%),
+                radial-gradient(circle at 75% 30%, rgba(0,212,255,.4), transparent 42%),
+                radial-gradient(circle at 50% 90%, rgba(255,61,173,.35), transparent 45%);
+  }
+  .glass-card { position: relative; z-index: 2; background: rgba(255,255,255,.1); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 44px 36px; max-width: 560px; margin: 0 auto; }
+  .glass-card h2 { color: #fff; font-size: 28px; margin-bottom: 14px; }
+  .glass-card p { color: rgba(255,255,255,.8); font-size: 14.5px; margin-bottom: 26px; line-height: 1.6; }
+  .glass-card .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── FAQ ── */
+  .faq-item { border-bottom: 1px solid #E7E4DA; padding: 18px 0; max-width: 720px; margin: 0 auto; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .faq-q .plus { color: #9A9891; font-size: 19px; transition: transform .2s ease; }
+  .faq-a { font-size: 13.5px; color: #6B6B63; line-height: 1.6; margin-top: 10px; display: none; max-width: 60ch; }
+  .faq-item.open .faq-a { display: block; }
+  .faq-item.open .plus { transform: rotate(45deg); }
+
+  /* ── Footer ── */
+  .footer { background: #0C0A16; color: #6C6784; padding: 60px 40px 30px; }
+  .footer-inner { max-width: 1160px; margin: 0 auto; }
+  .footer-glow { height: 3px; margin: 0 auto 50px; width: 100%; background: linear-gradient(90deg, transparent, #7B2FF7, #00D4FF, #FF3DAD, transparent); box-shadow: 0 0 24px rgba(123,47,247,.5); border-radius: 4px; }
+  .footer-cols { display: flex; gap: 50px; flex-wrap: wrap; margin-bottom: 30px; }
+  .footer-cols .brand { display: flex; align-items: center; gap: 9px; font-family: 'Fraunces', serif; font-weight: 600; color: #F5F3FF; font-size: 16px; margin-bottom: 10px; }
+  .footer-cols .brand img { width: 22px; height: 22px; }
+  .footer-cols p.desc { font-size: 12.5px; max-width: 28ch; line-height: 1.6; }
+  .footer-cols h4 { font-size: 12px; font-weight: 700; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .05em; color: #F5F3FF; }
+  .footer-cols div span { display: block; font-size: 12.5px; margin-bottom: 9px; }
+  .footer-bottom { font-size: 11.5px; display: flex; justify-content: space-between; padding-top: 20px; border-top: 1px solid rgba(255,255,255,.08); flex-wrap: wrap; gap: 10px; }
+
+  /* ── Showcase navigation ── */
+  .showcase-nav { display: flex; justify-content: space-between; align-items: center; padding: 40px 0; margin-top: 40px; max-width: 1160px; margin-left: auto; margin-right: auto; border-top: 1px solid rgba(255,255,255,.1); }
+  .showcase-nav a { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #F5F3FF; text-decoration: none; transition: opacity .2s ease; }
+  .showcase-nav a:hover { opacity: .8; }
+  .showcase-nav .next { margin-left: auto; }
+</style>
+</head>
+<body>
+<a href="index.html" style="position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#10211B;color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25);">&larr; Back to showcase</a>
+
+  <!-- NAV -->
+  <nav class="site-nav">
+    <div class="logo"><img src="showcase-assets/mint-compass-mark.png" alt="">Mint &amp; Co</div>
+    <div class="links">
+      <a href="#features">Features</a>
+      <a href="#styles">Styles</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#reviews">Reviews</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="cta">
+      <a class="btn btn-ghost btn-sm" href="#">Login</a>
+      <a class="btn btn-primary btn-sm" href="#">Book a demo</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <header class="hero">
+    <div class="blob"></div>
+    <div class="hero-inner">
+      <span class="eyebrow">Websites for local businesses, built right</span>
+      <h1>Your business, online, <span class="grad">in a week — not a quarter.</span></h1>
+      <p>A complete website system: booking, reviews, SEO, and a design that actually matches your
+        brand. Pick your look, we build the rest — top to bottom, top spec.</p>
+      <div class="cta-row">
+        <a class="btn btn-glow btn-lg" href="#">Get your free preview</a>
+        <a class="btn btn-outline-white btn-lg" href="#styles">See all styles</a>
+      </div>
+      <div class="trust">
+        <span>⭐ 4.9/5 from 120+ businesses</span>
+        <span>⚡ Live in 5–7 days</span>
+        <span>🔒 No lock-in contracts</span>
+      </div>
+    </div>
+  </header>
+  <div class="divider-glow" style="margin-top:-2px;"></div>
+
+  <!-- TOP-SPEC FEATURES -->
+  <section class="section" id="features">
+    <div class="section-head">
+      <div class="eyebrow">Top-spec, out of the box</div>
+      <h2>Not just a pretty page.</h2>
+      <p>Every Mint &amp; Co site ships with the features clients notice and Google rewards —
+        included as standard, not an upsell.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature">
+        <div class="icon">📅</div>
+        <h3>Real-time booking</h3>
+        <p>Live availability, instant confirmation, no back-and-forth calls or DMs.</p>
+        <span class="badge-spec">Core</span>
+      </div>
+      <div class="feature">
+        <div class="icon">🤖</div>
+        <h3>AI booking assistant</h3>
+        <p>Answers common questions and takes bookings 24/7, even when you're closed.</p>
+        <span class="badge-spec">Top spec</span>
+      </div>
+      <div class="feature">
+        <div class="icon">💬</div>
+        <h3>SMS &amp; email reminders</h3>
+        <p>Automatic reminders cut no-shows — proven to save hours of admin a month.</p>
+        <span class="badge-spec">Core</span>
+      </div>
+      <div class="feature">
+        <div class="icon">⭐</div>
+        <h3>Live Google review sync</h3>
+        <p>Your real reviews pulled straight onto the site and kept fresh automatically.</p>
+        <span class="badge-spec">Core</span>
+      </div>
+      <div class="feature">
+        <div class="icon">⚡</div>
+        <h3>Sub-1s load speed</h3>
+        <p>Built lean and fast — a 95+ PageSpeed score as standard, not an extra.</p>
+        <span class="badge-spec">Top spec</span>
+      </div>
+      <div class="feature">
+        <div class="icon">🔍</div>
+        <h3>SEO built in from day one</h3>
+        <p>Structured data, local SEO and metadata set up correctly before you ever go live.</p>
+        <span class="badge-spec">Core</span>
+      </div>
+      <div class="feature">
+        <div class="icon">💳</div>
+        <h3>Secure payments &amp; deposits</h3>
+        <p>Stripe-powered checkout for deposits, packages or full payment up front.</p>
+        <span class="badge-spec">Top spec</span>
+      </div>
+      <div class="feature">
+        <div class="icon">📱</div>
+        <h3>Mobile-first, every time</h3>
+        <p>Designed for the phone first — where 80%+ of your customers will actually land.</p>
+        <span class="badge-spec">Core</span>
+      </div>
+      <div class="feature">
+        <div class="icon">🛡️</div>
+        <h3>Uptime &amp; security monitoring</h3>
+        <p>24/7 monitoring, automatic backups, SSL — your site just stays up.</p>
+        <span class="badge-spec">Top spec</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- STYLE TEASER -->
+  <section class="section" id="styles">
+    <div class="style-strip">
+      <div class="eyebrow">Seven looks, one system</div>
+      <h2>Pick the style that feels like you.</h2>
+      <p>Warm &amp; Trusted, Bold &amp; Futuristic, Photo-led, Editorial, Ultra Futuristic,
+        Minimal — or fully custom. Everything above stays the same either way.</p>
+      <div class="swatch-row">
+        <div class="swatch s1"></div>
+        <div class="swatch s2"></div>
+        <div class="swatch s3"></div>
+        <div class="swatch s4"></div>
+        <div class="swatch s5"></div>
+        <div class="swatch s6"></div>
+        <div class="swatch s7"></div>
+      </div>
+      <a class="btn btn-glow btn-lg" href="design-showcase.html">Browse all 7 styles →</a>
+    </div>
+  </section>
+
+  <!-- BUTTON SYSTEM -->
+  <section class="section" id="buttons">
+    <div class="section-head">
+      <div class="eyebrow">Every button, one system</div>
+      <h2>Buttons that adapt to your style.</h2>
+      <p>Primary, secondary, outline, ghost and glow — all built from the same system so your
+        site feels consistent from the hero to the footer.</p>
+    </div>
+    <div class="features-grid" style="grid-template-columns:1fr;">
+      <div class="feature" style="display:flex;flex-wrap:wrap;gap:14px;align-items:center;">
+        <button class="btn btn-primary">Book now</button>
+        <button class="btn btn-secondary">Learn more</button>
+        <button class="btn btn-outline">View services</button>
+        <button class="btn btn-ghost">Cancel</button>
+        <button class="btn btn-glow">Get started</button>
+        <button class="btn btn-primary btn-sm">Small</button>
+        <button class="btn btn-primary btn-lg">Large</button>
+        <a class="btn btn-secondary" href="components-showcase.html">See the full component library →</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="section" id="pricing">
+    <div class="section-head">
+      <div class="eyebrow">Simple pricing</div>
+      <h2>One price, everything included.</h2>
+      <p>No hidden line items for the features that matter — booking, reviews, SEO and speed come
+        standard on every tier.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card">
+        <div class="tier">Starter</div>
+        <div class="amt">£49<span> / mo</span></div>
+        <div class="sub">Everything you need to launch</div>
+        <ul><li>1 style of your choice</li><li>Booking &amp; reminders</li><li>Google review sync</li><li>Core SEO setup</li></ul>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;">Choose Starter</button>
+      </div>
+      <div class="price-card featured">
+        <div class="tier">Most popular · Growth</div>
+        <div class="amt">£89<span> / mo</span></div>
+        <div class="sub">The top-spec build</div>
+        <ul><li>Everything in Starter</li><li>AI booking assistant</li><li>Secure payments &amp; deposits</li><li>Custom domain &amp; email</li></ul>
+        <button class="btn" style="width:100%;justify-content:center;background:#fff;color:#176B4F;">Choose Growth</button>
+      </div>
+      <div class="price-card">
+        <div class="tier">Custom</div>
+        <div class="amt">Let's talk</div>
+        <div class="sub">Multi-location or bespoke</div>
+        <ul><li>Everything in Growth</li><li>Fully custom design</li><li>Multi-location support</li><li>Dedicated support line</li></ul>
+        <button class="btn btn-outline" style="width:100%;justify-content:center;">Talk to us</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="section" id="reviews">
+    <div class="section-head">
+      <div class="eyebrow">What clients say</div>
+      <h2>Real businesses, real results.</h2>
+    </div>
+    <div class="testi-grid">
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Bookings went up almost immediately once people could actually book online instead of calling."</p>
+        <div class="who"><div class="av"></div><div><div class="name">Sarah M.</div><div class="sub">Salon owner</div></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"Site was live in under a week and it genuinely looks like something a big brand would pay 10x for."</p>
+        <div class="who"><div class="av"></div><div><div class="name">James T.</div><div class="sub">Gym owner</div></div></div>
+      </div>
+      <div class="testi">
+        <div class="stars">★★★★★</div>
+        <p>"No-shows dropped once the SMS reminders kicked in. Paid for itself in the first month."</p>
+        <div class="who"><div class="av"></div><div><div class="name">Priya K.</div><div class="sub">Clinic owner</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section" id="faq">
+    <div class="section-head">
+      <div class="eyebrow">Questions</div>
+      <h2>Before you get started.</h2>
+    </div>
+    <div class="faq-item open" onclick="this.classList.toggle('open')">
+      <div class="faq-q">How long does it take to go live? <span class="plus">+</span></div>
+      <div class="faq-a">Most sites are live within 5–7 days once you've picked a style and sent over your details — faster for Starter, a little longer for fully custom builds.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Can I switch styles later? <span class="plus">+</span></div>
+      <div class="faq-a">Yes — the booking, reviews and SEO underneath stay the same, so switching your look is a design change, not a rebuild.</div>
+    </div>
+    <div class="faq-item" onclick="this.classList.toggle('open')">
+      <div class="faq-q">Is there a contract? <span class="plus">+</span></div>
+      <div class="faq-a">No lock-in — it's a rolling monthly plan. Cancel any time and keep your domain.</div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="cta-section">
+      <div class="mesh"></div>
+      <div class="glass-card">
+        <h2>See your business in every style.</h2>
+        <p>Free, no-obligation preview — pick a look and we'll show you your actual business name and colours before anything goes live.</p>
+        <div class="cta-row">
+          <a class="btn btn-glow btn-lg" href="#">Get your free preview</a>
+          <a class="btn btn-outline-white btn-lg" href="design-showcase.html">Browse styles</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-glow"></div>
+      <div class="footer-cols">
+        <div>
+          <div class="brand"><img src="showcase-assets/mint-compass-mark.png" alt="">Mint &amp; Co</div>
+          <p class="desc">Websites for local businesses — booking, reviews and SEO built in, top spec as standard.</p>
+        </div>
+        <div><h4>Showcase</h4><div>
+          <span><a href="design-showcase.html" style="color:#6C6784;">Page styles</a></span>
+          <span><a href="components-showcase.html" style="color:#6C6784;">Components</a></span>
+          <span><a href="backgrounds-showcase.html" style="color:#6C6784;">Backgrounds &amp; effects</a></span>
+        </div></div>
+        <div><h4>Company</h4><div><span>About</span><span>Pricing</span><span>Contact</span></div></div>
+        <div><h4>Legal</h4><div><span>Terms</span><span>Privacy</span></div></div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Mint &amp; Co</span>
+        <span>Built by Mint &amp; Co · Designed around you</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="showcase-nav">
+    <a href="index.html">← Back to showcase</a>
+    <a href="design-showcase.html" class="next">Next: Page styles →</a>
+  </div>
+
+</body>
+</html>

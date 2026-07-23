@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nebula — Track 2 visual samples</title>
+<style>
+  :root {
+    --bg-dark: #08070F;
+    --surface-dark: #14121F;
+    --surface-dark-2: #1B1830;
+    --ink-dark: #F5F3FF;
+    --muted-dark: #A8A2C2;
+    --nebula-violet: #7B2FF7;
+    --nebula-violet-deep: #5A1FC7;
+    --nebula-cyan: #00D4FF;
+    --nebula-magenta: #FF3DAD;
+    --line-dark: #262238;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg-dark);
+    color: var(--ink-dark);
+    font-family: Georgia, "Iowan Old Style", "Times New Roman", serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .sans { font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+  .note-bar {
+    background: var(--surface-dark);
+    border-bottom: 1px solid var(--line-dark);
+    padding: 14px 24px;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 13px;
+    color: var(--muted-dark);
+    text-align: center;
+  }
+  .note-bar b { color: var(--ink-dark); }
+
+  /* ── SAMPLE 1: Hero, radial nebula glow ── */
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 24px;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: -20%;
+    background:
+      radial-gradient(circle at 30% 25%, rgba(123,47,247,0.35), transparent 45%),
+      radial-gradient(circle at 72% 20%, rgba(0,212,255,0.22), transparent 40%),
+      radial-gradient(circle at 55% 75%, rgba(255,61,173,0.16), transparent 42%);
+    filter: blur(40px);
+    animation: drift 14s ease-in-out infinite alternate;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero::before { animation: none; }
+  }
+  @keyframes drift {
+    from { transform: translate3d(0,0,0) scale(1); }
+    to   { transform: translate3d(-2%, 2%, 0) scale(1.06); }
+  }
+  .eyebrow {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--nebula-cyan);
+    position: relative;
+    z-index: 1;
+    margin-bottom: 20px;
+  }
+  h1.display {
+    position: relative;
+    z-index: 1;
+    font-size: clamp(38px, 7vw, 76px);
+    line-height: 1.05;
+    font-weight: 500;
+    max-width: 16ch;
+    letter-spacing: -0.01em;
+  }
+  h1.display .grad {
+    background: linear-gradient(90deg, var(--nebula-violet), var(--nebula-cyan));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .sub {
+    position: relative;
+    z-index: 1;
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--muted-dark);
+    font-size: 18px;
+    max-width: 46ch;
+    margin: 22px 0 36px;
+  }
+  .cta-row { position: relative; z-index: 1; display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
+  .btn-primary {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--nebula-violet);
+    color: #FFFFFF;
+    border: none;
+    padding: 16px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 30px rgba(123,47,247,0.35);
+    transition: box-shadow .25s ease, transform .25s ease;
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.1), 0 0 40px rgba(0,212,255,0.45), 0 10px 34px rgba(123,47,247,0.5);
+    transform: translateY(-1px);
+  }
+  .btn-ghost {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: transparent;
+    color: var(--ink-dark);
+    border: 1px solid var(--line-dark);
+    padding: 16px 30px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+
+  /* ── SAMPLE 2: Services cards on surface-dark ── */
+  .section {
+    padding: 88px 24px;
+    max-width: 1080px;
+    margin: 0 auto;
+  }
+  .section h2 {
+    font-size: clamp(26px, 4vw, 38px);
+    font-weight: 500;
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  .section .lede {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    text-align: center;
+    color: var(--muted-dark);
+    max-width: 50ch;
+    margin: 0 auto 56px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 20px;
+  }
+  .card {
+    background: var(--surface-dark);
+    border: 1px solid var(--line-dark);
+    border-radius: 16px;
+    padding: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: "";
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--nebula-violet), var(--nebula-cyan), var(--nebula-magenta));
+  }
+  .card .num {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--nebula-cyan);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .card h3 { font-size: 21px; font-weight: 500; margin-bottom: 10px; }
+  .card p {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--muted-dark);
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  /* ── SAMPLE 3: conic-gradient variant background, alternate mood ── */
+  .band {
+    position: relative;
+    padding: 100px 24px;
+    text-align: center;
+    overflow: hidden;
+    border-top: 1px solid var(--line-dark);
+    border-bottom: 1px solid var(--line-dark);
+  }
+  .band::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      conic-gradient(from 180deg at 50% 120%,
+        rgba(123,47,247,0.28), rgba(0,212,255,0.18), rgba(255,61,173,0.16), rgba(123,47,247,0.28));
+    filter: blur(60px);
+    opacity: 0.7;
+  }
+  .band-content { position: relative; z-index: 1; }
+  .band h2 { font-size: clamp(26px, 4vw, 40px); font-weight: 500; max-width: 22ch; margin: 0 auto 16px; }
+  .band p {
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--muted-dark);
+    max-width: 44ch;
+    margin: 0 auto 30px;
+  }
+
+  /* ── SAMPLE 4: pure background swatches for reference ── */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .swatch {
+    border-radius: 16px;
+    height: 160px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--line-dark);
+    font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  .swatch span {
+    position: absolute; left: 14px; bottom: 12px;
+    font-size: 12px; color: var(--muted-dark);
+    background: rgba(0,0,0,0.35);
+    padding: 4px 8px; border-radius: 6px;
+  }
+  .sw1 { background: radial-gradient(circle at 30% 30%, rgba(123,47,247,0.5), transparent 60%), var(--bg-dark); }
+  .sw2 { background: radial-gradient(circle at 70% 70%, rgba(0,212,255,0.45), transparent 55%), var(--bg-dark); }
+  .sw3 { background: linear-gradient(135deg, rgba(123,47,247,0.4), rgba(255,61,173,0.28), var(--bg-dark) 70%); }
+  .sw4 { background: conic-gradient(from 90deg, rgba(123,47,247,0.35), rgba(0,212,255,0.3), rgba(255,61,173,0.3), rgba(123,47,247,0.35)); }
+  .sw5 { background: var(--surface-dark-2); }
+  .sw6 { background: repeating-linear-gradient(115deg, rgba(0,212,255,0.06) 0 2px, transparent 2px 26px), var(--bg-dark); }
+</style>
+</head>
+<body>
+
+  <div class="note-bar">
+    <b>Nebula — Track 2 sample sheet.</b> Real CSS, the actual computed palette from
+    CLIENT-WEBSITE-BUILD-KIT.md §3b — not mockup images. Resize the window / toggle
+    reduced-motion in your OS to test the drift animation turns off.
+  </div>
+
+  <!-- Sample 1: Hero -->
+  <section class="hero">
+    <div class="eyebrow">Est. Harrow &amp; NW London</div>
+    <h1 class="display">Built for the ones who <span class="grad">don't blend in</span>.</h1>
+    <p class="sub">A bold, dark, gradient-lit web presence for brands that want to look like the
+      future arrived early — booking, reviews, and your whole online presence, live in 7–10 days.</p>
+    <div class="cta-row">
+      <button class="btn-primary">Book a slot</button>
+      <button class="btn-ghost">See the work</button>
+    </div>
+  </section>
+
+  <!-- Sample 2: Cards -->
+  <section class="section">
+    <h2>What's included</h2>
+    <p class="lede">Same build process, same price as the warm track — a different visual world.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="num">01</span>
+        <h3>Full site build</h3>
+        <p>Hero, services, trust, booking — same section structure, Nebula tokens throughout.</p>
+      </div>
+      <div class="card">
+        <span class="num">02</span>
+        <h3>Gradient signature</h3>
+        <p>One glow, one gradient trio, reused everywhere — never a different gradient per page.</p>
+      </div>
+      <div class="card">
+        <span class="num">03</span>
+        <h3>Booking + reviews</h3>
+        <p>Same booking-system and review-funnel wiring as every Mint &amp; Co build.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sample 3: conic band, alternate hero-adjacent mood -->
+  <section class="band">
+    <div class="band-content">
+      <h2>An alternate mood: conic drift instead of radial</h2>
+      <p>Same three colours, different gradient geometry — useful for a mid-page CTA band instead
+        of the hero itself, so the whole page doesn't lean on one gradient shape.</p>
+      <button class="btn-primary">Get started</button>
+    </div>
+  </section>
+
+  <!-- Sample 4: raw background swatches -->
+  <section class="section">
+    <h2>Background treatments, isolated</h2>
+    <p class="lede">Six ways to use the same three colours as a background — pick per-section, not
+      per-page, so the effect stays a signature rather than wallpaper.</p>
+    <div class="swatch-grid">
+      <div class="swatch sw1"><span>Radial — violet, single source</span></div>
+      <div class="swatch sw2"><span>Radial — cyan, single source</span></div>
+      <div class="swatch sw3"><span>Linear diagonal — violet → magenta</span></div>
+      <div class="swatch sw4"><span>Conic — full trio</span></div>
+      <div class="swatch sw5"><span>Flat surface-dark (cards, no glow)</span></div>
+      <div class="swatch sw6"><span>Diagonal hairline texture + bg</span></div>
+    </div>
+  </section>
+
+</body>
+</html>
