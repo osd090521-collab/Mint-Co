@@ -28,21 +28,15 @@
     padding: 9px 16px; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
 
-  /* ── Rotating emblem on a stand ── */
-  .emblem-stand { display: flex; flex-direction: column; align-items: center; margin-bottom: 22px; position: relative; z-index: 2; }
-  .emblem-spin-wrap { perspective: 600px; margin-bottom: 2px; }
-  .emblem-badge {
-    width: 76px; height: 76px; display: block; animation: badgeSpin 5.5s linear infinite;
-    filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
-  }
-  @keyframes badgeSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  .stand-pillar { width: 4px; height: 20px; background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.2)); border-radius: 2px; }
+  /* ── Emblem on a stand — sparkling granule field, reacts to the cursor ── */
+  .emblem-stand { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; position: relative; z-index: 2; }
+  #emblemCanvas { width: 64px; height: 64px; display: block; margin-bottom: 4px; }
+  .stand-pillar { width: 3px; height: 16px; background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,.15)); border-radius: 2px; }
   .stand-base {
-    width: 58px; height: 11px; border-radius: 50%; margin-top: -2px;
-    background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.45), rgba(255,255,255,.15) 70%);
-    box-shadow: 0 5px 10px rgba(0,0,0,.25);
+    width: 46px; height: 9px; border-radius: 50%; margin-top: -2px;
+    background: radial-gradient(ellipse at 35% 30%, rgba(255,255,255,.4), rgba(255,255,255,.12) 70%);
+    box-shadow: 0 4px 8px rgba(0,0,0,.25);
   }
-  @media (prefers-reduced-motion: reduce) { .emblem-badge { animation: none; } }
 
   /* ── Hero ── */
   .hero { position: relative; overflow: hidden; background: #08070F; padding: 90px 32px 90px; text-align: center; }
@@ -247,7 +241,7 @@
     <div class="mesh"></div>
     <div class="hero-inner">
       <div class="emblem-stand">
-        <div class="emblem-spin-wrap"><img class="emblem-badge" src="/showcase/showcase-assets/mint-compass-mark.png" alt="Mint & Co"></div>
+        <canvas id="emblemCanvas" width="128" height="128" role="img" aria-label="Mint & Co"></canvas>
         <div class="stand-pillar"></div>
         <div class="stand-base"></div>
       </div>
@@ -507,6 +501,126 @@
       });
       btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
     });
+  })();
+
+  // Emblem — sparkling granule field sampled from our real logo, reforms when idle,
+  // disperses gently as the cursor approaches. Kept small and restrained (subtle sparkle,
+  // small repel radius, low force) rather than the larger showcase-piece version.
+  (function () {
+    var canvas = document.getElementById('emblemCanvas');
+    if (!canvas) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var ctx = canvas.getContext('2d');
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    var SIZE = 64; // CSS px
+    canvas.width = SIZE * dpr; canvas.height = SIZE * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.src = '/showcase/showcase-assets/mint-compass-mark.png';
+    img.onload = function () { boot(buildPoints(img)); };
+    img.onerror = function () { /* fail quiet — stand still shows without the canvas */ };
+
+    function buildPoints(image) {
+      var S = 96;
+      var off = document.createElement('canvas');
+      off.width = S; off.height = S;
+      var octx = off.getContext('2d');
+      octx.drawImage(image, 0, 0, S, S);
+      var data = octx.getImageData(0, 0, S, S).data;
+      var pts = [];
+      var step = 3;
+      for (var y = 0; y < S; y += step) {
+        for (var x = 0; x < S; x += step) {
+          var i = (y * S + x) * 4;
+          var a = data[i + 3];
+          if (a > 60) {
+            pts.push({
+              x: x - S / 2, y: y - S / 2,
+              c: 'rgba(' + data[i] + ',' + data[i + 1] + ',' + data[i + 2] + ',' + (a / 255) + ')'
+            });
+          }
+        }
+      }
+      return pts;
+    }
+
+    var particles = [];
+    var pointer = { x: -9999, y: -9999, active: false };
+    var angle = 0;
+
+    function boot(pts) {
+      var scale = (SIZE * 0.86) / 96;
+      particles = pts.map(function (p) {
+        return {
+          bx: p.x * scale, by: p.y * scale, // base position before rotation
+          x: 0, y: 0, hx: 0, hy: 0,
+          r: 0.55 + Math.random() * 0.55,
+          c: p.c,
+          phase: Math.random() * Math.PI * 2,
+          speed: 1 + Math.random() * 1.8,
+          base: 0.6 + Math.random() * 0.4
+        };
+      });
+
+      function onMove(e) {
+        var r = canvas.getBoundingClientRect();
+        pointer.x = e.clientX - r.left - r.width / 2;
+        pointer.y = e.clientY - r.top - r.height / 2;
+        pointer.active = true;
+      }
+      function onLeave() { pointer.active = false; }
+      document.addEventListener('pointermove', onMove, { passive: true });
+      canvas.addEventListener('pointerleave', onLeave);
+
+      var cx = SIZE / 2, cy = SIZE / 2;
+
+      function frame(t) {
+        if (!reduce) angle += 0.0022; // slow spin of the home formation
+        var cosA = Math.cos(angle), sinA = Math.sin(angle);
+        ctx.clearRect(0, 0, SIZE, SIZE);
+
+        var radius = 26, radiusSq = radius * radius; // small, local repel field
+        for (var i = 0; i < particles.length; i++) {
+          var p = particles[i];
+          p.hx = cx + (p.bx * cosA - p.by * sinA);
+          p.hy = cy + (p.bx * sinA + p.by * cosA);
+          if (!p.x) { p.x = p.hx; p.y = p.hy; }
+
+          if (pointer.active && !reduce) {
+            var dx = p.x - cx - pointer.x, dy = p.y - cy - pointer.y;
+            var d2 = dx * dx + dy * dy;
+            if (d2 < radiusSq) {
+              var d = Math.sqrt(d2) || 0.01;
+              var force = (1 - d / radius) * 14; // gentle, professional — not a big blowout
+              p.x += (dx / d) * force * 0.4;
+              p.y += (dy / d) * force * 0.4;
+            }
+          }
+          p.x += (p.hx - p.x) * 0.09;
+          p.y += (p.hy - p.y) * 0.09;
+
+          var twinkle = reduce ? p.base : p.base + Math.sin((t || 0) * 0.001 * p.speed + p.phase) * (1 - p.base) * 0.85;
+          ctx.globalAlpha = Math.max(0.25, Math.min(1, twinkle));
+          var sparkle = !reduce && twinkle > (p.base + (1 - p.base) * 0.8);
+          if (sparkle) {
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255,255,255,.8)';
+            ctx.arc(p.x, p.y, p.r * 1.6, 0, Math.PI * 2);
+            ctx.fill();
+          }
+          ctx.beginPath();
+          ctx.fillStyle = p.c;
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (!reduce) requestAnimationFrame(frame);
+      }
+
+      if (reduce) { frame(0); } else { requestAnimationFrame(frame); }
+    }
   })();
 </script>
 </body>
