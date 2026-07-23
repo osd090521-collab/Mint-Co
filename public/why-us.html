@@ -28,74 +28,72 @@
     padding: 9px 16px; border-radius: 20px; text-decoration: none; box-shadow: 0 4px 12px rgba(0,0,0,.25);
   }
 
-  /* ── Rotating emblem, top corner — plain badge, no stand, just lit from two sides ── */
+  /* ── Rotating emblem, top corner — the plain logo, spinning smoothly, nothing else ── */
   .emblem-stand {
     position: absolute; top: 34px; right: 7%; z-index: 3;
     display: flex; align-items: center; justify-content: center;
   }
-  .emblem-glow-ring {
-    position: absolute; width: 96px; height: 96px; border-radius: 50%; z-index: 0;
-    background: radial-gradient(circle, rgba(224,169,74,.22), rgba(0,212,255,.14) 55%, transparent 75%);
-    filter: blur(16px); animation: glowPulse 3.4s ease-in-out infinite;
-  }
-  @keyframes glowPulse { 0%, 100% { opacity: .55; transform: scale(1); } 50% { opacity: .85; transform: scale(1.06); } }
-
-  /* Two soft lights floating either side of the badge itself — no visible support */
-  .stand-light {
-    position: absolute; top: 50%; width: 46px; height: 46px; margin-top: -23px; z-index: 0; pointer-events: none;
-    border-radius: 50%; filter: blur(11px); animation: lightPulse 3s ease-in-out infinite;
-  }
-  .stand-light.left { left: -22px; background: radial-gradient(circle, rgba(0,212,255,.45), transparent 72%); }
-  .stand-light.right { right: -22px; background: radial-gradient(circle, rgba(224,169,74,.45), transparent 72%); animation-delay: 1.5s; }
-  @keyframes lightPulse { 0%, 100% { opacity: .5; } 50% { opacity: .9; } }
-
-  .emblem-spin-wrap { perspective: 600px; position: relative; z-index: 1; }
   .emblem-badge {
-    width: 76px; height: 76px; display: block; animation: badgeSpin 5.5s linear infinite;
+    width: 76px; height: 76px; display: block; animation: badgeSpin 7s linear infinite;
     filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
   }
-  @keyframes badgeSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
-  @media (prefers-reduced-motion: reduce) { .emblem-badge, .emblem-glow-ring, .stand-light { animation: none; } }
+  @keyframes badgeSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .emblem-badge { animation: none; } }
   @media (max-width: 640px) { .emblem-stand { position: static; margin: 0 auto 20px; } }
 
   /* ── Emblem watermark — large sparkling granule field behind the hero, reacts to cursor ── */
   #emblemWatermark { position: absolute; top: 0; left: 0; z-index: 1; pointer-events: none; opacity: .5; }
 
   /* ── Hero ── */
-  .hero { position: relative; overflow: hidden; background: #08070F; padding: 58px 32px 78px; text-align: center; }
+  /* ── Glow-dome hero — one big soft radial arc at the top, fading to near-black,
+     same reference used site-wide for the "glass" theme ── */
+  @keyframes domeBreathe {
+    0%, 100% { opacity: .92; transform: translateX(-50%) scale(1); }
+    50%      { opacity: 1; transform: translateX(-50%) scale(1.035); }
+  }
+  .hero { position: relative; overflow: hidden; background: #060509; padding: 58px 32px 78px; text-align: center; }
   .hero .mesh {
-    position: absolute; inset: -10%;
-    background: radial-gradient(circle at 25% 25%, rgba(123,47,247,.45), transparent 42%),
-                radial-gradient(circle at 75% 30%, rgba(0,212,255,.35), transparent 42%),
-                radial-gradient(circle at 50% 90%, rgba(255,61,173,.3), transparent 45%);
-    filter: blur(20px);
+    position: absolute; top: -62%; left: 50%; width: 165%; aspect-ratio: 1 / 1; transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(151,71,255,.55) 0%, rgba(123,47,247,.32) 32%, rgba(224,169,74,.16) 48%, transparent 68%);
+    filter: blur(70px);
+    animation: domeBreathe 9s ease-in-out infinite;
   }
   .hero-inner { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
   .hero .eyebrow {
     display: inline-block; font-size: 11.5px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase;
-    color: #fff; background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2); backdrop-filter: blur(6px);
+    color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.35), 0 6px 18px rgba(0,0,0,.25);
     padding: 7px 16px; border-radius: 20px; margin-bottom: 22px;
   }
   .hero h1 { font-size: clamp(32px, 5vw, 54px); font-weight: 500; color: #fff; line-height: 1.12; margin-bottom: 20px; }
-  .hero h1 .grad { background: linear-gradient(90deg, #00D4FF, #FF3DAD); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hero h1 .grad { background: linear-gradient(90deg, #E0A94A, #FF3DAD); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero p { font-size: 16px; color: rgba(255,255,255,.75); max-width: 54ch; margin: 0 auto 0; line-height: 1.65; }
   .slogan-row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 34px; position: relative; z-index: 2; }
-  .slogan-chip { font-size: 12.5px; font-weight: 600; color: #fff; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); padding: 8px 16px; border-radius: 20px; }
+  .slogan-chip {
+    font-size: 12.5px; font-weight: 600; color: #fff; background: rgba(255,255,255,.09); border: 1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(16px) saturate(160%); -webkit-backdrop-filter: blur(16px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.3), 0 6px 16px rgba(0,0,0,.2);
+    padding: 8px 16px; border-radius: 20px;
+  }
   .hero-cta {
-    background: linear-gradient(135deg, #00D4FF, #7B2FF7); color: #fff; padding: 14px 28px; border: none; border-radius: 10px;
+    background: linear-gradient(135deg, #E0A94A, #7B2FF7); color: #fff; padding: 14px 28px; border: none; border-radius: 10px;
     font-size: 14px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;
     text-decoration: none; box-shadow: 0 8px 24px rgba(123,47,247,.35); transition: all .3s ease; margin-top: 28px;
   }
   .hero-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgba(123,47,247,.5); }
 
-  /* ── Why Choose Us — fixed dark panel, always-readable, vertical timeline ── */
-  .why-us { position: relative; background: #08070F; padding: 100px 32px; overflow: hidden; }
-  .why-us::before {
-    content: ""; position: absolute; inset: -10%;
-    background: radial-gradient(circle at 15% 20%, rgba(123,47,247,.22), transparent 40%),
-                radial-gradient(circle at 85% 75%, rgba(0,212,255,.16), transparent 40%);
-    filter: blur(50px); pointer-events: none;
+  /* ── Seam bridge — the last soft edge of the dome tailing off into flat black ── */
+  .seam-bridge { position: relative; height: 1px; margin-top: -110px; z-index: 3; pointer-events: none; }
+  .seam-bridge::before {
+    content: ""; position: absolute; left: -10%; right: -10%; top: -90px; height: 200px;
+    background: radial-gradient(60% 100% at 50% 0%, rgba(123,47,247,.22), transparent 75%);
+    filter: blur(50px);
   }
+
+  /* ── Why Choose Us — flat, clean, near-black panel — no competing glow, glass elements do the work ── */
+  .why-us { position: relative; background: #060509; padding: 100px 32px; overflow: hidden; }
   .why-inner { position: relative; z-index: 2; max-width: 760px; margin: 0 auto; }
   .why-us .section-head .eyebrow { color: #E0A94A; }
   .why-us .section-head h2 { color: #fff; }
@@ -105,32 +103,37 @@
   .vtrack { position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px; background: rgba(255,255,255,.1); }
   .vfill {
     position: absolute; left: 17px; top: 6px; width: 2px; height: 0%;
-    background: linear-gradient(180deg, #7B2FF7, #00D4FF 35%, #E0A94A 68%, #FF3DAD);
-    box-shadow: 0 0 14px rgba(123,47,247,.6); transition: height .1s linear;
+    background: linear-gradient(180deg, #F6E2B0, #E0A94A 55%, #B98B5E);
+    box-shadow: 0 0 14px rgba(224,169,74,.55); transition: height .1s linear;
   }
   .lesson { position: relative; padding: 0 0 40px; }
   .lesson:last-child { padding-bottom: 0; }
   .lesson .lnum {
     position: absolute; left: -54px; top: 0; width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600;
-    color: #08070F; background: #333844; box-shadow: 0 0 0 6px #08070F; transition: background .35s ease, box-shadow .35s ease, transform .35s ease;
+    color: #fff; background: rgba(255,255,255,.07); border: 1px solid rgba(255,255,255,.16);
+    backdrop-filter: blur(10px) saturate(150%); -webkit-backdrop-filter: blur(10px) saturate(150%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), 0 0 0 6px #060509;
+    transition: background .35s ease, box-shadow .35s ease, transform .35s ease, border-color .35s ease;
   }
   .lesson .lnum .lnum-text { opacity: 0; transition: opacity .3s ease .1s; }
   .lesson .lnum .lock-icon { position: absolute; font-size: 13px; opacity: .55; transition: opacity .25s ease, transform .25s ease; }
   .lesson.unlocked .lnum { transform: scale(1.15); animation: unlockPop .5s ease; }
   .lesson.unlocked .lnum .lnum-text { opacity: 1; }
   .lesson.unlocked .lnum .lock-icon { opacity: 0; transform: scale(.4) rotate(-25deg); }
-  .lesson.unlocked:nth-child(1) .lnum { background: #E0A94A; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(224,169,74,.65); }
-  .lesson.unlocked:nth-child(2) .lnum { background: #00D4FF; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(0,212,255,.65); }
-  .lesson.unlocked:nth-child(3) .lnum { background: #7B2FF7; color: #fff; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(123,47,247,.65); }
-  .lesson.unlocked:nth-child(4) .lnum { background: #FF3DAD; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(255,61,173,.65); }
-  .lesson.unlocked:nth-child(5) .lnum { background: #1E8E68; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(30,142,104,.65); }
+  .lesson.unlocked .lnum {
+    color: #08070F; border-color: rgba(255,255,255,.4);
+    background: linear-gradient(135deg, #F6E2B0, #E0A94A 55%, #B98B5E);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.6), 0 0 0 6px #060509, 0 0 22px rgba(224,169,74,.55);
+  }
   @keyframes unlockPop { 0%{transform:scale(1);} 45%{transform:scale(1.45);} 100%{transform:scale(1.15);} }
   .lesson .lcard {
-    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 20px 24px;
-    backdrop-filter: blur(6px); opacity: .45; transition: opacity .45s ease, border-color .45s ease, background .45s ease;
+    background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 20px 24px;
+    backdrop-filter: blur(18px) saturate(160%); -webkit-backdrop-filter: blur(18px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.14);
+    opacity: .45; transition: opacity .45s ease, border-color .45s ease, background .45s ease;
   }
-  .lesson.unlocked .lcard { opacity: 1; background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
+  .lesson.unlocked .lcard { opacity: 1; background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.2); }
   .lesson .lcard h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; color: #fff; }
   .lesson .lcard p { font-size: 13.5px; margin: 0; line-height: 1.65; color: rgba(255,255,255,.65); }
   .why-closer {
@@ -287,12 +290,7 @@
     <div class="mesh"></div>
     <canvas id="emblemWatermark" aria-hidden="true"></canvas>
     <div class="emblem-stand">
-      <div class="emblem-glow-ring"></div>
-      <div class="stand-light left"></div>
-      <div class="stand-light right"></div>
-      <div class="emblem-spin-wrap">
-        <img class="emblem-badge" src="/showcase/showcase-assets/mint-compass-mark.png" alt="Mint & Co">
-      </div>
+      <img class="emblem-badge" src="/showcase/showcase-assets/mint-compass-mark.png" alt="Mint & Co">
     </div>
     <div class="hero-inner">
       <span class="eyebrow">Why Us</span>
@@ -309,6 +307,8 @@
       <a href="/free-audit?ref=why-us" class="hero-cta">Get Your Free Audit →</a>
     </div>
   </header>
+
+  <div class="seam-bridge" aria-hidden="true"></div>
 
   <!-- WHY CHOOSE US -->
   <section class="why-us" id="why-us">

@@ -91,7 +91,7 @@ export default function ProcessPage() {
             />
             {steps.map((step, i) => (
               <li key={step.t} className="timeline-node relative flex gap-6 pb-12 last:pb-0">
-                <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint bg-bg text-sm font-semibold text-mint-deep">
+                <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint/70 bg-white/60 text-sm font-semibold text-mint-deep shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md backdrop-saturate-150">
                   {i + 1}
                 </span>
                 <div className="pt-1">

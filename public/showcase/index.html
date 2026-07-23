@@ -16,8 +16,14 @@
   #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #176b4f, #1e8e68); z-index: 400; transition: width .12s linear; }
 
   /* Persistent top nav */
-  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #E7E4DA; padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
-  .showcase-topnav a { font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .2s ease; }
+  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.7); backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%); border-bottom: 1px solid rgba(231,228,218,.7); padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .showcase-topnav a {
+    font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px;
+    background: rgba(255,255,255,.55); border: 1px solid rgba(255,255,255,.7);
+    backdrop-filter: blur(10px) saturate(160%); -webkit-backdrop-filter: blur(10px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 12px rgba(0,0,0,.05);
+    transition: all .2s ease;
+  }
   .showcase-topnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
 
   /* Custom cursor */
@@ -129,7 +135,10 @@
     box-shadow: 0 12px 32px rgba(30, 142, 104, 0.35);
   }
   .btn-secondary {
-    background: #fff;
+    background: rgba(255,255,255,.5);
+    backdrop-filter: blur(12px) saturate(160%);
+    -webkit-backdrop-filter: blur(12px) saturate(160%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9);
     color: #176b4f;
     padding: 16px 32px;
     border: 2px solid #176b4f;
@@ -199,7 +208,9 @@
     margin: 0 auto;
   }
   .link-card {
-    background: #fff;
+    background: rgba(255,255,255,.6);
+    backdrop-filter: blur(16px) saturate(160%);
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
     border-radius: 16px;
     padding: 40px 32px;
     text-decoration: none;
@@ -207,8 +218,8 @@
     position: relative;
     overflow: hidden;
     transition: all .3s cubic-bezier(.2,.7,.2,1);
-    box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 30px rgba(0,0,0,0.06);
-    border: 1.5px solid transparent;
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 6px rgba(0,0,0,0.03), 0 12px 30px rgba(0,0,0,0.06);
+    border: 1.5px solid rgba(255,255,255,.7);
     display: flex;
     flex-direction: column;
   }
@@ -287,21 +298,31 @@
   .gallery-scroll { position: relative; height: 340vh; max-width: 1180px; margin: 0 auto; padding: 0 24px 120px; }
   .book { position: sticky; top: 70px; }
   @media (max-width: 720px) { .gallery-scroll { height: auto; padding-bottom: 60px; } .book { position: static; } }
-  .book-tabs { display: flex; gap: 1px; background: #E7E4DA; border: 1px solid #E7E4DA; border-bottom: none; overflow-x: auto; border-radius: 16px 16px 0 0; }
+  .book-tabs {
+    display: flex; gap: 1px; background: rgba(231,228,218,.6); border: 1px solid rgba(255,255,255,.6); border-bottom: none;
+    overflow-x: auto; border-radius: 16px 16px 0 0; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+  }
   .book-tabs .tab {
-    flex: 1; padding: 14px 10px; background: #fff; color: #6B6B63; font-size: 11.5px; font-weight: 700;
+    flex: 1; padding: 14px 10px; background: rgba(255,255,255,.5); color: #6B6B63; font-size: 11.5px; font-weight: 700;
     text-transform: uppercase; letter-spacing: .04em; cursor: pointer; border: none; white-space: nowrap;
     transition: background .25s ease, color .25s ease;
   }
-  .book-tabs .tab.active { background: #F6F5F1; color: #176b4f; }
+  .book-tabs .tab.active { background: rgba(255,255,255,.85); color: #176b4f; }
   .book-tabs .tab:hover:not(.active) { color: #10211B; }
 
   /* device frames — browser + phone shown side by side for every style */
-  .devices-row { display: flex; gap: 20px; align-items: stretch; border: 1px solid #E7E4DA; border-top: none; border-radius: 0 0 16px 16px; padding: 18px; background: #F6F5F1; }
-  .device-frame.browser { flex: 1; min-width: 0; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 20px 50px rgba(0,0,0,0.06); }
-  .browser-chrome { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #F1EFE8; border-bottom: 1px solid #E7E4DA; }
+  .devices-row {
+    display: flex; gap: 20px; align-items: stretch; border: 1px solid rgba(255,255,255,.6); border-top: none;
+    border-radius: 0 0 16px 16px; padding: 18px; background: rgba(246,245,241,.6);
+    backdrop-filter: blur(14px) saturate(160%); -webkit-backdrop-filter: blur(14px) saturate(160%);
+  }
+  .device-frame.browser {
+    flex: 1; min-width: 0; border-radius: 10px; overflow: hidden; background: rgba(255,255,255,.7);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 4px 6px rgba(0,0,0,0.03), 0 20px 50px rgba(0,0,0,0.06);
+  }
+  .browser-chrome { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: rgba(241,239,232,.75); border-bottom: 1px solid rgba(231,228,218,.7); }
   .browser-chrome .cdot { width: 8px; height: 8px; border-radius: 50%; background: #D8D5CB; }
-  .browser-chrome .url-pill { margin-left: 6px; flex: 1; max-width: 220px; height: 19px; border-radius: 10px; background: #fff; border: 1px solid #E7E4DA; font-size: 10px; color: #9A968A; display: flex; align-items: center; padding: 0 10px; overflow: hidden; white-space: nowrap; }
+  .browser-chrome .url-pill { margin-left: 6px; flex: 1; max-width: 220px; height: 19px; border-radius: 10px; background: rgba(255,255,255,.8); border: 1px solid rgba(231,228,218,.9); font-size: 10px; color: #9A968A; display: flex; align-items: center; padding: 0 10px; overflow: hidden; white-space: nowrap; }
   .book-page { position: relative; aspect-ratio: 16/9; overflow: hidden; perspective: 1400px; }
   .layout-wire {
     position: absolute; inset: 0; padding: clamp(18px,3.6vw,40px); opacity: 0; pointer-events: none;

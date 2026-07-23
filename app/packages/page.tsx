@@ -126,7 +126,7 @@ export default function PackagesPage() {
               <Reveal
                 key={tier.name}
                 delay={i * 60}
-                className={`rounded-xl bg-surface p-7 shadow-card ${
+                className={`rounded-xl bg-white/55 p-7 shadow-card shadow-[inset_0_1px_0_rgba(255,255,255,0.9)] backdrop-blur-md backdrop-saturate-150 ${
                   tier.recommended
                     ? "border-2 border-mint shadow-soft"
                     : "border-t-2 border-mint"
