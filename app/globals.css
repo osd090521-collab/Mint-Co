@@ -262,3 +262,123 @@ html[data-js] [data-reveal][data-shown="true"] .timeline-line {
     transition-duration: 0.001ms !important;
   }
 }
+
+/* ============================================================
+   MARQUEE THEME GALLERY — 13 ticker styles, most artistic first.
+   Each .mq-theme-N strip reuses the same duplicate-track +
+   translateX(-50%) loop as the base .marquee-track above.
+   ============================================================ */
+.marquee-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.marquee-gallery .mq-strip {
+  overflow: hidden;
+  border-radius: 14px;
+  position: relative;
+}
+.marquee-gallery .mq-text {
+  padding: 0 20px;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.marquee-gallery .mq-amp {
+  font-size: 16px;
+}
+
+/* 13. Pinterest Bloom */
+.mq-theme-13-bg { position: relative; padding: 26px 0; overflow: hidden; background: #FBF7F0; border-radius: 14px; }
+.mq-blob-13 { position: absolute; border-radius: 44% 56% 62% 38%/48% 42% 58% 52%; filter: blur(42px); opacity: .75; animation: mq-morph-13 16s ease-in-out infinite; }
+.mq-blob-13.a { width: 280px; height: 260px; background: radial-gradient(circle,#F2B9A6,transparent 72%); top: -70px; left: 4%; }
+.mq-blob-13.b { width: 320px; height: 300px; background: radial-gradient(circle,#9FD9C4,transparent 72%); bottom: -110px; left: 36%; animation-delay: -5s; }
+.mq-blob-13.c { width: 260px; height: 240px; background: radial-gradient(circle,#F5D68A,transparent 72%); top: -50px; right: 8%; animation-delay: -10s; }
+.mq-blob-13.d { width: 220px; height: 220px; background: radial-gradient(circle,#D6A9E0,transparent 72%); bottom: -80px; right: 22%; animation-delay: -13s; }
+@keyframes mq-morph-13 { 0%,100% { border-radius: 44% 56% 62% 38%/48% 42% 58% 52%; transform: scale(1); } 50% { border-radius: 58% 42% 40% 60%/54% 60% 40% 46%; transform: scale(1.08); } }
+.mq-theme-13 { background: rgba(255,255,255,.5); backdrop-filter: blur(20px) saturate(150%); -webkit-backdrop-filter: blur(20px) saturate(150%); border: 1px solid rgba(255,255,255,.65); box-shadow: 0 1px 0 rgba(255,255,255,.7) inset, 0 24px 60px rgba(90,60,40,.12); padding: 17px 0; margin: 0 14px; border-radius: 14px; }
+.mq-theme-13 .mq-text { color: #4A2E22; letter-spacing: .04em; }
+.mq-theme-13 .mq-amp { font-family: var(--font-fraunces); font-style: italic; font-weight: 500; font-size: 19px; color: #C9633B; }
+
+/* 12. Apple Frost */
+.mq-theme-12-bg { position: relative; padding: 26px 0; background: linear-gradient(135deg,#F4F4F6,#EDEEF2); overflow: hidden; border-radius: 14px; }
+.mq-blob-12 { position: absolute; border-radius: 50%; filter: blur(50px); opacity: .55; animation: mq-drift-12 18s ease-in-out infinite; }
+.mq-blob-12.a { width: 260px; height: 260px; background: radial-gradient(circle,#A8C8FF,transparent 70%); top: -60px; left: 8%; }
+.mq-blob-12.b { width: 300px; height: 300px; background: radial-gradient(circle,#E3B8F5,transparent 70%); bottom: -100px; left: 40%; animation-delay: -6s; }
+.mq-blob-12.c { width: 240px; height: 240px; background: radial-gradient(circle,#B8F0DC,transparent 70%); top: -40px; right: 6%; animation-delay: -12s; }
+@keyframes mq-drift-12 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(14px,-10px) scale(1.06); } }
+.mq-theme-12 { background: rgba(255,255,255,.55); backdrop-filter: blur(22px) saturate(160%); -webkit-backdrop-filter: blur(22px) saturate(160%); border: 1px solid rgba(255,255,255,.6); box-shadow: 0 1px 0 rgba(255,255,255,.8) inset, 0 20px 50px rgba(30,40,60,.10); padding: 16px 0; margin: 0 14px; border-radius: 14px; }
+.mq-theme-12 .mq-text { color: #1D1D1F; font-weight: 590; letter-spacing: -0.01em; text-transform: none; font-size: 14px; }
+.mq-theme-12 .mq-amp { color: #0071E3; font-weight: 600; }
+
+/* 11. Spotlight Drift (interactive — cursor-tracked glow) */
+.mq-theme-11 { background: #0D1117; padding: 16px 0; position: relative; --mx: 50%; --my: 50%; }
+.mq-theme-11::before { content: ""; position: absolute; inset: 0; pointer-events: none; border-radius: 14px; background: radial-gradient(320px circle at var(--mx) var(--my), rgba(30,142,104,.28), transparent 65%); transition: background .05s linear; }
+.mq-theme-11 .mq-text { position: relative; background: linear-gradient(90deg, #F5F4EF, #1e8e68, #4FA8FF, #F5F4EF); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; animation: mq-shift-11 8s ease-in-out infinite; }
+@keyframes mq-shift-11 { 0%,100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+.mq-theme-11 .mq-amp { position: relative; color: #4FA8FF; }
+
+/* 10. Aurora Shift (interactive — rotating conic glow) */
+.mq-theme-10 { background: #0A0E14; padding: 16px 0; position: relative; overflow: hidden; }
+.mq-theme-10::before { content: ""; position: absolute; inset: -40%; background: conic-gradient(from 0deg, #7B2FF7, #00D4FF, #1E8E68, #FF3DAD, #7B2FF7); filter: blur(60px); opacity: .35; animation: mq-spin-10 10s linear infinite; }
+@keyframes mq-spin-10 { to { transform: rotate(360deg); } }
+.mq-theme-10 .mq-text { position: relative; color: #F5F3FF; }
+.mq-theme-10 .mq-amp { position: relative; background: linear-gradient(90deg,#00D4FF,#7B2FF7,#FF3DAD,#00D4FF); background-size: 300% 100%; -webkit-background-clip: text; background-clip: text; color: transparent; font-weight: 700; animation: mq-hue-10 4s linear infinite; }
+@keyframes mq-hue-10 { to { background-position: 300% 0; } }
+
+/* 9. Glass */
+.mq-theme-9-bg { position: relative; border-radius: 14px; padding: 20px 0; overflow: hidden; background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1400&auto=format&fit=crop&q=70') center/cover; }
+.mq-theme-9-bg::before { content:""; position:absolute; inset:0; background: linear-gradient(120deg, rgba(20,10,40,.55), rgba(0,20,40,.5)); border-radius: 14px; }
+.mq-theme-9 { background: rgba(255,255,255,.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(255,255,255,.28); padding: 14px 0; margin: 0 14px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.2); position: relative; }
+.mq-theme-9 .mq-text { color: #FFFFFF; text-shadow: 0 1px 4px rgba(0,0,0,.3); }
+.mq-theme-9 .mq-amp { color: #7EE8C6; }
+
+/* 8. Carbon Steel */
+.mq-theme-8 { background: repeating-linear-gradient(135deg, #1A1D1F 0px, #1A1D1F 2px, #17191B 2px, #17191B 4px); padding: 16px 0; border-top: 2px solid #3A3F42; border-bottom: 2px solid #3A3F42; }
+.mq-theme-8 .mq-text { color: #E4E6E7; }
+.mq-theme-8 .mq-amp { color: #E0A835; }
+
+/* 7. Rose Quartz */
+.mq-theme-7 { background: linear-gradient(120deg,#FCEEF3,#F7E7EF); padding: 16px 0; }
+.mq-theme-7 .mq-text { color: #6B2A44; }
+.mq-theme-7 .mq-amp { color: #D4487A; }
+
+/* 6. Mono Terminal */
+.mq-theme-6 { background: #000; padding: 16px 0; }
+.mq-theme-6 .mq-text { color: #B8FFD9; font-family: var(--font-jetbrains-mono); letter-spacing: .06em; }
+.mq-theme-6 .mq-text::before { content: "> "; color: #33E895; }
+.mq-theme-6 .mq-amp { color: #33E895; font-family: var(--font-jetbrains-mono); }
+
+/* 5. Terracotta Editorial */
+.mq-theme-5 { background: #F4EEE4; padding: 16px 0; border: 1px solid #E4D9C6; }
+.mq-theme-5 .mq-text { color: #5C2E1B; }
+.mq-theme-5 .mq-amp { color: #B5502E; }
+
+/* 4. Deep Navy Tech */
+.mq-theme-4 { background: linear-gradient(135deg,#060B18,#0B1530); padding: 16px 0; }
+.mq-theme-4 .mq-text { color: #DCE6F5; font-family: var(--font-space-grotesk); }
+.mq-theme-4 .mq-amp { color: #4FA8FF; text-shadow: 0 0 12px rgba(79,168,255,.6); }
+
+/* 3. Arctic Minimal */
+.mq-theme-3 { background: #FFFFFF; padding: 16px 0; border: 1px solid #E7E4DA; }
+.mq-theme-3 .mq-text { color: #10211B; }
+.mq-theme-3 .mq-amp { color: #B98B5E; }
+
+/* 2. Obsidian Gold */
+.mq-theme-2 { background: #0A0A0A; padding: 16px 0; border: 1px solid #2A2418; }
+.mq-theme-2 .mq-text { color: #EDE6D6; font-weight: 500; letter-spacing: .18em; }
+.mq-theme-2 .mq-amp { color: #C9A24B; }
+
+/* 1. Midnight Emerald */
+.mq-theme-1 { background: #0C1C16; padding: 16px 0; position: relative; }
+.mq-theme-1 .mq-text { color: #F5F4EF; }
+.mq-theme-1 .mq-amp { color: #2FBE85; }
+.mq-theme-1::after { content:""; position:absolute; inset:0; background: radial-gradient(ellipse at 20% 50%, rgba(47,190,133,.10), transparent 60%); pointer-events:none; border-radius: 14px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mq-blob-12, .mq-blob-13, .mq-theme-10::before, .mq-theme-10 .mq-amp, .mq-theme-11 .mq-text {
+    animation: none;
+  }
+}
