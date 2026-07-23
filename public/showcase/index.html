@@ -9,32 +9,121 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; }
+  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; padding-top: 50px; }
   h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
+
+  /* Scroll progress bar */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #176b4f, #1e8e68); z-index: 400; transition: width .12s linear; }
+
+  /* Persistent top nav */
+  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #E7E4DA; padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .showcase-topnav a { font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .2s ease; }
+  .showcase-topnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
+
+  /* Custom cursor */
+  #cursor-dot, #cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 500; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; }
+  #cursor-glow { position: fixed; top: 0; left: 0; width: 280px; height: 280px; pointer-events: none; z-index: 60; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; opacity: 0; background: radial-gradient(circle, rgba(30, 142, 104, 0.14) 0%, transparent 70%); mix-blend-mode: screen; transition: opacity .4s ease; }
+  body.cursor-ready #cursor-glow { opacity: 1; }
+  #cursor-dot { width: 7px; height: 7px; background: #1e8e68; opacity: 0; }
+  #cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(30, 142, 104, 0.7); opacity: 0; transition: width .25s ease, height .25s ease, border-color .25s ease, opacity .25s ease; }
+  body.cursor-ready #cursor-dot, body.cursor-ready #cursor-ring { opacity: 1; }
+  body.cursor-ready { cursor: none; }
+  #cursor-ring.hover { width: 64px; height: 64px; border-color: #1e8e68; background: rgba(30, 142, 104, 0.14); }
+  @media (pointer: coarse), (hover: none) { #cursor-dot, #cursor-ring { display: none; } body.cursor-ready { cursor: auto; } }
+
+  /* Page curtain */
+  #curtain { position: fixed; inset: 0; z-index: 600; background: #F6F5F1; display: flex; align-items: center; justify-content: center; transition: transform .9s cubic-bezier(.7,0,.15,1), opacity .6s ease .3s; }
+  #curtain.leave { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { #curtain { display: none; } }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 100; background: #fff; border: 1px solid #E7E4DA; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: all .3s ease; }
+  .theme-toggle:hover { background: #176b4f; color: #fff; border-color: #176b4f; }
+
+  /* Reveal animations */
+  .reveal { opacity: 0; transform: translateY(12px) scale(0.95); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal[data-shown="true"] { opacity: 1; transform: translateY(0) scale(1); }
+
   .intro { text-align: center; padding: 80px 24px 40px; }
   .intro img { width: 56px; height: 56px; margin-bottom: 20px; }
+
+  /* Emblem on a stand — badge spins, stand stays still */
+  .emblem-stand { display: flex; flex-direction: column; align-items: center; margin-bottom: 20px; }
+  .emblem-spin-wrap { perspective: 600px; margin-bottom: 2px; }
+  .emblem-badge {
+    width: 76px; height: 76px; display: block; animation: badgeSpin 5.5s linear infinite;
+    filter: drop-shadow(0 10px 18px rgba(0,0,0,.18));
+  }
+  @keyframes badgeSpin { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } }
+  .stand-pillar { width: 4px; height: 20px; background: linear-gradient(180deg, #C7C4B8, #9A9891); border-radius: 2px; }
+  .stand-base {
+    width: 58px; height: 11px; border-radius: 50%; margin-top: -2px;
+    background: radial-gradient(ellipse at 35% 30%, #E7E4DA, #B0AEA1 70%);
+    box-shadow: 0 5px 10px rgba(0,0,0,.14);
+  }
+  @media (prefers-reduced-motion: reduce) { .emblem-badge { animation: none; } }
   .intro h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 500; margin-bottom: 16px; }
   .intro p { font-size: 17px; color: #6B6B63; max-width: 54ch; margin: 0 auto; line-height: 1.6; }
   .links { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 20px 24px 100px; max-width: 1000px; margin: 0 auto; }
   .link-card {
     width: 300px; max-width: 100%; background: #fff; border-radius: 20px; padding: 30px 26px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(0,0,0,0.08); text-decoration: none; color: inherit;
-    transition: transform .2s ease, box-shadow .2s ease;
+    position: relative; overflow: hidden; transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease; will-change: transform;
   }
-  .link-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 30px 60px rgba(0,0,0,0.12); }
+  .link-card::after {
+    content: ""; position: absolute; top: -20%; left: -60%; width: 40%; height: 140%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.6), transparent);
+    transform: skewX(-20deg); transition: left .6s ease; pointer-events: none;
+  }
+  .link-card:hover::after { left: 130%; }
+  .link-card:hover { box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 30px 60px rgba(0,0,0,0.12); }
   .link-card .n { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
   .link-card h3 { font-size: 19px; margin-bottom: 8px; }
   .link-card p { font-size: 13.5px; color: #6B6B63; line-height: 1.6; margin: 0 0 16px; }
   .link-card .go { font-size: 13px; font-weight: 600; color: #176B4F; }
+
+  @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
 <body>
-  <div class="intro">
-    <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
-    <h1>Mint &amp; Co — Showcase</h1>
-    <p>Everything a client can browse before we build their site: full page styles, individual
-      components, and background/visual effects.</p>
+
+<!-- Top Navigation -->
+<div class="showcase-topnav">
+  <a href="https://mintandco.co.uk">Live site ↗</a>
+  <a href="https://mintandco.co.uk/free-audit">Get free audit ↗</a>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress"></div>
+
+<!-- Cursor System -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-glow"></div>
+
+<!-- Page Load Curtain -->
+<div id="curtain">
+  <div style="display: flex; align-items: center; gap: 12px; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 1.7rem; color: #10211B;">
+    <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L22 22H2Z M12 2L2 22H22Z" fill="currentColor" opacity="0.1"/>
+      <circle cx="12" cy="12" r="3" fill="currentColor"/>
+    </svg>
+    Mint & Co
   </div>
+</div>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="theme-btn">🌙</button>
+
+<div class="intro reveal">
+  <div class="emblem-stand">
+    <div class="emblem-spin-wrap"><img class="emblem-badge" src="showcase-assets/mint-compass-mark.png" alt="Mint & Co"></div>
+    <div class="stand-pillar"></div>
+    <div class="stand-base"></div>
+  </div>
+  <h1>Mint &amp; Co — Showcase</h1>
+  <p>A professional AI software-engineering studio. We build the websites, the automations, and the agentic workflows. Everything a client can browse before we build their entire system: full page styles, individual components, premium motion effects, and visual systems.</p>
+</div>
   <div class="links">
     <a class="link-card" href="homepage-showcase.html" style="border:2px solid #176B4F;">
       <div class="n" style="color:#176B4F;">Flagship</div>
@@ -66,6 +155,100 @@
       <p>Holographic blobs, mesh gradients, grain texture and glow-line dividers.</p>
       <div class="go">Open →</div>
     </a>
+    <a class="link-card" href="motion-showcase.html">
+      <div class="n">04</div>
+      <h3>Motion &amp; Effects</h3>
+      <p>Custom cursor, scroll effects, theme toggle, before/after sliders, rotating badges, sparkles, and premium interactions that showcase what's possible.</p>
+      <div class="go">Open →</div>
+    </a>
   </div>
+
+<script>
+  // Initialize cursor system
+  var cursorDot = document.getElementById('cursor-dot');
+  var cursorRing = document.getElementById('cursor-ring');
+  var cursorGlow = document.getElementById('cursor-glow');
+  var body = document.body;
+
+  function initCursor() {
+    body.classList.add('cursor-ready');
+
+    document.addEventListener('mousemove', function(e) {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(function(el) {
+      el.addEventListener('mouseenter', function() { cursorRing.classList.add('hover'); });
+      el.addEventListener('mouseleave', function() { cursorRing.classList.remove('hover'); });
+    });
+  }
+
+  // Progress bar
+  function updateProgress() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('progress').style.width = scrolled + '%';
+  }
+
+  // Page curtain
+  function removeCurtain() {
+    var curtain = document.getElementById('curtain');
+    setTimeout(function() { curtain.classList.add('leave'); }, 500);
+  }
+
+  // Reveal animations
+  function initReveal() {
+    var reveals = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.setAttribute('data-shown', 'true');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(function(el) { observer.observe(el); });
+  }
+
+  // Theme toggle
+  document.getElementById('theme-btn').addEventListener('click', function() {
+    var html = document.documentElement;
+    var isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    this.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  // Link cards — magnetic pull that follows the cursor as it gets close.
+  document.querySelectorAll('.link-card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      var px = (e.clientX - r.left - r.width / 2) * 0.2;
+      var py = (e.clientY - r.top - r.height / 2) * 0.35 - 4;
+      card.style.transform = 'translate(' + px + 'px,' + py + 'px)';
+    });
+    card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+  });
+
+  // Initialize
+  initCursor();
+  updateProgress();
+  initReveal();
+  removeCurtain();
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  // Restore theme preference
+  var theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+</script>
+
 </body>
 </html>
