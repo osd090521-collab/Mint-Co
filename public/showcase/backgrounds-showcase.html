@@ -106,6 +106,44 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
+  /* ── CHROME RIBBON FLOW (scroll parallax + looping variants) ── */
+  .flow-hero {
+    position: relative; height: 420px; border-radius: 20px; overflow: hidden; background: #050308;
+  }
+  .flow-hero-tag {
+    position: absolute; bottom: 18px; left: 18px; z-index: 3; font-size: 12px; font-weight: 600; color: #fff;
+    background: rgba(0,0,0,.4); backdrop-filter: blur(6px); padding: 7px 14px; border-radius: 20px;
+  }
+  .flow-layer {
+    position: absolute; height: 46%; border-radius: 50%; filter: blur(38px) saturate(1.3); opacity: .8;
+    background: conic-gradient(from 0deg, var(--c1), var(--c2), #050308, var(--c1));
+    animation: flowDrift 9s ease-in-out infinite alternate;
+    will-change: transform;
+  }
+  @keyframes flowDrift {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    100% { transform: translate(var(--driftpx, 50px), 0) rotate(12deg); }
+  }
+
+  .flow-loop { position: absolute; inset: -20%; }
+  .flow-loop-a {
+    background: conic-gradient(from 200deg at 35% 40%, #7B2FF7, #00D4FF, #FF3DAD, #FFB86B, #7B2FF7);
+    filter: blur(46px) saturate(1.4); opacity: .8; animation: flowLoop 11s ease-in-out infinite;
+  }
+  .flow-loop-artistic {
+    background: conic-gradient(from 160deg at 55% 45%, #E07A3F, #B5502E, #6A22D6, #00A3C4, #E07A3F);
+    filter: blur(50px) saturate(1.15); opacity: .7; animation: flowLoop 14s ease-in-out infinite reverse;
+  }
+  @keyframes flowLoop {
+    0%   { transform: translate(-6%, -4%) rotate(0deg) scale(1); }
+    35%  { transform: translate(6%, 5%) rotate(8deg) scale(1.08); }
+    65%  { transform: translate(-4%, 6%) rotate(-6deg) scale(1.04); }
+    100% { transform: translate(-6%, -4%) rotate(0deg) scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .flow-layer, .flow-loop-a, .flow-loop-artistic { animation: none; }
+  }
+
   /* ── GLOW LINE DIVIDERS (Seamless.ai style) ── */
   .glow-lines-wrap { border-radius: 20px; overflow: hidden; background: #0C0A16; padding: 40px 0; }
   .glow-line { height: 6px; margin: 14px 0; border-radius: 4px; filter: blur(.4px); }
@@ -134,9 +172,86 @@
   .showcase-nav a { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #176B4F; text-decoration: none; transition: opacity .2s ease; }
   .showcase-nav a:hover { opacity: .7; }
   .showcase-nav .next { margin-left: auto; }
+
+  /* Scroll progress bar */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #176b4f, #1e8e68); z-index: 400; transition: width .12s linear; }
+
+  /* Persistent top nav */
+  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #E7E4DA; padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .showcase-topnav a { font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .2s ease; }
+  .showcase-topnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
+
+  /* Custom cursor */
+  #cursor-dot, #cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 500; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; }
+  #cursor-glow { position: fixed; top: 0; left: 0; width: 280px; height: 280px; pointer-events: none; z-index: 60; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; opacity: 0; background: radial-gradient(circle, rgba(30, 142, 104, 0.14) 0%, transparent 70%); mix-blend-mode: screen; transition: opacity .4s ease; }
+  body.cursor-ready #cursor-glow { opacity: 1; }
+  #cursor-dot { width: 7px; height: 7px; background: #1e8e68; opacity: 0; }
+  #cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(30, 142, 104, 0.7); opacity: 0; transition: width .25s ease, height .25s ease, border-color .25s ease, opacity .25s ease; }
+  body.cursor-ready #cursor-dot, body.cursor-ready #cursor-ring { opacity: 1; }
+  body.cursor-ready { cursor: none; }
+  #cursor-ring.hover { width: 64px; height: 64px; border-color: #1e8e68; background: rgba(30, 142, 104, 0.14); }
+  @media (pointer: coarse), (hover: none) { #cursor-dot, #cursor-ring { display: none; } body.cursor-ready { cursor: auto; } }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 100; background: #fff; border: 1px solid #E7E4DA; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: all .3s ease; }
+  .theme-toggle:hover { background: #176b4f; color: #fff; border-color: #176b4f; }
+
+
+  /* ── Sheet-scroll stack (sticky sections) ── */
+  .sheets { position: relative; z-index: 2; }
+  .sheet {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-top: 2px solid #E7E4DA;
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -30px 60px -20px rgba(0,0,0,.08);
+    padding: 100px 40px;
+    scroll-behavior: smooth;
+  }
+  .sheet::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 5px;
+    border-radius: 99px;
+    background: #E7E4DA;
+  }
+  .sheet.dark {
+    background: #f0ebe5;
+  }
+  .sheet .sheet-content {
+    max-width: 1000px;
+    width: 100%;
+    text-align: center;
+  }
+  .sheet h2 {
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #10211B;
+  }
+  .sheet p {
+    font-size: 18px;
+    color: #566761;
+    line-height: 1.7;
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sheet { scroll-behavior: auto; }
+  }
+
 </style>
 </head>
-<body>
+<body style="padding-top: 50px;">
 <a href="index.html" style="position:fixed;top:18px;left:18px;z-index:100;display:inline-flex;align-items:center;gap:6px;background:#10211B;color:#fff;font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;padding:9px 16px;border-radius:20px;text-decoration:none;box-shadow:0 4px 12px rgba(0,0,0,.25);">&larr; Back to showcase</a>
 
   <div class="intro">
@@ -148,11 +263,42 @@
   </div>
 
   <div class="jumpnav">
+    <a href="#flow">Chrome ribbon flow (new)</a>
     <a href="#holo">Holographic blobs</a>
     <a href="#mesh">Mesh gradients</a>
     <a href="#grain">Grain texture</a>
     <a href="#glow">Glow lines</a>
     <a href="#glass">Glass over gradient</a>
+  </div>
+
+  <!-- CHROME RIBBON FLOW — scroll-linked preview -->
+  <div class="section" id="flow">
+    <div class="section-head">
+      <h2>Chrome ribbon flow <span style="font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#B98B5E;background:#FBF0DD;padding:4px 10px;border-radius:20px;vertical-align:middle;">Preview — not wired in yet</span></h2>
+      <p>Glossy iridescent ribbons that actually drift horizontally <em>and</em> vertically as you
+        scroll the page (not just a static image) — plus a softer, more painterly variant. Scroll
+        this section to see the live parallax; the two smaller cards below loop on their own so
+        you can compare styles side by side.</p>
+    </div>
+
+    <!-- Full-bleed scroll-parallax demo -->
+    <div class="flow-hero" id="flow-hero">
+      <div class="flow-layer" data-speed="0.35" data-drift="40" style="--c1:#7B2FF7;--c2:#00D4FF;top:8%;left:-10%;width:70%;"></div>
+      <div class="flow-layer" data-speed="0.6" data-drift="-60" style="--c1:#00D4FF;--c2:#FF3DAD;top:35%;left:35%;width:80%;"></div>
+      <div class="flow-layer" data-speed="0.2" data-drift="70" style="--c1:#FF3DAD;--c2:#FFB86B;top:60%;left:-20%;width:60%;"></div>
+      <div class="flow-hero-tag">Scroll to move ↕ &nbsp;·&nbsp; drifts ↔ on its own</div>
+    </div>
+
+    <div class="bg-grid" style="margin-top:18px;">
+      <div class="bg-card" style="background:#08070F;">
+        <div class="flow-loop flow-loop-a"></div>
+        <div class="tag">Chrome ribbon — looping</div>
+      </div>
+      <div class="bg-card" style="background:#0E0A14;">
+        <div class="flow-loop flow-loop-artistic"></div>
+        <div class="tag">Artistic — softer, painterly</div>
+      </div>
+    </div>
   </div>
 
   <!-- HOLOGRAPHIC BLOBS -->
@@ -240,6 +386,105 @@
     <a href="index.html">← Back to showcase</a>
     <a href="index.html" class="next">Back to main showcase →</a>
   </div>
+
+<script>
+  // Chrome ribbon flow — real scroll-linked vertical parallax (each layer at its own speed),
+  // layered on top of the CSS drift animation which handles the horizontal wobble.
+  (function () {
+    var hero = document.getElementById('flow-hero');
+    if (!hero) return;
+    var layers = Array.prototype.slice.call(hero.querySelectorAll('.flow-layer'));
+    layers.forEach(function (layer) {
+      layer.style.setProperty('--driftpx', (layer.dataset.drift || 50) + 'px');
+    });
+
+    function update() {
+      var rect = hero.getBoundingClientRect();
+      layers.forEach(function (layer) {
+        var speed = parseFloat(layer.dataset.speed) || 0.3;
+        var offset = (window.innerHeight - rect.top) * speed * 0.15;
+        layer.style.marginTop = offset + 'px';
+      });
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(function () { update(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+  
+  // Initialize cursor system
+  var cursorDot = document.getElementById('cursor-dot');
+  var cursorRing = document.getElementById('cursor-ring');
+  var cursorGlow = document.getElementById('cursor-glow');
+  var body = document.body;
+
+  function initCursor() {
+    body.classList.add('cursor-ready');
+    document.addEventListener('mousemove', function(e) {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(function(el) {
+      el.addEventListener('mouseenter', function() { cursorRing.classList.add('hover'); });
+      el.addEventListener('mouseleave', function() { cursorRing.classList.remove('hover'); });
+    });
+  }
+
+  function updateProgress() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('progress').style.width = scrolled + '%';
+  }
+
+  document.getElementById('theme-btn').addEventListener('click', function() {
+    var html = document.documentElement;
+    var isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    this.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  initCursor();
+  updateProgress();
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  var theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+
+</script>
+
+<div class="sheets">
+  <div class="sheet">
+    <div class="sheet-content">
+      <h2>Scroll Down to Explore</h2>
+      <p>Each section sticks as you scroll, creating a premium viewing experience.</p>
+    </div>
+  </div>
+  <div class="sheet dark">
+    <div class="sheet-content">
+      <h2>Premium Design Quality</h2>
+      <p>Every detail crafted for conversion. Every interaction optimized for users.</p>
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="sheet-content">
+      <h2>Enterprise-Grade Performance</h2>
+      <p>Built for scale, speed, and results. Your website works as hard as you do.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

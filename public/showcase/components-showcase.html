@@ -41,8 +41,18 @@
   .panel-label { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #9A9891; margin-bottom: 18px; }
   .row { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
 
-  /* ── BUTTONS ── */
-  .btn { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
+  /* ── BUTTONS — magnetic pull + shine sweep ── */
+  .btn {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
+    transition: transform .25s cubic-bezier(.2,.7,.2,1), box-shadow .3s ease; will-change: transform;
+  }
+  .btn::after {
+    content: ""; position: absolute; top: -20%; left: -60%; width: 40%; height: 140%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+    transform: skewX(-20deg); transition: left .6s ease; pointer-events: none;
+  }
+  .btn:hover::after { left: 130%; }
   /* Warm set */
   .btn-warm-primary { background: #176B4F; color: #fff; padding: 12px 24px; border-radius: 10px; }
   .btn-warm-primary:hover { background: #135840; }
@@ -160,6 +170,83 @@
   .showcase-nav a { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 600; color: #176B4F; text-decoration: none; transition: opacity .2s ease; }
   .showcase-nav a:hover { opacity: .7; }
   .showcase-nav .next { margin-left: auto; }
+
+  /* Scroll progress bar */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #176b4f, #1e8e68); z-index: 400; transition: width .12s linear; }
+
+  /* Persistent top nav */
+  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #E7E4DA; padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .showcase-topnav a { font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .2s ease; }
+  .showcase-topnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
+
+  /* Custom cursor */
+  #cursor-dot, #cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 500; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; }
+  #cursor-glow { position: fixed; top: 0; left: 0; width: 280px; height: 280px; pointer-events: none; z-index: 60; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; opacity: 0; background: radial-gradient(circle, rgba(30, 142, 104, 0.14) 0%, transparent 70%); mix-blend-mode: screen; transition: opacity .4s ease; }
+  body.cursor-ready #cursor-glow { opacity: 1; }
+  #cursor-dot { width: 7px; height: 7px; background: #1e8e68; opacity: 0; }
+  #cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(30, 142, 104, 0.7); opacity: 0; transition: width .25s ease, height .25s ease, border-color .25s ease, opacity .25s ease; }
+  body.cursor-ready #cursor-dot, body.cursor-ready #cursor-ring { opacity: 1; }
+  body.cursor-ready { cursor: none; }
+  #cursor-ring.hover { width: 64px; height: 64px; border-color: #1e8e68; background: rgba(30, 142, 104, 0.14); }
+  @media (pointer: coarse), (hover: none) { #cursor-dot, #cursor-ring { display: none; } body.cursor-ready { cursor: auto; } }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 100; background: #fff; border: 1px solid #E7E4DA; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: all .3s ease; }
+  .theme-toggle:hover { background: #176b4f; color: #fff; border-color: #176b4f; }
+
+
+  /* ── Sheet-scroll stack (sticky sections) ── */
+  .sheets { position: relative; z-index: 2; }
+  .sheet {
+    position: sticky;
+    top: 0;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    border-top: 2px solid #E7E4DA;
+    border-radius: 32px 32px 0 0;
+    box-shadow: 0 -30px 60px -20px rgba(0,0,0,.08);
+    padding: 100px 40px;
+    scroll-behavior: smooth;
+  }
+  .sheet::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 64px;
+    height: 5px;
+    border-radius: 99px;
+    background: #E7E4DA;
+  }
+  .sheet.dark {
+    background: #f0ebe5;
+  }
+  .sheet .sheet-content {
+    max-width: 1000px;
+    width: 100%;
+    text-align: center;
+  }
+  .sheet h2 {
+    font-size: clamp(32px, 6vw, 56px);
+    font-weight: 600;
+    margin-bottom: 24px;
+    color: #10211B;
+  }
+  .sheet p {
+    font-size: 18px;
+    color: #566761;
+    line-height: 1.7;
+    max-width: 60ch;
+    margin: 0 auto;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sheet { scroll-behavior: auto; }
+  }
+
 </style>
 </head>
 <body>
@@ -438,6 +525,88 @@
     <a href="index.html">← Back to showcase</a>
     <a href="backgrounds-showcase.html" class="next">Next: Backgrounds & Effects →</a>
   </div>
+
+<script>
+  // Buttons — magnetic pull that follows the cursor as it gets close.
+  (function () {
+    document.querySelectorAll('.btn').forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var px = (e.clientX - r.left - r.width / 2) * 0.28;
+        var py = (e.clientY - r.top - r.height / 2) * 0.5;
+        btn.style.transform = 'translate(' + px + 'px,' + py + 'px)';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
+    });
+  })();
+  
+  // Initialize cursor system
+  var cursorDot = document.getElementById('cursor-dot');
+  var cursorRing = document.getElementById('cursor-ring');
+  var cursorGlow = document.getElementById('cursor-glow');
+  var body = document.body;
+
+  function initCursor() {
+    body.classList.add('cursor-ready');
+    document.addEventListener('mousemove', function(e) {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+    });
+    document.querySelectorAll('a, button').forEach(function(el) {
+      el.addEventListener('mouseenter', function() { cursorRing.classList.add('hover'); });
+      el.addEventListener('mouseleave', function() { cursorRing.classList.remove('hover'); });
+    });
+  }
+
+  function updateProgress() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('progress').style.width = scrolled + '%';
+  }
+
+  document.getElementById('theme-btn').addEventListener('click', function() {
+    var html = document.documentElement;
+    var isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    this.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  initCursor();
+  updateProgress();
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  var theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+
+</script>
+
+<div class="sheets">
+  <div class="sheet">
+    <div class="sheet-content">
+      <h2>Scroll Down to Explore</h2>
+      <p>Each section sticks as you scroll, creating a premium viewing experience.</p>
+    </div>
+  </div>
+  <div class="sheet dark">
+    <div class="sheet-content">
+      <h2>Premium Design Quality</h2>
+      <p>Every detail crafted for conversion. Every interaction optimized for users.</p>
+    </div>
+  </div>
+  <div class="sheet">
+    <div class="sheet-content">
+      <h2>Enterprise-Grade Performance</h2>
+      <p>Built for scale, speed, and results. Your website works as hard as you do.</p>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

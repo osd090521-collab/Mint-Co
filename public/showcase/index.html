@@ -3,63 +3,484 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mint & Co — Showcase</title>
+<title>Mint & Co — AI Software-Engineering Studio</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   * { box-sizing: border-box; }
-  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; }
+  body { margin: 0; background: #F6F5F1; color: #2A2A28; font-family: 'Inter', -apple-system, sans-serif; padding-top: 50px; }
   h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; margin: 0; }
-  .intro { text-align: center; padding: 80px 24px 40px; }
-  .intro img { width: 56px; height: 56px; margin-bottom: 20px; }
-  .intro h1 { font-size: clamp(30px, 5vw, 46px); font-weight: 500; margin-bottom: 16px; }
-  .intro p { font-size: 17px; color: #6B6B63; max-width: 54ch; margin: 0 auto; line-height: 1.6; }
-  .links { display: flex; flex-wrap: wrap; gap: 24px; justify-content: center; padding: 20px 24px 100px; max-width: 1000px; margin: 0 auto; }
-  .link-card {
-    width: 300px; max-width: 100%; background: #fff; border-radius: 20px; padding: 30px 26px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.04), 0 20px 50px rgba(0,0,0,0.08); text-decoration: none; color: inherit;
-    transition: transform .2s ease, box-shadow .2s ease;
+
+  /* Scroll progress bar */
+  #progress { position: fixed; top: 0; left: 0; height: 3px; width: 0%; background: linear-gradient(90deg, #176b4f, #1e8e68); z-index: 400; transition: width .12s linear; }
+
+  /* Persistent top nav */
+  .showcase-topnav { position: fixed; top: 0; left: 0; right: 0; z-index: 999; background: rgba(246,245,241,.95); backdrop-filter: blur(8px); border-bottom: 1px solid #E7E4DA; padding: 12px 24px; display: flex; gap: 12px; align-items: center; justify-content: center; }
+  .showcase-topnav a { font-size: 12.5px; font-weight: 600; color: #10211B; text-decoration: none; padding: 8px 16px; border-radius: 20px; background: #fff; border: 1px solid #E7E4DA; transition: all .2s ease; }
+  .showcase-topnav a:hover { background: #10211B; color: #fff; border-color: #10211B; }
+
+  /* Custom cursor */
+  #cursor-dot, #cursor-ring { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 500; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; }
+  #cursor-glow { position: fixed; top: 0; left: 0; width: 280px; height: 280px; pointer-events: none; z-index: 60; border-radius: 50%; transform: translate(-50%,-50%); will-change: transform; opacity: 0; background: radial-gradient(circle, rgba(30, 142, 104, 0.14) 0%, transparent 70%); mix-blend-mode: screen; transition: opacity .4s ease; }
+  body.cursor-ready #cursor-glow { opacity: 1; }
+  #cursor-dot { width: 7px; height: 7px; background: #1e8e68; opacity: 0; }
+  #cursor-ring { width: 34px; height: 34px; border: 1px solid rgba(30, 142, 104, 0.7); opacity: 0; transition: width .25s ease, height .25s ease, border-color .25s ease, opacity .25s ease; }
+  body.cursor-ready #cursor-dot, body.cursor-ready #cursor-ring { opacity: 1; }
+  body.cursor-ready { cursor: none; }
+  #cursor-ring.hover { width: 64px; height: 64px; border-color: #1e8e68; background: rgba(30, 142, 104, 0.14); }
+  @media (pointer: coarse), (hover: none) { #cursor-dot, #cursor-ring { display: none; } body.cursor-ready { cursor: auto; } }
+
+  /* Page curtain */
+  #curtain { position: fixed; inset: 0; z-index: 600; background: #F6F5F1; display: flex; align-items: center; justify-content: center; transition: transform .9s cubic-bezier(.7,0,.15,1), opacity .6s ease .3s; }
+  #curtain.leave { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+  @media (prefers-reduced-motion: reduce) { #curtain { display: none; } }
+
+  /* Theme toggle */
+  .theme-toggle { position: fixed; bottom: 24px; right: 24px; z-index: 100; background: #fff; border: 1px solid #E7E4DA; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; transition: all .3s ease; }
+  .theme-toggle:hover { background: #176b4f; color: #fff; border-color: #176b4f; }
+
+  /* Reveal animations */
+  .reveal { opacity: 0; transform: translateY(12px) scale(0.95); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal[data-shown="true"] { opacity: 1; transform: translateY(0) scale(1); }
+
+  /* HERO SECTION */
+  .hero-section {
+    background: linear-gradient(135deg, #F6F5F1 0%, #FFFBF7 100%);
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
   }
-  .link-card:hover { transform: translateY(-4px); box-shadow: 0 8px 16px rgba(0,0,0,0.06), 0 30px 60px rgba(0,0,0,0.12); }
-  .link-card .n { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
-  .link-card h3 { font-size: 19px; margin-bottom: 8px; }
-  .link-card p { font-size: 13.5px; color: #6B6B63; line-height: 1.6; margin: 0 0 16px; }
-  .link-card .go { font-size: 13px; font-weight: 600; color: #176B4F; }
+  .hero-section::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(30, 142, 104, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .hero-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .hero-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: #1e8e68;
+    background: rgba(30, 142, 104, 0.1);
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin-bottom: 24px;
+  }
+  .hero-section h1 {
+    font-size: clamp(48px, 8vw, 72px);
+    font-weight: 500;
+    margin-bottom: 20px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+  .hero-section h1 .grad {
+    background: linear-gradient(135deg, #1e8e68, #176b4f);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero-section > p {
+    font-size: 18px;
+    color: #566761;
+    max-width: 600px;
+    margin: 0 auto 32px;
+    line-height: 1.7;
+  }
+  .cta-group {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #1e8e68, #176b4f);
+    color: #fff;
+    padding: 16px 32px;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 24px rgba(30, 142, 104, 0.25);
+    transition: all .3s ease;
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(30, 142, 104, 0.35);
+  }
+  .btn-secondary {
+    background: #fff;
+    color: #176b4f;
+    padding: 16px 32px;
+    border: 2px solid #176b4f;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all .3s ease;
+  }
+  .btn-secondary:hover {
+    background: #176b4f;
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  /* SOCIAL PROOF */
+  .social-proof {
+    max-width: 1000px;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #E7E4DA;
+    margin-bottom: 60px;
+  }
+  .social-proof p {
+    font-size: 14px;
+    color: #B98B5E;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    margin-bottom: 16px;
+  }
+  .proof-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .stat-number {
+    font-size: 32px;
+    font-weight: 700;
+    color: #1e8e68;
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-size: 13px;
+    color: #6B6B63;
+  }
+
+  /* SHOWCASE CARDS */
+  .links {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 28px;
+    justify-content: center;
+    padding: 0 24px 120px;
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+  .link-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 40px 32px;
+    text-decoration: none;
+    color: inherit;
+    position: relative;
+    overflow: hidden;
+    transition: all .3s cubic-bezier(.2,.7,.2,1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 30px rgba(0,0,0,0.06);
+    border: 1.5px solid transparent;
+    display: flex;
+    flex-direction: column;
+  }
+  .link-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #1e8e68, #176b4f);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .3s ease;
+  }
+  .link-card:hover::before {
+    transform: scaleX(1);
+  }
+  .link-card::after {
+    content: "";
+    position: absolute;
+    top: -20%;
+    left: -60%;
+    width: 40%;
+    height: 140%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.5), transparent);
+    transform: skewX(-20deg);
+    transition: left .6s ease;
+    pointer-events: none;
+  }
+  .link-card:hover::after { left: 130%; }
+  .link-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.08), 0 24px 48px rgba(0,0,0,0.12);
+    border-color: #1e8e68;
+  }
+  .link-card .card-icon {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+  .link-card .n {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #1e8e68;
+    margin-bottom: 12px;
+  }
+  .link-card h3 {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    line-height: 1.3;
+  }
+  .link-card p {
+    font-size: 14.5px;
+    color: #6B6B63;
+    line-height: 1.7;
+    margin: 0 0 20px;
+    flex-grow: 1;
+  }
+  .link-card .go {
+    font-size: 13px;
+    font-weight: 600;
+    color: #1e8e68;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  @media (prefers-reduced-motion: reduce) { * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; } }
 </style>
 </head>
 <body>
-  <div class="intro">
-    <img src="showcase-assets/mint-compass-mark.png" alt="Mint & Co">
-    <h1>Mint &amp; Co — Showcase</h1>
-    <p>Everything a client can browse before we build their site: full page styles, individual
-      components, and background/visual effects.</p>
+
+<!-- Top Navigation -->
+<div class="showcase-topnav">
+  <a href="https://mintandco.co.uk">Live site ↗</a>
+  <a href="https://mintandco.co.uk/free-audit">Get free audit ↗</a>
+</div>
+
+<!-- Progress Bar -->
+<div id="progress"></div>
+
+<!-- Cursor System -->
+<div id="cursor-dot"></div>
+<div id="cursor-ring"></div>
+<div id="cursor-glow"></div>
+
+<!-- Page Load Curtain -->
+<div id="curtain">
+  <div style="display: flex; align-items: center; gap: 12px; font-family: 'Fraunces', Georgia, serif; font-style: italic; font-size: 1.7rem; color: #10211B;">
+    <svg style="width: 24px; height: 24px;" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2L22 22H2Z M12 2L2 22H22Z" fill="currentColor" opacity="0.1"/>
+      <circle cx="12" cy="12" r="3" fill="currentColor"/>
+    </svg>
+    Mint & Co
   </div>
-  <div class="links">
-    <a class="link-card" href="homepage-showcase.html" style="border:2px solid #176B4F;">
-      <div class="n" style="color:#176B4F;">Flagship</div>
-      <h3>Full homepage demo</h3>
-      <p>The complete top-spec build in one real page — nav, hero, features, buttons, pricing, reviews, FAQ and footer, all working together.</p>
-      <div class="go">Open →</div>
-    </a>
-    <a class="link-card" href="design-showcase.html">
-      <div class="n">01</div>
-      <h3>Page styles</h3>
-      <p>Seven complete look-and-feel options, side by side, plus a fully custom tier.</p>
-      <div class="go">Open →</div>
-    </a>
-    <a class="link-card" href="components-showcase.html">
-      <div class="n">02</div>
-      <h3>Components</h3>
-      <p>Buttons, forms, cards, pricing, reviews, FAQ and footers — the actual building blocks.</p>
-      <div class="go">Open →</div>
-    </a>
-    <a class="link-card" href="backgrounds-showcase.html">
-      <div class="n">03</div>
-      <h3>Backgrounds &amp; effects</h3>
-      <p>Holographic blobs, mesh gradients, grain texture and glow-line dividers.</p>
-      <div class="go">Open →</div>
-    </a>
+</div>
+
+<!-- Theme Toggle -->
+<button class="theme-toggle" id="theme-btn">🌙</button>
+
+<!-- HERO SECTION -->
+<section class="hero-section reveal">
+  <div class="hero-inner">
+    <span class="hero-badge">AI Software-Engineering Studio</span>
+    <h1>Websites that <span class="grad">sell. Automations that scale.</span></h1>
+    <p>We don't build websites. We build automated business systems that answer phones, capture leads, boost reviews, and close bookings 24/7. Everything powered by AI.</p>
+    <div class="cta-group">
+      <a href="what-we-do-showcase.html" class="btn-primary">See How It Works →</a>
+      <a href="https://mintandco.co.uk/free-audit" class="btn-secondary">Get Free Audit</a>
+    </div>
   </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<div class="social-proof reveal">
+  <p>Trusted by local businesses</p>
+  <div class="proof-stats">
+    <div class="stat">
+      <div class="stat-number">50+</div>
+      <div class="stat-label">Businesses powered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">15K+</div>
+      <div class="stat-label">Bookings generated</div>
+    </div>
+    <div class="stat">
+      <div class="stat-number">4.9★</div>
+      <div class="stat-label">Average client rating</div>
+    </div>
+  </div>
+</div>
+
+<!-- SHOWCASE CARDS -->
+<div class="links">
+  <a class="link-card reveal" href="what-we-do-showcase.html">
+    <div class="card-icon">🤖</div>
+    <div class="n">The Foundation</div>
+    <h3>The Full System</h3>
+    <p>See how your website becomes a customer-generating machine. Missed calls answered, reviews gathered, SEO ranking — all automated.</p>
+    <div class="go">Explore the system →</div>
+  </a>
+
+  <a class="link-card reveal" href="homepage-showcase.html">
+    <div class="card-icon">🎨</div>
+    <div class="n">The Design</div>
+    <h3>Flagship Website</h3>
+    <p>Our complete website build. Fast, beautiful, and built to convert. Includes booking system, review section, and performance optimization.</p>
+    <div class="go">View the build →</div>
+  </a>
+
+  <a class="link-card reveal" href="design-showcase.html">
+    <div class="card-icon">🎭</div>
+    <div class="n">The Flexibility</div>
+    <h3>7 Design Styles</h3>
+    <p>One powerful system. Seven completely different looks. Choose your brand, or go fully custom. Same performance, different personality.</p>
+    <div class="go">See all styles →</div>
+  </a>
+
+  <a class="link-card reveal" href="components-showcase.html">
+    <div class="card-icon">⚙️</div>
+    <div class="n">The Details</div>
+    <h3>Premium Components</h3>
+    <p>Buttons that respond. Forms that convert. Cards, pricing tables, reviews, footers — every element built for speed and sales.</p>
+    <div class="go">Explore components →</div>
+  </a>
+
+  <a class="link-card reveal" href="backgrounds-showcase.html">
+    <div class="card-icon">✨</div>
+    <div class="n">The Polish</div>
+    <h3>Backgrounds & Effects</h3>
+    <p>Holographic gradients, mesh effects, grain textures, and glowing dividers. The visual details that separate premium from ordinary.</p>
+    <div class="go">See the effects →</div>
+  </a>
+
+  <a class="link-card reveal" href="motion-showcase.html">
+    <div class="card-icon">🎬</div>
+    <div class="n">The Wow Factor</div>
+    <h3>17 Premium Features</h3>
+    <p>Custom cursor, scroll effects, theme toggle, before/after sliders, sparkles, rotating badges. Everything that makes high-end sites feel alive.</p>
+    <div class="go">Experience motion →</div>
+  </a>
+</div>
+
+<script>
+  // Initialize cursor system
+  var cursorDot = document.getElementById('cursor-dot');
+  var cursorRing = document.getElementById('cursor-ring');
+  var cursorGlow = document.getElementById('cursor-glow');
+  var body = document.body;
+
+  function initCursor() {
+    body.classList.add('cursor-ready');
+
+    document.addEventListener('mousemove', function(e) {
+      cursorDot.style.left = e.clientX + 'px';
+      cursorDot.style.top = e.clientY + 'px';
+      cursorRing.style.left = e.clientX + 'px';
+      cursorRing.style.top = e.clientY + 'px';
+      cursorGlow.style.left = e.clientX + 'px';
+      cursorGlow.style.top = e.clientY + 'px';
+    });
+
+    document.querySelectorAll('a, button').forEach(function(el) {
+      el.addEventListener('mouseenter', function() { cursorRing.classList.add('hover'); });
+      el.addEventListener('mouseleave', function() { cursorRing.classList.remove('hover'); });
+    });
+  }
+
+  // Progress bar
+  function updateProgress() {
+    var scrollTop = window.scrollY;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    document.getElementById('progress').style.width = scrolled + '%';
+  }
+
+  // Page curtain
+  function removeCurtain() {
+    var curtain = document.getElementById('curtain');
+    setTimeout(function() { curtain.classList.add('leave'); }, 500);
+  }
+
+  // Reveal animations
+  function initReveal() {
+    var reveals = document.querySelectorAll('.reveal');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.setAttribute('data-shown', 'true');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    reveals.forEach(function(el) { observer.observe(el); });
+  }
+
+  // Theme toggle
+  document.getElementById('theme-btn').addEventListener('click', function() {
+    var html = document.documentElement;
+    var isDark = html.dataset.theme === 'dark';
+    html.dataset.theme = isDark ? 'light' : 'dark';
+    this.textContent = isDark ? '🌙' : '☀️';
+    localStorage.setItem('theme', isDark ? 'light' : 'dark');
+  });
+
+  // Link cards — magnetic pull that follows the cursor as it gets close.
+  document.querySelectorAll('.link-card').forEach(function (card) {
+    card.addEventListener('mousemove', function (e) {
+      var r = card.getBoundingClientRect();
+      var px = (e.clientX - r.left - r.width / 2) * 0.2;
+      var py = (e.clientY - r.top - r.height / 2) * 0.35 - 4;
+      card.style.transform = 'translate(' + px + 'px,' + py + 'px)';
+    });
+    card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+  });
+
+  // Initialize
+  initCursor();
+  updateProgress();
+  initReveal();
+  removeCurtain();
+
+  window.addEventListener('scroll', updateProgress, { passive: true });
+
+  // Restore theme preference
+  var theme = localStorage.getItem('theme') || 'light';
+  document.documentElement.dataset.theme = theme;
+  document.getElementById('theme-btn').textContent = theme === 'dark' ? '☀️' : '🌙';
+</script>
+
 </body>
 </html>
