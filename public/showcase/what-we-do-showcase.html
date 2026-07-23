@@ -57,26 +57,37 @@
   .why-us .section-head p { color: rgba(255,255,255,.68); }
 
   .vtimeline { position: relative; margin-top: 20px; padding-left: 54px; }
-  .vtimeline::before {
-    content: ""; position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px;
+  .vtrack {
+    position: absolute; left: 17px; top: 6px; bottom: 6px; width: 2px; background: rgba(255,255,255,.1);
+  }
+  .vfill {
+    position: absolute; left: 17px; top: 6px; width: 2px; height: 0%;
     background: linear-gradient(180deg, #7B2FF7, #00D4FF 35%, #E0A94A 68%, #FF3DAD);
-    box-shadow: 0 0 14px rgba(123,47,247,.4);
+    box-shadow: 0 0 14px rgba(123,47,247,.6); transition: height .1s linear;
   }
   .lesson { position: relative; padding: 0 0 40px; }
   .lesson:last-child { padding-bottom: 0; }
   .lesson .lnum {
     position: absolute; left: -54px; top: 0; width: 36px; height: 36px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 14px; font-weight: 600;
-    color: #08070F; background: #E0A94A; box-shadow: 0 0 0 6px #08070F, 0 0 18px rgba(224,169,74,.5);
+    color: #08070F; background: #333844; box-shadow: 0 0 0 6px #08070F; transition: background .35s ease, box-shadow .35s ease, transform .35s ease;
   }
-  .lesson:nth-child(2) .lnum { background: #00D4FF; box-shadow: 0 0 0 6px #08070F, 0 0 18px rgba(0,212,255,.5); }
-  .lesson:nth-child(3) .lnum { background: #7B2FF7; color: #fff; box-shadow: 0 0 0 6px #08070F, 0 0 18px rgba(123,47,247,.5); }
-  .lesson:nth-child(4) .lnum { background: #FF3DAD; box-shadow: 0 0 0 6px #08070F, 0 0 18px rgba(255,61,173,.5); }
-  .lesson:nth-child(5) .lnum { background: #1E8E68; box-shadow: 0 0 0 6px #08070F, 0 0 18px rgba(30,142,104,.5); }
+  .lesson .lnum .lnum-text { opacity: 0; transition: opacity .3s ease .1s; }
+  .lesson .lnum .lock-icon { position: absolute; font-size: 13px; opacity: .55; transition: opacity .25s ease, transform .25s ease; }
+  .lesson.unlocked .lnum { transform: scale(1.15); animation: unlockPop .5s ease; }
+  .lesson.unlocked .lnum .lnum-text { opacity: 1; }
+  .lesson.unlocked .lnum .lock-icon { opacity: 0; transform: scale(.4) rotate(-25deg); }
+  .lesson.unlocked:nth-child(1) .lnum { background: #E0A94A; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(224,169,74,.65); }
+  .lesson.unlocked:nth-child(2) .lnum { background: #00D4FF; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(0,212,255,.65); }
+  .lesson.unlocked:nth-child(3) .lnum { background: #7B2FF7; color: #fff; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(123,47,247,.65); }
+  .lesson.unlocked:nth-child(4) .lnum { background: #FF3DAD; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(255,61,173,.65); }
+  .lesson.unlocked:nth-child(5) .lnum { background: #1E8E68; box-shadow: 0 0 0 6px #08070F, 0 0 22px rgba(30,142,104,.65); }
+  @keyframes unlockPop { 0%{transform:scale(1);} 45%{transform:scale(1.45);} 100%{transform:scale(1.15);} }
   .lesson .lcard {
-    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); border-radius: 16px; padding: 20px 24px;
-    backdrop-filter: blur(6px);
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 16px; padding: 20px 24px;
+    backdrop-filter: blur(6px); opacity: .45; transition: opacity .45s ease, border-color .45s ease, background .45s ease;
   }
+  .lesson.unlocked .lcard { opacity: 1; background: rgba(255,255,255,.05); border-color: rgba(255,255,255,.16); }
   .lesson .lcard h4 { font-size: 17px; font-weight: 600; margin-bottom: 8px; color: #fff; }
   .lesson .lcard p { font-size: 13.5px; margin: 0; line-height: 1.65; color: rgba(255,255,255,.65); }
   .why-closer {
@@ -137,18 +148,31 @@
 
   /* ── How it works — vertical timeline ── */
   .vsteps { position: relative; max-width: 600px; margin: 10px auto 0; padding-left: 60px; }
-  .vsteps::before {
-    content: ""; position: absolute; left: 22px; top: 6px; bottom: 6px; width: 2px;
-    background: linear-gradient(180deg, #1E8E68, #176B4F);
+  .vsteps .vtrack { position: absolute; left: 22px; top: 6px; bottom: 6px; width: 2px; background: #E7E4DA; }
+  .vsteps .vfill {
+    position: absolute; left: 22px; top: 6px; width: 2px; height: 0%;
+    background: linear-gradient(180deg, #1E8E68, #176B4F); box-shadow: 0 0 12px rgba(30,142,104,.5);
+    transition: height .1s linear;
   }
   .vstep { position: relative; padding-bottom: 38px; }
   .vstep:last-child { padding-bottom: 0; }
   .vstep .dot {
-    position: absolute; left: -60px; top: 0; width: 46px; height: 46px; border-radius: 50%; background: #10211B; color: #fff;
+    position: absolute; left: -60px; top: 0; width: 46px; height: 46px; border-radius: 50%; background: #D8D6CE; color: #fff;
     display: flex; align-items: center; justify-content: center; font-family: 'Fraunces', serif; font-size: 17px;
-    box-shadow: 0 0 0 6px #F6F5F1;
+    box-shadow: 0 0 0 6px #F6F5F1; transition: background .35s ease, box-shadow .35s ease, transform .35s ease;
   }
-  .vstep .vcard { background: #fff; border-radius: 14px; padding: 18px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 24px rgba(0,0,0,0.05); }
+  .vstep .dot .dot-text { opacity: 0; transition: opacity .3s ease .1s; }
+  .vstep .dot .lock-icon { position: absolute; font-size: 15px; opacity: .5; transition: opacity .25s ease, transform .25s ease; }
+  .vstep.unlocked .dot {
+    background: #10211B; transform: scale(1.12); box-shadow: 0 0 0 6px #F6F5F1, 0 0 18px rgba(23,107,79,.4); animation: unlockPop .5s ease;
+  }
+  .vstep.unlocked .dot .dot-text { opacity: 1; }
+  .vstep.unlocked .dot .lock-icon { opacity: 0; transform: scale(.4) rotate(-25deg); }
+  .vstep .vcard {
+    background: #fff; border-radius: 14px; padding: 18px 22px; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 12px 24px rgba(0,0,0,0.05);
+    opacity: .5; transition: opacity .45s ease;
+  }
+  .vstep.unlocked .vcard { opacity: 1; }
   .vstep h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
   .vstep p { font-size: 13px; color: #6B6B63; line-height: 1.55; margin: 0; }
 
@@ -168,9 +192,25 @@
   .glass-card { position: relative; z-index: 2; background: rgba(255,255,255,.1); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,.25); border-radius: 20px; padding: 44px 36px; max-width: 560px; margin: 0 auto; }
   .glass-card h2 { color: #fff; font-size: 27px; margin-bottom: 14px; }
   .glass-card p { color: rgba(255,255,255,.8); font-size: 14.5px; margin-bottom: 26px; line-height: 1.6; }
-  .btn { font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none; display: inline-flex; align-items: center; gap: 8px; }
-  .btn-glow { background: linear-gradient(90deg,#7B2FF7,#00D4FF); color: #fff; padding: 14px 28px; border-radius: 10px; box-shadow: 0 8px 24px rgba(123,47,247,.35); }
+  /* ── Buttons — shine sweep, magnetic 3D tilt, glow pulse ── */
+  .btn {
+    font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; border: none;
+    display: inline-flex; align-items: center; gap: 8px; position: relative; overflow: hidden;
+    transform-style: preserve-3d; transition: transform .15s ease-out, box-shadow .3s ease; will-change: transform;
+  }
+  .btn::after {
+    content: ""; position: absolute; top: -20%; left: -60%; width: 40%; height: 140%;
+    background: linear-gradient(115deg, transparent, rgba(255,255,255,.55), transparent);
+    transform: skewX(-20deg); transition: left .6s ease; pointer-events: none;
+  }
+  .btn:hover::after { left: 130%; }
+  .btn-glow { background: linear-gradient(90deg,#7B2FF7,#00D4FF); color: #fff; padding: 14px 28px; border-radius: 10px; box-shadow: 0 8px 24px rgba(123,47,247,.35); animation: btnPulse 2.6s ease-in-out infinite; }
+  @keyframes btnPulse {
+    0%, 100% { box-shadow: 0 8px 24px rgba(123,47,247,.35); }
+    50% { box-shadow: 0 8px 34px rgba(0,212,255,.55), 0 0 22px rgba(123,47,247,.4); }
+  }
   .btn-outline-white { background: transparent; color: #fff; padding: 13px 27px; border-radius: 10px; border: 1.5px solid rgba(255,255,255,.5); }
+  .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,.06); }
   .cta-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 </style>
 </head>
@@ -205,17 +245,19 @@
           more than any one piece of it.</p>
       </div>
 
-      <div class="vtimeline">
-        <div class="lesson reveal">
-          <div class="lnum">01</div>
+      <div class="vtimeline" id="lessons-timeline">
+        <div class="vtrack"></div>
+        <div class="vfill"></div>
+        <div class="lesson">
+          <div class="lnum"><span class="lock-icon">🔒</span><span class="lnum-text">01</span></div>
           <div class="lcard">
             <h4>Your website is judged in seconds.</h4>
             <p>Before someone calls, books, or walks in, they've already decided whether they
               trust you — based on a page that loads slow, looks dated, or answers nothing.</p>
           </div>
         </div>
-        <div class="lesson reveal">
-          <div class="lnum">02</div>
+        <div class="lesson">
+          <div class="lnum"><span class="lock-icon">🔒</span><span class="lnum-text">02</span></div>
           <div class="lcard">
             <h4>If you're not visible, you don't exist.</h4>
             <p>Local search only ever shows a shortlist. SEO and your Google profile decide
@@ -223,24 +265,24 @@
               finds you first.</p>
           </div>
         </div>
-        <div class="lesson reveal">
-          <div class="lnum">03</div>
+        <div class="lesson">
+          <div class="lnum"><span class="lock-icon">🔒</span><span class="lnum-text">03</span></div>
           <div class="lcard">
             <h4>Trust is built before the first "hello."</h4>
             <p>Reviews, clear pricing, and a site that looks professional lower the risk of
               booking with someone new — that trust has to exist before contact, not after.</p>
           </div>
         </div>
-        <div class="lesson reveal">
-          <div class="lnum">04</div>
+        <div class="lesson">
+          <div class="lnum"><span class="lock-icon">🔒</span><span class="lnum-text">04</span></div>
           <div class="lcard">
             <h4>Every unanswered moment is a lost customer.</h4>
             <p>A missed call, a slow page, an empty review section — each one is a quiet reason
               to try the next name on the list instead of waiting on you.</p>
           </div>
         </div>
-        <div class="lesson reveal">
-          <div class="lnum">05</div>
+        <div class="lesson">
+          <div class="lnum"><span class="lock-icon">🔒</span><span class="lnum-text">05</span></div>
           <div class="lcard">
             <h4>None of it works alone.</h4>
             <p>A site with no traffic is invisible. Traffic hitting a slow site loses bookings.
@@ -337,12 +379,14 @@
       <h2>From a missed call to a booked job.</h2>
       <p>One connected loop — not three separate tools you have to check.</p>
     </div>
-    <div class="vsteps">
-      <div class="vstep reveal"><div class="dot">1</div><div class="vcard"><h4>Customer finds you</h4><p>Search, Google Maps, or a call — SEO and your profile put you in front of them.</p></div></div>
-      <div class="vstep reveal"><div class="dot">2</div><div class="vcard"><h4>They call or book</h4><p>Site booking or a phone call — either way, it's captured instantly.</p></div></div>
-      <div class="vstep reveal"><div class="dot">3</div><div class="vcard"><h4>Missed call? Instant text</h4><p>If you can't pick up, an auto-text goes out within seconds so they don't call the next name on Google.</p></div></div>
-      <div class="vstep reveal"><div class="dot">4</div><div class="vcard"><h4>Reminder sent</h4><p>SMS/email reminders cut no-shows before the appointment happens.</p></div></div>
-      <div class="vstep reveal"><div class="dot">5</div><div class="vcard"><h4>Review requested</h4><p>After the job, a review request goes out — feeding straight back into your site and your ranking.</p></div></div>
+    <div class="vsteps" id="flow-timeline">
+      <div class="vtrack"></div>
+      <div class="vfill"></div>
+      <div class="vstep"><div class="dot"><span class="lock-icon">🔒</span><span class="dot-text">1</span></div><div class="vcard"><h4>Customer finds you</h4><p>Search, Google Maps, or a call — SEO and your profile put you in front of them.</p></div></div>
+      <div class="vstep"><div class="dot"><span class="lock-icon">🔒</span><span class="dot-text">2</span></div><div class="vcard"><h4>They call or book</h4><p>Site booking or a phone call — either way, it's captured instantly.</p></div></div>
+      <div class="vstep"><div class="dot"><span class="lock-icon">🔒</span><span class="dot-text">3</span></div><div class="vcard"><h4>Missed call? Instant text</h4><p>If you can't pick up, an auto-text goes out within seconds so they don't call the next name on Google.</p></div></div>
+      <div class="vstep"><div class="dot"><span class="lock-icon">🔒</span><span class="dot-text">4</span></div><div class="vcard"><h4>Reminder sent</h4><p>SMS/email reminders cut no-shows before the appointment happens.</p></div></div>
+      <div class="vstep"><div class="dot"><span class="lock-icon">🔒</span><span class="dot-text">5</span></div><div class="vcard"><h4>Review requested</h4><p>After the job, a review request goes out — feeding straight back into your site and your ranking.</p></div></div>
     </div>
   </section>
 
@@ -389,6 +433,62 @@
     items.forEach(function (el, i) {
       el.style.transitionDelay = (i % 6) * 70 + 'ms';
       io.observe(el);
+    });
+  })();
+
+  // Vertical timelines "unlock" step by step as a glowing line fills down the page with scroll.
+  (function () {
+    var timelines = [
+      { el: document.getElementById('lessons-timeline'), itemSel: '.lesson' },
+      { el: document.getElementById('flow-timeline'), itemSel: '.vstep' }
+    ].filter(function (t) { return !!t.el; });
+
+    timelines.forEach(function (t) {
+      t.fill = t.el.querySelector('.vfill');
+      t.items = Array.prototype.slice.call(t.el.querySelectorAll(t.itemSel));
+    });
+
+    function update() {
+      timelines.forEach(function (t) {
+        var rect = t.el.getBoundingClientRect();
+        var anchorY = window.innerHeight * 0.72; // "reading line" — where the unlock happens
+        var progressPx = anchorY - rect.top;
+        var pct = Math.max(0, Math.min(1, progressPx / rect.height));
+        t.fill.style.height = (pct * 100) + '%';
+
+        t.items.forEach(function (item) {
+          var dotRect = item.getBoundingClientRect();
+          var dotCenter = dotRect.top + dotRect.height / 2;
+          if (dotCenter <= anchorY) {
+            if (!item.classList.contains('unlocked')) item.classList.add('unlocked');
+          }
+        });
+      });
+    }
+
+    var ticking = false;
+    window.addEventListener('scroll', function () {
+      if (!ticking) {
+        requestAnimationFrame(function () { update(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+  })();
+
+  // Buttons — magnetic 3D tilt that follows the cursor.
+  (function () {
+    var buttons = document.querySelectorAll('.btn');
+    buttons.forEach(function (btn) {
+      btn.addEventListener('mousemove', function (e) {
+        var r = btn.getBoundingClientRect();
+        var x = e.clientX - r.left, y = e.clientY - r.top;
+        var rotateY = ((x - r.width / 2) / (r.width / 2)) * 8;
+        var rotateX = -((y - r.height / 2) / (r.height / 2)) * 8;
+        btn.style.transform = 'perspective(320px) rotateX(' + rotateX + 'deg) rotateY(' + rotateY + 'deg) scale(1.045) translateZ(4px)';
+      });
+      btn.addEventListener('mouseleave', function () { btn.style.transform = ''; });
     });
   })();
 </script>
