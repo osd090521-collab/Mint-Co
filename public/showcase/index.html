@@ -284,7 +284,7 @@
   .book-head .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
   .book-head h2 { font-size: clamp(24px, 3.2vw, 32px); font-weight: 500; margin-bottom: 12px; }
   .book-head p { font-size: 14.5px; color: #6B6B63; line-height: 1.6; }
-  .gallery-scroll { position: relative; height: 320vh; max-width: 1180px; margin: 0 auto; padding: 0 24px 120px; }
+  .gallery-scroll { position: relative; height: 340vh; max-width: 1180px; margin: 0 auto; padding: 0 24px 120px; }
   .book { position: sticky; top: 70px; }
   @media (max-width: 720px) { .gallery-scroll { height: auto; padding-bottom: 60px; } .book { position: static; } }
   .book-tabs { display: flex; gap: 1px; background: #E7E4DA; border: 1px solid #E7E4DA; border-bottom: none; overflow-x: auto; border-radius: 16px 16px 0 0; }
@@ -295,17 +295,86 @@
   }
   .book-tabs .tab.active { background: #F6F5F1; color: #176b4f; }
   .book-tabs .tab:hover:not(.active) { color: #10211B; }
-  .book-page {
-    position: relative; aspect-ratio: 16/8; border: 1px solid #E7E4DA; border-top: none; border-radius: 0 0 16px 16px;
-    overflow: hidden; perspective: 1400px; background: #fff;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 20px 50px rgba(0,0,0,0.06);
-  }
+
+  /* device frames — browser + phone shown side by side for every style */
+  .devices-row { display: flex; gap: 20px; align-items: stretch; border: 1px solid #E7E4DA; border-top: none; border-radius: 0 0 16px 16px; padding: 18px; background: #F6F5F1; }
+  .device-frame.browser { flex: 1; min-width: 0; border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 4px 6px rgba(0,0,0,0.03), 0 20px 50px rgba(0,0,0,0.06); }
+  .browser-chrome { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #F1EFE8; border-bottom: 1px solid #E7E4DA; }
+  .browser-chrome .cdot { width: 8px; height: 8px; border-radius: 50%; background: #D8D5CB; }
+  .browser-chrome .url-pill { margin-left: 6px; flex: 1; max-width: 220px; height: 19px; border-radius: 10px; background: #fff; border: 1px solid #E7E4DA; font-size: 10px; color: #9A968A; display: flex; align-items: center; padding: 0 10px; overflow: hidden; white-space: nowrap; }
+  .book-page { position: relative; aspect-ratio: 16/9; overflow: hidden; perspective: 1400px; }
   .layout-wire {
-    position: absolute; inset: 0; padding: clamp(20px,4vw,44px); opacity: 0; pointer-events: none;
-    transform: rotateY(-90deg); transform-origin: left center; display: flex; flex-direction: column; justify-content: center;
+    position: absolute; inset: 0; padding: clamp(18px,3.6vw,40px); opacity: 0; pointer-events: none;
+    transform: rotateY(-90deg); transform-origin: left center;
     transition: opacity .4s ease, transform .65s cubic-bezier(.2,.7,.2,1);
   }
   .layout-wire.active { opacity: 1; transform: rotateY(0deg); pointer-events: auto; }
+  .wire-page { display: none; flex-direction: column; justify-content: center; height: 100%; }
+  .wire-page.active { display: flex; }
+
+  .device-frame.phone { width: 190px; flex-shrink: 0; border: 7px solid #1A1A1A; border-radius: 28px; background: #1A1A1A; position: relative; align-self: stretch; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+  .phone-notch { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 46%; height: 16px; background: #1A1A1A; border-radius: 0 0 10px 10px; z-index: 2; }
+  .phone-screen { position: absolute; inset: 0; overflow: hidden; background: #fff; }
+  .phone-screen .wire-page { transform: scale(.62); transform-origin: top left; width: 161%; height: 161%; padding: clamp(18px,3.6vw,40px); }
+  .phone-home { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); width: 34%; height: 3px; border-radius: 2px; background: rgba(255,255,255,.45); z-index: 2; }
+
+  .wire-pager { display: flex; justify-content: center; gap: 8px; padding: 14px 0 4px; }
+  .wire-pager .pdot { width: 22px; height: 6px; border-radius: 3px; border: none; background: #E7E4DA; cursor: pointer; padding: 0; transition: background .2s ease, width .2s ease; }
+  .wire-pager .pdot.active { background: #176b4f; width: 32px; }
+
+  /* real photography inside the previews — subtle, always-alive zoom */
+  .w-photo { background-size: cover; background-position: center; }
+  @keyframes wphoto-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.06); } }
+  .wire-page.active .w-photo { animation: wphoto-pulse 7s ease-in-out infinite; }
+
+  /* Ultra Futuristic — a real iridescent glassmorphism hero, not a stock photo */
+  .w-navbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .w-navdot { width: 13px; height: 13px; border-radius: 50%; background: linear-gradient(135deg,#00D4FF,#7B2FF7); flex-shrink: 0; }
+  .w-navlines { display: flex; gap: 9px; }
+  .w-navlines span { width: 20px; height: 3px; border-radius: 2px; background: rgba(255,255,255,.32); display: block; }
+  .w-hero-iri { position: relative; flex: 1; min-height: 0; display: flex; align-items: center; justify-content: center; border-radius: 12px; overflow: hidden; background: radial-gradient(circle at 28% 25%, rgba(123,47,247,.55), transparent 55%), radial-gradient(circle at 75% 70%, rgba(0,212,255,.5), transparent 55%), #0B0E17; }
+  .w-iri-blob { position: absolute; width: 72%; height: 72%; border-radius: 46%; background: conic-gradient(from 180deg, #7B2FF7, #00D4FF, #FF3DAD, #1E8E68, #7B2FF7); filter: blur(26px); opacity: .55; }
+  @keyframes iri-spin { to { transform: rotate(360deg); } }
+  .wire-page.active .w-iri-blob { animation: iri-spin 12s linear infinite; }
+  .w-glass-card { position: relative; z-index: 2; background: rgba(255,255,255,.08); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); border: 1px solid rgba(255,255,255,.28); border-radius: 12px; padding: 14px 16px; max-width: 76%; box-shadow: 0 10px 30px rgba(0,0,0,.4); }
+  .w-glass-tag { display: inline-block; font-size: 8px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #00D4FF; background: rgba(0,212,255,.14); border: 1px solid rgba(0,212,255,.4); border-radius: 20px; padding: 3px 9px; margin-bottom: 8px; }
+  .w-glass-h1 { font-size: clamp(13px,1.6vw,16px); font-weight: 700; color: #F5F3FF; line-height: 1.25; margin-bottom: 10px; }
+  .w-glass-cta { display: inline-block; font-size: 9px; font-weight: 700; color: #0B0E17; background: linear-gradient(90deg,#00D4FF,#7B2FF7); border-radius: 20px; padding: 6px 13px; }
+  .w-glass-panel { position: relative; border-radius: 10px; overflow: hidden; background: radial-gradient(circle at 30% 30%, rgba(123,47,247,.5), transparent 55%), radial-gradient(circle at 75% 75%, rgba(0,212,255,.45), transparent 55%), #0B0E17; }
+  .w-glass-panel .w-iri-blob { width: 90%; height: 90%; }
+  .w-glass-mini { background: rgba(255,255,255,.07); backdrop-filter: blur(4px); border: 1px solid rgba(255,255,255,.22); border-radius: 8px; }
+
+  @media (max-width: 640px) { .devices-row { flex-direction: column; } .device-frame.phone { width: 150px; aspect-ratio: 9/19; align-self: center; margin: 0 auto; } }
+
+  /* ---------- REAL BUILD — a real, browsable live site ---------- */
+  .proof-head { max-width: 720px; margin: 0 auto 22px; text-align: center; padding: 0 24px; }
+  .proof-head .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #B98B5E; margin-bottom: 10px; }
+  .proof-head h2 { font-size: clamp(24px, 3.2vw, 32px); font-weight: 500; margin-bottom: 12px; }
+  .proof-head p { font-size: 14.5px; color: #6B6B63; line-height: 1.6; }
+  .proof-devices { max-width: 980px; margin: 0 auto; height: min(460px, 58vh); justify-content: center; }
+  .proof-devices .device-frame.browser { display: flex; flex-direction: column; flex: 0 1 560px; max-width: 560px; }
+  .proof-devices .device-frame.phone { width: auto; aspect-ratio: 9/19.5; align-self: stretch; }
+  .proof-frame-wrap { flex: 1; min-height: 0; position: relative; overflow: hidden; }
+  .proof-frame-wrap iframe {
+    position: absolute; top: 0; left: 0; width: 154%; height: 154%; border: 0; display: block;
+    transform: scale(.65); transform-origin: top left; pointer-events: auto;
+  }
+  .device-frame.phone .phone-screen { position: absolute; inset: 0; overflow: hidden; }
+  .device-frame.phone .phone-screen iframe {
+    position: absolute; top: 0; left: 0; width: 182%; height: 182%; border: 0; display: block;
+    transform: scale(.55); transform-origin: top left;
+  }
+  .browser-chrome .live-badge { margin-left: auto; display: flex; align-items: center; gap: 5px; font-size: 10px; font-weight: 700; color: #1E8E68; white-space: nowrap; }
+  .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #1E8E68; }
+  @keyframes live-pulse { 0% { box-shadow: 0 0 0 0 rgba(30,142,104,.5); } 70% { box-shadow: 0 0 0 6px rgba(30,142,104,0); } 100% { box-shadow: 0 0 0 0 rgba(30,142,104,0); } }
+  .live-dot { animation: live-pulse 1.8s ease-out infinite; }
+  .proof-cta { text-align: center; margin-top: 16px; padding: 0 24px 56px; }
+  .proof-cta a { font-size: 13px; font-weight: 600; color: #176b4f; text-decoration: none; }
+  @media (max-width: 640px) {
+    .proof-devices { height: auto; }
+    .proof-devices .device-frame.browser { height: 340px; }
+    .proof-devices .device-frame.phone { width: 190px; height: auto; aspect-ratio: 9/19.5; align-self: center; margin: 0 auto; }
+  }
   .w-bar { height: 18px; width: 32%; margin-bottom: 20px; border-radius: 4px; }
   .w-h1 { height: 30px; width: 60%; margin-bottom: 14px; border-radius: 4px; }
   .w-p { height: 8px; width: 44%; margin-bottom: 22px; border-radius: 4px; opacity: .5; }
@@ -454,6 +523,33 @@
   </a>
 </div>
 
+<!-- REAL BUILD — an actual live site, browsable right here on desktop and mobile -->
+<div class="proof-head reveal">
+  <div class="eyebrow">Crafted with care for each business individually</div>
+  <h2>A real build. Not a mock-up.</h2>
+  <p>This is a live Mint &amp; Co site, working exactly as it does for the business running it. Click around — nothing here is staged.</p>
+</div>
+<div class="devices-row proof-devices reveal">
+  <div class="device-frame browser">
+    <div class="browser-chrome">
+      <span class="cdot" style="background:#F04F4F;"></span><span class="cdot" style="background:#F0B429;"></span><span class="cdot" style="background:#1E8E68;"></span>
+      <div class="url-pill">rangeautomotive.co.uk</div>
+      <span class="live-badge"><span class="live-dot"></span>Live</span>
+    </div>
+    <div class="proof-frame-wrap">
+      <iframe src="https://osd090521-collab.github.io/range-automotive-website/" title="Range Automotive — a real Mint &amp; Co build" loading="lazy"></iframe>
+    </div>
+  </div>
+  <div class="device-frame phone">
+    <div class="phone-notch"></div>
+    <div class="phone-screen">
+      <iframe src="https://osd090521-collab.github.io/range-automotive-website/" title="Range Automotive on mobile" loading="lazy"></iframe>
+    </div>
+    <div class="phone-home"></div>
+  </div>
+</div>
+<div class="proof-cta reveal"><a href="https://osd090521-collab.github.io/range-automotive-website/" target="_blank" rel="noopener">Open the full site in a new tab →</a></div>
+
 <!-- BOOK / FOLDER GALLERY — flip through our 7 styles -->
 <div class="book-head reveal">
   <div class="eyebrow">The archive</div>
@@ -472,70 +568,236 @@
       <button class="tab" data-layout="minimal" role="tab" aria-selected="false">Minimal</button>
       <button class="tab" data-layout="custom" role="tab" aria-selected="false">Custom</button>
     </div>
-    <div class="book-page" id="bookPage">
-      <div class="layout-wire active" data-layout="warm" style="background:#FAFAF7;">
-        <div class="w-bar" style="background:#1E8E68;"></div>
-        <div class="w-h1" style="background:#10211B;opacity:.85;"></div>
-        <div class="w-p" style="background:#566761;"></div>
-        <div class="w-feat">
-          <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
-          <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
-          <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="nebula" style="background:#08070F;">
-        <div class="w-bar" style="background:linear-gradient(90deg,#7B2FF7,#00D4FF);"></div>
-        <div class="w-h1" style="background:#F5F3FF;opacity:.9;"></div>
-        <div class="w-p" style="background:#A8A2C2;"></div>
-        <div class="w-feat">
-          <div class="w-icon" style="background:#14121F;border:1px solid #7B2FF7;box-shadow:0 0 12px rgba(123,47,247,.5);"></div>
-          <div class="w-icon" style="background:#14121F;border:1px solid #00D4FF;box-shadow:0 0 12px rgba(0,212,255,.5);"></div>
-          <div class="w-icon" style="background:#14121F;border:1px solid #FF3DAD;box-shadow:0 0 12px rgba(255,61,173,.5);"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="photo" style="background:#fff;">
-        <div class="w-bar" style="background:#1A1A1A;"></div>
-        <div class="w-grid">
-          <div class="w-cell" style="background:#D8D6CE;"></div><div class="w-cell" style="background:#C7C4B8;"></div>
-          <div class="w-cell" style="background:#B0AEA1;"></div><div class="w-cell" style="background:#D8D6CE;"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="editorial" style="background:#F4EEE4;">
-        <div class="w-bar" style="background:#B5502E;"></div>
-        <div class="w-masonry">
-          <div class="w-m tall" style="background:#C97B4A;"></div><div class="w-m" style="background:#DCD0BC;"></div>
-          <div class="w-m" style="background:#B5502E;"></div><div class="w-m tall" style="background:#DCD0BC;"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="glass" style="background:#E8ECF4;">
-        <div class="w-bar" style="background:#00D4FF;"></div>
-        <div class="w-hero-center soft" style="background:rgba(255,255,255,.6);border:1px solid rgba(0,229,255,.6);"></div>
-        <div class="w-feat">
-          <div class="w-icon round" style="background:rgba(255,255,255,.55);"></div>
-          <div class="w-icon round" style="background:rgba(255,255,255,.55);"></div>
-          <div class="w-icon round" style="background:rgba(255,255,255,.55);"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="minimal" style="background:#fff;">
-        <div class="w-bar" style="background:#111;"></div>
-        <div class="w-h1" style="background:#111;"></div>
-        <div class="w-p" style="background:#999;"></div>
-        <div class="w-menu" style="max-width:40%;">
-          <div class="w-line" style="background:#EEE;"></div>
-          <div class="w-line short" style="background:#EEE;"></div>
-        </div>
-      </div>
-      <div class="layout-wire" data-layout="custom" style="background:conic-gradient(from 210deg,#FDE8D8,#FCEAF2,#E4EFFC,#E4FCEF);">
-        <div class="w-bar" style="background:#2A2A28;"></div>
-        <div class="w-split">
-          <div class="w-block" style="background:conic-gradient(from 90deg,#E07A3F,#B5502E,#7B2FF7,#00D4FF,#1E8E68,#E07A3F);"></div>
-          <div class="w-menu">
-            <div class="w-line" style="background:#2A2A28;opacity:.5;"></div>
-            <div class="w-line short" style="background:#2A2A28;opacity:.5;"></div>
-            <div class="w-cbtn" style="background:#2A2A28;"></div>
+    <div class="devices-row">
+      <div class="device-frame browser">
+        <div class="browser-chrome"><span class="cdot" style="background:#F04F4F;"></span><span class="cdot" style="background:#F0B429;"></span><span class="cdot" style="background:#1E8E68;"></span><div class="url-pill" id="browserUrl">yourbusiness.co.uk</div></div>
+        <div class="book-page" id="bookPage">
+          <div class="layout-wire active" data-layout="warm" style="background:#FAFAF7;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:#1E8E68;"></div>
+              <div class="w-h1" style="background:#10211B;opacity:.85;"></div>
+              <div class="w-p" style="background:#566761;"></div>
+              <div class="w-feat">
+                <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
+                <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
+                <div class="w-icon" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:#1E8E68;"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&auto=format&fit=crop&q=70') center/cover;border:1px solid #1E8E68;"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#566761;"></div>
+                  <div class="w-line short" style="background:#566761;"></div>
+                  <div class="w-cbtn" style="background:#1E8E68;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:#1E8E68;"></div>
+              <div class="w-grid">
+                <div class="w-cell" style="background:#E4F4EC;border:1px solid #1E8E68;"></div><div class="w-cell" style="background:#1E8E68;"></div>
+                <div class="w-cell" style="background:#1E8E68;"></div><div class="w-cell" style="background:#E4F4EC;border:1px solid #1E8E68;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="nebula" style="background:#08070F;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:linear-gradient(90deg,#7B2FF7,#00D4FF);"></div>
+              <div class="w-h1" style="background:#F5F3FF;opacity:.9;"></div>
+              <div class="w-p" style="background:#A8A2C2;"></div>
+              <div class="w-feat">
+                <div class="w-icon" style="background:#14121F;border:1px solid #7B2FF7;box-shadow:0 0 12px rgba(123,47,247,.5);"></div>
+                <div class="w-icon" style="background:#14121F;border:1px solid #00D4FF;box-shadow:0 0 12px rgba(0,212,255,.5);"></div>
+                <div class="w-icon" style="background:#14121F;border:1px solid #FF3DAD;box-shadow:0 0 12px rgba(255,61,173,.5);"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:linear-gradient(90deg,#7B2FF7,#00D4FF);"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400&auto=format&fit=crop&q=70') center/cover;border:1px solid #7B2FF7;box-shadow:0 0 16px rgba(123,47,247,.4);"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#A8A2C2;"></div>
+                  <div class="w-line short" style="background:#A8A2C2;"></div>
+                  <div class="w-cbtn" style="background:linear-gradient(90deg,#7B2FF7,#00D4FF);"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:linear-gradient(90deg,#7B2FF7,#00D4FF);"></div>
+              <div class="w-grid">
+                <div class="w-cell" style="background:#14121F;border:1px solid #7B2FF7;"></div><div class="w-cell" style="background:#14121F;border:1px solid #00D4FF;"></div>
+                <div class="w-cell" style="background:#14121F;border:1px solid #FF3DAD;"></div><div class="w-cell" style="background:#14121F;border:1px solid #7B2FF7;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="photo" style="background:#fff;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:#1A1A1A;"></div>
+              <div class="w-grid">
+                <div class="w-cell w-photo" style="background:url('https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=300&auto=format&fit=crop&q=70') center/cover;"></div><div class="w-cell w-photo" style="background:url('https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=300&auto=format&fit=crop&q=70') center/cover;"></div>
+                <div class="w-cell w-photo" style="background:url('https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=300&auto=format&fit=crop&q=70') center/cover;"></div><div class="w-cell w-photo" style="background:url('https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=300&auto=format&fit=crop&q=70') center/cover;"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:#1A1A1A;"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400&auto=format&fit=crop&q=70') center/cover;"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#B0AEA1;"></div>
+                  <div class="w-line short" style="background:#B0AEA1;"></div>
+                  <div class="w-cbtn" style="background:#1A1A1A;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:#1A1A1A;"></div>
+              <div class="w-feat">
+                <div class="w-icon" style="background:#D8D6CE;"></div>
+                <div class="w-icon" style="background:#C7C4B8;"></div>
+                <div class="w-icon" style="background:#B0AEA1;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="editorial" style="background:#F4EEE4;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:#B5502E;"></div>
+              <div class="w-masonry">
+                <div class="w-m tall" style="background:#C97B4A;"></div><div class="w-m" style="background:#DCD0BC;"></div>
+                <div class="w-m" style="background:#B5502E;"></div><div class="w-m tall" style="background:#DCD0BC;"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:#B5502E;"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=400&auto=format&fit=crop&q=70') center/cover;"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#B5502E;opacity:.6;"></div>
+                  <div class="w-line short" style="background:#B5502E;opacity:.6;"></div>
+                  <div class="w-cbtn" style="background:#B5502E;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:#B5502E;"></div>
+              <div class="w-feat">
+                <div class="w-icon round" style="background:#DCD0BC;"></div>
+                <div class="w-icon round" style="background:#C97B4A;"></div>
+                <div class="w-icon round" style="background:#B5502E;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="glass" style="background:#0B0E17;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-navbar">
+                <div class="w-navdot"></div>
+                <div class="w-navlines"><span></span><span></span><span></span></div>
+              </div>
+              <div class="w-hero-iri">
+                <div class="w-iri-blob"></div>
+                <div class="w-glass-card">
+                  <span class="w-glass-tag">Book smarter</span>
+                  <div class="w-glass-h1">A booking system<br>that feels premium.</div>
+                  <span class="w-glass-cta">Get started →</span>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-navbar">
+                <div class="w-navdot"></div>
+                <div class="w-navlines"><span></span><span></span><span></span></div>
+              </div>
+              <div class="w-split" style="height:auto;flex:1;">
+                <div class="w-glass-panel" style="height:100%;"><div class="w-iri-blob"></div></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:rgba(255,255,255,.5);"></div>
+                  <div class="w-line short" style="background:rgba(255,255,255,.5);"></div>
+                  <span class="w-glass-cta" style="align-self:flex-start;">Our story →</span>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-navbar">
+                <div class="w-navdot"></div>
+                <div class="w-navlines"><span></span><span></span><span></span></div>
+              </div>
+              <div class="w-grid" style="flex:1;">
+                <div class="w-cell w-glass-mini"></div><div class="w-cell w-glass-mini"></div>
+                <div class="w-cell w-glass-mini"></div><div class="w-cell w-glass-mini"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="minimal" style="background:#fff;">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:#111;"></div>
+              <div class="w-h1" style="background:#111;"></div>
+              <div class="w-p" style="background:#999;"></div>
+              <div class="w-menu" style="max-width:40%;">
+                <div class="w-line" style="background:#EEE;"></div>
+                <div class="w-line short" style="background:#EEE;"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:#111;"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1494203484021-3c454daf695d?w=400&auto=format&fit=crop&q=70') center/cover;"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#999;"></div>
+                  <div class="w-line short" style="background:#999;"></div>
+                  <div class="w-cbtn" style="background:#111;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:#111;"></div>
+              <div class="w-feat">
+                <div class="w-icon" style="background:#fff;border:1px solid #111;"></div>
+                <div class="w-icon" style="background:#fff;border:1px solid #111;"></div>
+                <div class="w-icon" style="background:#fff;border:1px solid #111;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="layout-wire" data-layout="custom" style="background:conic-gradient(from 210deg,#FDE8D8,#FCEAF2,#E4EFFC,#E4FCEF);">
+            <div class="wire-page active" data-page="0">
+              <div class="w-bar" style="background:#2A2A28;"></div>
+              <div class="w-split">
+                <div class="w-block w-photo" style="background:url('https://images.unsplash.com/photo-1541701494587-cb58502866ab?w=400&auto=format&fit=crop&q=70') center/cover;"></div>
+                <div class="w-menu">
+                  <div class="w-line" style="background:#2A2A28;opacity:.5;"></div>
+                  <div class="w-line short" style="background:#2A2A28;opacity:.5;"></div>
+                  <div class="w-cbtn" style="background:#2A2A28;"></div>
+                </div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="1">
+              <div class="w-bar" style="background:#2A2A28;"></div>
+              <div class="w-grid">
+                <div class="w-cell" style="background:#E07A3F;"></div><div class="w-cell" style="background:#7B2FF7;"></div>
+                <div class="w-cell" style="background:#00D4FF;"></div><div class="w-cell" style="background:#1E8E68;"></div>
+              </div>
+            </div>
+            <div class="wire-page" data-page="2">
+              <div class="w-bar" style="background:#2A2A28;"></div>
+              <div class="w-feat">
+                <div class="w-icon round" style="background:conic-gradient(from 0deg,#E07A3F,#7B2FF7,#00D4FF,#1E8E68,#E07A3F);"></div>
+                <div class="w-icon round" style="background:conic-gradient(from 90deg,#E07A3F,#7B2FF7,#00D4FF,#1E8E68,#E07A3F);"></div>
+                <div class="w-icon round" style="background:conic-gradient(from 180deg,#E07A3F,#7B2FF7,#00D4FF,#1E8E68,#E07A3F);"></div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <div class="device-frame phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen" id="phoneScreen"></div>
+        <div class="phone-home"></div>
+      </div>
+    </div>
+    <div class="wire-pager" id="wirePager" role="tablist" aria-label="Sample pages">
+      <button class="pdot active" data-page="0" aria-label="Home page"></button>
+      <button class="pdot" data-page="1" aria-label="About page"></button>
+      <button class="pdot" data-page="2" aria-label="Services page"></button>
     </div>
     <div class="book-caption">
       <p id="bookCaption">Soft cream tones, a clean layout, nothing flashy — customers feel like they already know you.</p>
@@ -613,6 +875,9 @@
     var tabs = document.querySelectorAll('.book-tabs .tab');
     var wires = document.querySelectorAll('.layout-wire');
     var caption = document.getElementById('bookCaption');
+    var browserUrl = document.getElementById('browserUrl');
+    var phoneScreen = document.getElementById('phoneScreen');
+    var pagerDots = document.querySelectorAll('.wire-pager .pdot');
     var captions = {
       warm: "Soft cream tones, a clean layout, nothing flashy — customers feel like they already know you.",
       nebula: "Dark background, glowing colour — a look that feels modern and a little rebellious.",
@@ -622,10 +887,39 @@
       minimal: "Black on white, huge whitespace, one thin accent line — quiet confidence.",
       custom: "None of these quite it? We design a one-off style around your business instead."
     };
+    var pageSlugs = { 0: '', 1: '/about', 2: '/services' };
+
+    function activeWire() {
+      var found = null;
+      wires.forEach(function (w) { if (w.classList.contains('active')) found = w; });
+      return found;
+    }
+    function syncPhone() {
+      if (!phoneScreen) return;
+      var wire = activeWire();
+      if (!wire) return;
+      var page = wire.querySelector('.wire-page.active') || wire.querySelector('.wire-page');
+      phoneScreen.innerHTML = '';
+      phoneScreen.style.background = wire.style.background || '#fff';
+      if (page) phoneScreen.appendChild(page.cloneNode(true));
+    }
+    function setPage(pageIdx) {
+      pagerDots.forEach(function (d, i) { d.classList.toggle('active', i === pageIdx); });
+      wires.forEach(function (w) {
+        w.querySelectorAll('.wire-page').forEach(function (p, i) { p.classList.toggle('active', i === pageIdx); });
+      });
+      if (browserUrl) {
+        browserUrl.textContent = 'yourbusiness.co.uk' + (pageSlugs[pageIdx] || '');
+      }
+      syncPhone();
+    }
+    var currentIdx = 0;
     function setActive(idx) {
+      currentIdx = idx;
       tabs.forEach(function (t, i) { t.classList.toggle('active', i === idx); t.setAttribute('aria-selected', i === idx ? 'true' : 'false'); });
       wires.forEach(function (w, i) { w.classList.toggle('active', i === idx); });
       if (caption) caption.textContent = captions[tabs[idx].getAttribute('data-layout')] || '';
+      setPage(0);
     }
     function onScroll() {
       var r = scrollBox.getBoundingClientRect();
@@ -640,6 +934,10 @@
     tabs.forEach(function (tab, i) {
       tab.addEventListener('click', function () { setActive(i); });
     });
+    pagerDots.forEach(function (dot, i) {
+      dot.addEventListener('click', function () { setPage(i); });
+    });
+    syncPhone();
   })();
 
   // Link cards — magnetic pull that follows the cursor as it gets close.
