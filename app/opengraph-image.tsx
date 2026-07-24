@@ -1,13 +1,8 @@
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
 import { ImageResponse } from "next/og";
+import { compassDataUri } from "./components/compass";
 import { site } from "./site.config";
 
 export const dynamic = "force-static";
-
-const markDataUri = `data:image/png;base64,${readFileSync(
-  join(process.cwd(), "public/brand/mint-compass-mark.png"),
-).toString("base64")}`;
 
 export const alt = "Mint & Co — premium websites for businesses, Harrow";
 export const size = { width: 1200, height: 630 };
@@ -30,7 +25,7 @@ export default function OpengraphImage() {
       >
         <div style={{ display: "flex", alignItems: "center", fontSize: 40, color: "#10211B" }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={markDataUri} width={64} height={64} alt="" style={{ marginRight: 18 }} />
+          <img src={compassDataUri} width={64} height={64} alt="" style={{ marginRight: 18 }} />
           <span>Mint</span>
           <span style={{ color: "#1E8E68", margin: "0 10px" }}>
             &amp;

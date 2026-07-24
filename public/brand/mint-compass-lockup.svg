@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="420" viewBox="0 0 1600 420" fill="none" role="img" aria-label="Mint and Co logo lockup">
+  <rect width="1600" height="420" fill="#FAFAF7"/>
+  <defs>
+    <linearGradient id="lknd" gradientUnits="userSpaceOnUse" x1="64" y1="59" x2="64" y2="6"><stop offset="0" stop-color="#123F30"/><stop offset="1" stop-color="#164B39"/></linearGradient>
+    <linearGradient id="lknl" gradientUnits="userSpaceOnUse" x1="64" y1="59" x2="64" y2="6"><stop offset="0" stop-color="#164B39"/><stop offset="0.55" stop-color="#3A785A"/><stop offset="1" stop-color="#89CDA4"/></linearGradient>
+    <linearGradient id="lked" gradientUnits="userSpaceOnUse" x1="69" y1="64" x2="114" y2="64"><stop offset="0" stop-color="#123F30"/><stop offset="1" stop-color="#164B39"/></linearGradient>
+    <linearGradient id="lkel" gradientUnits="userSpaceOnUse" x1="69" y1="64" x2="114" y2="64"><stop offset="0" stop-color="#164B39"/><stop offset="0.55" stop-color="#3A785A"/><stop offset="1" stop-color="#89CDA4"/></linearGradient>
+  </defs>
+
+  <g transform="translate(90 74) scale(2)">
+    <path d="M75.47 14.31 A51 51 0 0 1 113.69 52.53 M113.69 75.47 A51 51 0 0 1 75.47 113.69 M52.53 113.69 A51 51 0 0 1 14.31 75.47 M14.31 52.53 A51 51 0 0 1 52.53 14.31" stroke="#164B39" stroke-width="4.2" stroke-linecap="round" fill="none"/>
+    <path d="M64 6 C73 15.5 77 27 76 39 C75.3 48.5 70.5 55.5 64 59 Z" fill="url(#lknl)"/>
+    <path d="M64 6 C55 15.5 51 27 52 39 C52.7 48.5 57.5 55.5 64 59 Z" fill="url(#lknd)"/>
+    <g transform="matrix(1 0 0 -1 0 128)">
+      <path d="M64 6 C73 15.5 77 27 76 39 C75.3 48.5 70.5 55.5 64 59 Z" fill="url(#lknl)"/>
+      <path d="M64 6 C55 15.5 51 27 52 39 C52.7 48.5 57.5 55.5 64 59 Z" fill="url(#lknd)"/>
+    </g>
+    <path d="M114 64 C104.5 57 93 53.5 81 54.5 C72 55.3 66.5 59.5 69 64 Z" fill="url(#lkel)"/>
+    <path d="M114 64 C104.5 71 93 74.5 81 73.5 C72 72.7 66.5 68.5 69 64 Z" fill="url(#lked)"/>
+    <g transform="matrix(-1 0 0 1 128 0)">
+      <path d="M114 64 C104.5 57 93 53.5 81 54.5 C72 55.3 66.5 59.5 69 64 Z" fill="url(#lkel)"/>
+      <path d="M114 64 C104.5 71 93 74.5 81 73.5 C72 72.7 66.5 68.5 69 64 Z" fill="url(#lked)"/>
+    </g>
+    <path d="M64 58.8 Q65.25 62.75 69.2 64 Q65.25 65.25 64 69.2 Q62.75 65.25 58.8 64 Q62.75 62.75 64 58.8 Z" fill="#164B39"/>
+  </g>
+
+  <text x="420" y="262" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="400" font-size="148" letter-spacing="-1.5" fill="#0F2D23">Mint</text>
+  <text x="758" y="262" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="400" font-size="148" fill="#1E8E68">&amp;</text>
+  <text x="850" y="262" font-family="Fraunces, Georgia, 'Times New Roman', serif" font-weight="400" font-size="148" letter-spacing="-1.5" fill="#0F2D23">Co</text>
+</svg>
