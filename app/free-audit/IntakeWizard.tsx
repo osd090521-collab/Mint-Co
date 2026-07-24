@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { Cta } from "../components/Cta";
 import { Eyebrow } from "../components/Eyebrow";
 import { auditWhatsApp, site } from "../site.config";
 
@@ -108,6 +109,20 @@ const STEP_FIELDS: (keyof Answers)[][] = [
   ["name", "contactMethod", "contactDetail"],
 ];
 
+/**
+ * A per-submission id, generated once and reused across retries within the
+ * same session (persisted alongside the answers draft — see the hydration
+ * effect below). Lets the backend (apps-script/Code.gs) recognise "the same
+ * lead, submitted twice" — a real risk given the no-cors fire-and-forget
+ * design (see the module comment above): a false-failure retry, a second
+ * tab, or a resubmit after a slow response would otherwise write a
+ * duplicate row with no way to tell it apart from a genuinely new lead.
+ */
+function genSubmissionId(): string {
+  if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
+  return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+}
+
 const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 const isPhone = (v: string) =>
   /^\+?[\d\s()-]{9,16}$/.test(v.trim()) && (v.match(/\d/g) ?? []).length >= 10;
@@ -151,7 +166,7 @@ function validateStep(step: number, a: Answers): Partial<Record<keyof Answers, s
 
 function fallbackMailto(a: Answers): string {
   const lines = [
-    "Hi Omar, David & Rodrick,",
+    "Hi Mint & Co,",
     "",
     "I tried the audit form on your site but it didn't go through — here are my answers.",
     "",
@@ -420,6 +435,7 @@ export function IntakeWizard() {
 
   const startedAt = useRef(0);
   const refSource = useRef("");
+  const submissionId = useRef("");
   const headingRef = useRef<HTMLHeadingElement>(null);
   const hydrated = useRef(false);
 
@@ -456,6 +472,8 @@ export function IntakeWizard() {
             setStep(saved.step);
           if (typeof saved.startedAt === "number") startedAt.current = saved.startedAt;
           if (!refSource.current && typeof saved.ref === "string") refSource.current = saved.ref;
+          if (typeof saved.submissionId === "string" && saved.submissionId)
+            submissionId.current = saved.submissionId;
           if (savedAnswers.note) setNoteOpen(true);
           setRestored(true);
         }
@@ -463,6 +481,7 @@ export function IntakeWizard() {
     } catch {
       // corrupt storage — start clean
     }
+    if (!submissionId.current) submissionId.current = genSubmissionId();
     hydrated.current = true;
     /* eslint-enable react-hooks/set-state-in-effect */
   }, []);
@@ -472,7 +491,13 @@ export function IntakeWizard() {
     try {
       sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ answers, step, startedAt: startedAt.current, ref: refSource.current }),
+        JSON.stringify({
+          answers,
+          step,
+          startedAt: startedAt.current,
+          ref: refSource.current,
+          submissionId: submissionId.current,
+        }),
       );
     } catch {
       // storage blocked/full — autosave is best-effort
@@ -545,6 +570,7 @@ export function IntakeWizard() {
       // ignore
     }
     startedAt.current = Date.now();
+    submissionId.current = genSubmissionId(); // starting over is a new lead, not a retry
     setAnswers(EMPTY);
     setErrors({});
     setAttempted([false, false, false, false]);
@@ -583,6 +609,7 @@ export function IntakeWizard() {
         elapsedMs: Date.now() - startedAt.current,
         company,
         ref: refSource.current,
+        submissionId: submissionId.current || genSubmissionId(),
         businessName: a.businessName.trim(),
         businessType: businessTypeFinal(a),
         location: a.location.trim(),
@@ -655,7 +682,7 @@ export function IntakeWizard() {
           {answers.businessName.trim() || "your business"}{" "}
           comes across online: how it
           performs on a phone right now, where you&apos;re likely losing customers, and
-          the two or three things we&apos;d fix first — plus a fixed-price quote.
+          the two or three things we&apos;d fix first — plus which package fits.
           Usually within one working day.
         </p>
         <div className="mt-10 space-y-4 text-base">
@@ -703,7 +730,7 @@ export function IntakeWizard() {
       <div className="mt-4 text-sm text-muted">Step {step + 1} of 4</div>
       <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
         <div
-          className="h-full rounded-full bg-mint transition-[width] duration-300 motion-reduce:transition-none"
+          className="h-full rounded-full bg-mint transition-[width] duration-[var(--dur-control)] ease-[var(--ease-house)] motion-reduce:transition-none"
           style={{ width: `${((step + 1) / 4) * 100}%` }}
         />
       </div>
@@ -1034,13 +1061,9 @@ export function IntakeWizard() {
             ) : (
               <span aria-hidden="true" />
             )}
-            <button
-              type="submit"
-              disabled={sending}
-              className="ml-auto inline-flex min-h-[52px] flex-1 items-center justify-center rounded-xl bg-mint-cta px-8 text-base font-semibold tracking-[0.01em] text-white shadow-soft transition duration-150 hover:bg-mint-deep active:scale-[0.98] disabled:opacity-70 sm:flex-none"
-            >
+            <Cta type="submit" disabled={sending} className="ml-auto flex-1 sm:flex-none">
               {step < 3 ? "Next" : sending ? "Sending…" : "Get my free write-up"}
-            </button>
+            </Cta>
           </div>
           {sending && (
             <div className="mx-auto mt-3 h-[3px] w-full max-w-[560px] overflow-hidden rounded-full bg-line">

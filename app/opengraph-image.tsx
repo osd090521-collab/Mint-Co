@@ -4,7 +4,7 @@ import { site } from "./site.config";
 
 export const dynamic = "force-static";
 
-export const alt = "Mint & Co — premium websites for businesses, Harrow";
+export const alt = "Mint & Co — websites, Google presence & reviews for businesses, Harrow";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -47,7 +47,7 @@ export default function OpengraphImage() {
             Look as good online as you do in person.
           </div>
           <div style={{ display: "flex", marginTop: 28, fontSize: 30, color: "#566761" }}>
-            {"Clear fixed-price packages, agreed before we start"}
+            {"From £49/mo · no setup fee · cancel anytime"}
           </div>
         </div>
 

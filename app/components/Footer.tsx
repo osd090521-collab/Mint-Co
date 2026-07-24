@@ -28,8 +28,8 @@ export function Footer() {
         <div className="flex flex-col items-center">
           <LogoLockup markSize={42} />
           <p className="mt-3 max-w-sm text-sm leading-relaxed text-muted">
-            Mint &amp; Co — a three-person studio by Omar, David and
-            Rodrick. {site.location}.
+            Mint &amp; Co — a three-person studio based in {site.location},
+            working with businesses across London and the UK.
           </p>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm">
@@ -87,6 +87,10 @@ export function Footer() {
             © {new Date().getFullYear()} Mint &amp; Co ·{" "}
             <Link href="/privacy" className="underline underline-offset-4">
               Privacy
+            </Link>{" "}
+            ·{" "}
+            <Link href="/terms" className="underline underline-offset-4">
+              Terms
             </Link>
           </p>
           <p className="mt-1 text-muted">Designed &amp; built by us.</p>

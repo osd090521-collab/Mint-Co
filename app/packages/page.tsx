@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
 import { AmpMarker } from "../components/AmpMarker";
+import { Card } from "../components/Card";
 import { Cta } from "../components/Cta";
 import { ContactCta } from "../components/ContactCta";
 import { Eyebrow } from "../components/Eyebrow";
+import { InlineLink } from "../components/InlineLink";
+import { PageHero } from "../components/PageHero";
+import { staggerDelay } from "../lib/motion";
 import { Reveal } from "../components/Reveal";
-import { packageMailto, site } from "../site.config";
+import { Section } from "../components/Section";
+import { breadcrumbJsonLd, packageMailto, site } from "../site.config";
 
 export const metadata: Metadata = {
   title: "Packages",
@@ -20,6 +25,9 @@ export const metadata: Metadata = {
   },
 };
 
+// Bullets kept in sync with ULTRAPLAN.md §3 — including AEO/GEO on Complete,
+// the tier's stated headline differentiator, which was missing from this
+// page (COHERENCE-AUDIT.md, technical risk list).
 const tiers = [
   {
     name: "Essentials",
@@ -42,6 +50,7 @@ const tiers = [
     bullets: [
       "Everything in Essentials",
       "Full website — designed, built, hosted, secured, backed up",
+      "Local SEO foundations (Search Console, citations, map)",
       "Website edits included (~1 hr/mo fair use)",
       "Business email setup",
       "Booking system setup",
@@ -54,8 +63,9 @@ const tiers = [
     recommended: false,
     bullets: [
       "Everything in Growth",
+      "AI search optimisation (AEO/GEO) — exclusive to Complete",
+      "Local SEO management (not just foundations)",
       "Social setup + monthly branded post templates",
-      "Local SEO management",
       "Branding polish + full copywriting at build",
       "Priority support",
     ],
@@ -69,7 +79,7 @@ const faqs = [
   },
   {
     q: "What happens to my website if I cancel?",
-    a: "You can buy the full site export outright for £595. Otherwise it comes down after a 30-day grace period. Your domain and Google Business Profile were always yours — never hostages.",
+    a: "Your domain and Google Business Profile are yours from day one and stay in your name — always. The website itself is ours while you subscribe: you can buy it outright for £595, or it comes down after a 30-day grace period.",
   },
   {
     q: "When do you bill me?",
@@ -78,6 +88,10 @@ const faqs = [
   {
     q: "Is there a setup fee?",
     a: "No, never. No setup fees, no surprise extras — just the monthly price.",
+  },
+  {
+    q: "How much website editing is actually included?",
+    a: "About an hour a month of fair-use edits — text and image changes, small tweaks. Bigger rebuilds or new pages are quoted separately. We'll always tell you before anything falls outside fair use.",
   },
 ];
 
@@ -91,47 +105,56 @@ const faqJsonLd = {
   })),
 };
 
+const offersJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "OfferCatalog",
+  name: "Mint & Co packages",
+  itemListElement: tiers.map((tier) => ({
+    "@type": "Offer",
+    name: tier.name,
+    description: tier.bullets.join("; "),
+    price: tier.price,
+    priceCurrency: "GBP",
+    priceSpecification: {
+      "@type": "UnitPriceSpecification",
+      price: tier.price,
+      priceCurrency: "GBP",
+      unitText: "MONTH",
+    },
+    seller: { "@type": "Organization", name: site.name },
+  })),
+};
+
 export default function PackagesPage() {
   return (
     <main id="main" className="flex-1">
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
-          <Reveal>
-            <Eyebrow>Packages</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-5xl sm:leading-[1.05] sm:tracking-[-0.02em]">
-              One monthly price. Everything included.
-            </h1>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
-              No setup fees, no minimum term, cancel anytime — plus a free
-              Google review stand in every package.
-            </p>
-          </Reveal>
-          <Reveal delay={180}>
-            <p className="mt-6 max-w-xl text-sm text-muted">
-              No setup fee · No minimum term, cancel anytime · Review stand
-              included free in every package
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="Packages"
+        title="One monthly price. Everything included."
+        lead="No setup fees, no minimum term, cancel anytime — plus a free Google review stand in every package."
+        after={
+          <p className="mt-6 max-w-xl text-sm text-muted">
+            No setup fee · No minimum term, cancel anytime · Review stand
+            included free in every package
+          </p>
+        }
+      />
 
-      <section>
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <div className="grid gap-4 sm:grid-cols-3">
-            {tiers.map((tier, i) => (
-              <Reveal
-                key={tier.name}
-                delay={i * 60}
-                className={`rounded-xl bg-surface p-7 shadow-card ${
-                  tier.recommended
-                    ? "border-2 border-mint shadow-soft"
-                    : "border-t-2 border-mint"
-                }`}
-              >
+      <Section rhythm="standard">
+        {/*
+          A real H2 above the grid, not just an Eyebrow — tier names below
+          are H3s under it. Previously this section had no heading at all
+          and three tier names sat as bare H2 siblings of the FAQ's own
+          (also bare) H2-level questions: eight same-level headings with no
+          section grouping between them. See COHERENCE-AUDIT.md V8.
+        */}
+        <Reveal>
+          <h2 className="sr-only">Compare the packages</h2>
+        </Reveal>
+        <div className="grid gap-4 sm:grid-cols-3">
+          {tiers.map((tier, i) => (
+            <Reveal key={tier.name} delay={staggerDelay(i)}>
+              <Card variant={tier.recommended ? "emphasis" : "default"} className="h-full">
                 {tier.recommended && (
                   <div className="mb-4">
                     <span className="inline-flex rounded-full bg-tint px-3 py-1 text-xs font-semibold uppercase tracking-wide text-mint-deep">
@@ -139,7 +162,7 @@ export default function PackagesPage() {
                     </span>
                   </div>
                 )}
-                <h2 className="text-xl font-medium text-ink">{tier.name}</h2>
+                <h3 className="text-xl font-medium text-ink">{tier.name}</h3>
                 <p className="mt-1 text-sm text-muted">{tier.tagline}</p>
                 <p className="mt-4 font-display text-4xl font-medium text-ink">
                   £{tier.price}
@@ -161,18 +184,38 @@ export default function PackagesPage() {
                 >
                   Ask about {tier.name}
                 </Cta>
-              </Reveal>
-            ))}
-          </div>
+              </Card>
+            </Reveal>
+          ))}
         </div>
-      </section>
+      </Section>
 
-      <section className="border-y border-line bg-warm">
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal className="rounded-xl border border-mint/20 bg-tint p-7 sm:p-9">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-mint-deep">
-              £30 one-time
+      {/*
+        Ownership, ongoing until you leave. Brief §6: ownership and
+        cancellation terms belong in the main decision journey, not only in
+        an FAQ a visitor might not open. Same facts, same wording, as the
+        FAQ answer below and /terms — one honest phrasing, stated once here
+        prominently and repeated consistently everywhere else it appears.
+      */}
+      <Section rhythm="standard" border="y" tone="warm">
+        <Reveal>
+          <Card variant="tint">
+            <Eyebrow>What you own</Eyebrow>
+            <p className="mt-4 max-w-2xl text-lg leading-relaxed text-ink">
+              Your domain and your Google Business Profile are yours from
+              day one and stay in your name — always. The website itself is
+              ours while you subscribe: cancel and you can buy it outright
+              for £595, or it comes down after a 30-day grace period.
+              Nothing here is a surprise you find out on your way out.
             </p>
+          </Card>
+        </Reveal>
+      </Section>
+
+      <Section rhythm="standard" border="bottom" tone="warm">
+        <Reveal>
+          <Card variant="tint">
+            <Eyebrow>£30 one-time</Eyebrow>
             <h2 className="mt-3 text-2xl font-medium text-ink">
               The review stand that starts it all
             </h2>
@@ -192,39 +235,58 @@ export default function PackagesPage() {
             >
               Ask about a stand
             </Cta>
-          </Reveal>
-        </div>
-      </section>
+          </Card>
+        </Reveal>
+      </Section>
 
-      <section>
-        <div className="mx-auto max-w-5xl px-5 py-16 sm:px-8 sm:py-24">
-          <Reveal>
-            <Eyebrow>Questions</Eyebrow>
-          </Reveal>
-          <div className="mt-8">
-            {faqs.map((faq, i) => (
-              <Reveal
-                key={faq.q}
-                delay={i * 60}
-                className="grid grid-cols-1 gap-2 border-b border-line py-8 first:pt-0 sm:grid-cols-[16rem_1fr] sm:gap-10 sm:py-10"
-              >
-                <h2 className="flex items-baseline gap-3 text-lg font-medium text-ink">
-                  <AmpMarker className="w-6 shrink-0 text-right" />
-                  {faq.q}
-                </h2>
-                <p className="text-base leading-relaxed text-muted">{faq.a}</p>
-              </Reveal>
-            ))}
-          </div>
+      <Section rhythm="standard">
+        <Reveal>
+          <Eyebrow>Questions</Eyebrow>
+          <h2 className="sr-only">Questions</h2>
+        </Reveal>
+        <div className="mt-8">
+          {faqs.map((faq, i) => (
+            <Reveal
+              key={faq.q}
+              delay={staggerDelay(i)}
+              className="grid grid-cols-1 gap-2 border-b border-line py-8 first:pt-0 sm:grid-cols-[16rem_1fr] sm:gap-10 sm:py-10"
+            >
+              <h3 className="flex items-baseline gap-3 text-lg font-medium text-ink">
+                <AmpMarker className="w-6 shrink-0 text-right" />
+                {faq.q}
+              </h3>
+              <p className="text-base leading-relaxed text-muted">{faq.a}</p>
+            </Reveal>
+          ))}
         </div>
-      </section>
+        <Reveal delay={staggerDelay(faqs.length)}>
+          <p className="mt-8 text-base text-muted">
+            Want the detail behind what&apos;s actually involved?{" "}
+            <InlineLink href="/services">See all services →</InlineLink>
+          </p>
+        </Reveal>
+      </Section>
 
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
       />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(offersJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd("/packages", "Packages")),
+        }}
+      />
 
-      <ContactCta refSource="packages" />
+      <ContactCta
+        refSource="packages"
+        heading="Still deciding between packages?"
+        lead="Send us a line about your business and we'll tell you honestly which one fits — there's no commission for steering you toward the bigger one."
+      />
     </main>
   );
 }

@@ -62,6 +62,11 @@ function doPost(e) {
   if (data.company) return out; // honeypot filled — silently discard
   if (!(Number(data.elapsedMs) >= CONFIG.minElapsedMs)) return out;
   if (overRateCeiling_()) return out;
+  // Same submissionId seen before (false-failure retry, a second tab, a
+  // slow-response resubmit) → answer success-shaped but skip the row/email.
+  // The client can't tell "it worked" from "it failed" under no-cors, so
+  // without this a retry after an unconfirmed success duplicates the lead.
+  if (data.submissionId && alreadySubmitted_(String(data.submissionId))) return out;
 
   var values = FIELDS.map(function (f) {
     return sanitize_(data[f]);
@@ -105,6 +110,21 @@ function doPost(e) {
   }
 
   return out;
+}
+
+/**
+ * Idempotency check: has this exact submissionId been accepted before?
+ * CacheService caps put() TTL at 21600s (6h) — the platform maximum, used
+ * here in full since a retry could plausibly arrive minutes to hours later
+ * (a user reopening a failed tab, say). First sighting marks it seen and
+ * returns false (proceed); every sighting after that returns true (skip).
+ */
+function alreadySubmitted_(id) {
+  var cache = CacheService.getScriptCache();
+  var key = "submission-" + id.slice(0, 100);
+  if (cache.get(key)) return true;
+  cache.put(key, "1", 21600);
+  return false;
 }
 
 /** Rolling script-wide submission ceiling via CacheService. */

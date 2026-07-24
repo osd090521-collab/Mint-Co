@@ -40,12 +40,12 @@ The visual identity for Mint & Co. Board-reviewed and WCAG-checked. This file is
 - *(Phase 2 upgrade path: a licensed grotesk — Söhne / Aeonik / PP Neue Montreal — if budget allows.)*
 
 ## Voice
-Honest, direct, warm, no jargon. Sell hard on what's **true** (premium, fixed price, ten days, "built to the standard we sell"). **Never** guarantee rankings or bookings. No public competitor-knocking. Never fake reality (no fabricated premises, staff, results, testimonials, or schema).
+Honest, direct, warm, no jargon. Sell hard on what's **true** (one clear monthly price, ten-day build, "built to the standard we sell"). Studio voice in public copy — speak as Mint & Co, not as named individuals (exception: `/privacy` and `/terms`, where UK law requires naming the data controller). **Never** guarantee rankings or bookings. No public competitor-knocking. Never fake reality (no fabricated premises, staff, results, testimonials, or schema).
 
-**Pricing promise:** clear fixed-price packages, agreed before work begins — no vague quotes, no surprise extras. Public copy states our three confirmed monthly packages and prices (see `/packages`) — no hidden numbers.
+**Pricing promise (subscription only — no fixed-price/deposit model exists):** one monthly price per package, stated up front — no setup fee, no minimum term, cancel anytime. First month billed at go-live, not at signature. Public copy states our three confirmed monthly packages and prices (see `/packages`) — no hidden numbers. Ownership on cancellation: domain and Google Business Profile are the client's from day one, always; the website itself can be bought outright (see `/terms` for the current figure) or comes down after a 30-day grace period. State this consistently everywhere it's mentioned — see COHERENCE-AUDIT.md §2 for the failure mode when it drifts.
 
 ## Motion & detail
-One restrained system: fade-up 500ms ease-out, once, on scroll-in (`Reveal`), disabled under `prefers-reduced-motion`. Custom `:focus-visible` (2px mint ring). One CTA style only (`mint-cta` fill). Mint `::selection`. Oversized faint `&` as hero texture.
+One timing hierarchy, one easing curve — tokens in `app/globals.css` (`--dur-micro` 120ms, `--dur-control` 180ms, `--dur-element` 320ms, `--dur-section` 480ms; `--ease-house: cubic-bezier(0.22, 1, 0.36, 1)` everywhere motion is chosen, not imposed). Fade-up on scroll-in (`Reveal`) runs at the section tier, once, disabled under `prefers-reduced-motion`. Stagger is one rule — 60ms per item, capped at 4 items' worth (`staggerDelay` in `Reveal.tsx`) — not hand-typed delays per call site. `linear` is reserved for indeterminate/looping motion only (the wizard's sending bar); it is the one named exception to `--ease-house`. Custom `:focus-visible` (2px mint ring). One CTA style only (`mint-cta` fill). Mint `::selection`. Oversized faint `&` as hero texture.
 
 ## Assets
 - Compass symbol + lockup (source of truth): `app/components/compass.tsx` (`CompassMark`, `LogoLockup`, `compassSvg`, `compassDataUri`); reference SVGs `public/brand/mint-compass.svg` + `public/brand/mint-compass-lockup.svg`.

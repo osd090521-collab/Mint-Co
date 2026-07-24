@@ -13,10 +13,9 @@ export const site = {
   url: "https://mintandco.co.uk",
   tagline: "Your business, in mint condition.",
   description:
-    "Mint & Co builds clean, premium, mobile-first websites for businesses — clear fixed-price packages, agreed before we start. By Omar, David & Rodrick, Harrow.",
+    "Mint & Co builds and looks after your whole online presence — website, Google profile and reviews — from £49 a month. No setup fee, no minimum term. Harrow.",
   location: "Harrow, North West London",
   areaServed: ["Harrow", "North West London", "London", "United Kingdom"],
-  founders: ["Omar", "David", "Rodrick"],
 
   // Live, working inbox (interim primary contact).
   email: "omar@mintandco.co.uk",
@@ -43,7 +42,7 @@ export const site = {
   audit: {
     subject: "Free website audit — Mint & Co",
     body:
-      "Hi Omar, David & Rodrick,\n\nI'd love a free audit of how my business looks online.\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
+      "Hi Mint & Co,\n\nI'd love a free audit of how my business looks online.\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.",
   },
 } as const;
 
@@ -90,7 +89,7 @@ export function ctaConsequence(href: string): string {
 export function auditWhatsApp(): string | null {
   if (!site.whatsappNumber) return null;
   const text = encodeURIComponent(
-    "Hi Omar, David & Rodrick — I'd love a free audit of how my business looks online.",
+    "Hi Mint & Co — I'd love a free audit of how my business looks online.",
   );
   return `https://wa.me/${site.whatsappNumber}?text=${text}`;
 }
@@ -103,7 +102,24 @@ export function auditWhatsApp(): string | null {
 export function packageMailto(tier: string, priceLine: string): string {
   const subject = encodeURIComponent(`${tier} — Mint & Co`);
   const body = encodeURIComponent(
-    `Hi Omar, David & Rodrick,\n\nI'd like to find out more about ${tier} (${priceLine}).\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.`,
+    `Hi Mint & Co,\n\nI'd like to find out more about ${tier} (${priceLine}).\n\nBusiness name:\nWhat I do:\nWhere you are:\nCurrent website (if any):\nBest way to reach me:\n\nThanks.`,
   );
   return `mailto:${site.email}?subject=${subject}&body=${body}`;
+}
+
+/**
+ * BreadcrumbList JSON-LD for a single inner page (Home → this page). One
+ * shared helper instead of hand-writing the same schema shape on every
+ * route — every non-home page renders this once, just above its main
+ * content, right after its own page-specific JSON-LD (if any).
+ */
+export function breadcrumbJsonLd(path: string, label: string) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: label, item: `${site.url}${path}` },
+    ],
+  };
 }

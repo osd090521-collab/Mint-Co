@@ -1,9 +1,16 @@
 # Mint & Co — Business Model Ultraplan
 
-> Canonical business model document. Pricing and terms below were decided 16 July 2026
-> and supersede all earlier pricing (including the £895 one-time website figure).
-> PROJECT_STATE.md remains the operational source of truth; this document defines
-> **what we sell, to whom, at what price, and how the machine works.**
+> Canonical business model document. Terms below were decided 16 July 2026 and supersede
+> all earlier pricing (including the £895 one-time website figure). PROJECT_STATE.md
+> remains the operational source of truth; this document defines **what we sell, to whom,
+> at what price, and how the machine works.**
+>
+> **Pricing amendment — 24 July 2026.** The 16 July package prices (£99 / £249 / £449,
+> themselves amended same-day from £49 / £119 / £179) are **reverted**. Live pricing is
+> **£49 / £119 / £179/mo** — confirmed by Omar for the initial land-grab cohort, knowingly
+> below the unit-economics target in §7. Every price figure below is updated to match; see
+> the decisions log (§11) for the full history. If this document and the live site
+> (`app/packages/page.tsx`) ever disagree again, **the site is correct, not this file.**
 
 ---
 
@@ -12,7 +19,7 @@
 Mint & Co sells **digital presence as a monthly subscription** to local service businesses.
 The wedge is a £30 one-time Google review stand — cheap enough to sell on a cold walk-in,
 valuable enough to prove we're real. Every stand customer is a warm lead for one of three
-monthly packages (£99 / £249 / £449). No setup fees, no minimum term, cancel anytime —
+monthly packages (£49 / £119 / £179). No setup fees, no minimum term, cancel anytime —
 which keeps our "no pressure, no surprises" brand promise intact — and a fair buyout
 option protects us on the website asset. Revenue compounds: every closed client is
 recurring income, not a one-off project.
@@ -82,7 +89,7 @@ future top tier above Complete.
 All monthly, rolling, cancel anytime. No setup fee, no minimum term.
 Review stand included free in every package.
 
-### Essentials — "Get found & trusted" — £99/mo
+### Essentials — "Get found & trusted" — £49/mo
 The full Reputation category plus a managed Google presence. For businesses not
 ready for a website but bleeding customers on Google.
 - Google review stand + funnel (stand free)
@@ -90,9 +97,9 @@ ready for a website but bleeding customers on Google.
 - Review dashboard + monthly report + review response drafting
 - Google Business Profile setup, then managed monthly
 - WhatsApp & social links tidy-up
-- **Market anchor:** GBP management alone sells at £50–£400/mo; review software alone at £60–£320/mo. Essentials undercuts either component bought separately.
+- **Market anchor:** GBP management alone sells at £50–£400/mo; review software alone at £60–£320/mo. Essentials undercuts either component bought separately — at £49/mo, it undercuts the low end of both.
 
-### Growth — "Get found, trusted & chosen" — £249/mo
+### Growth — "Get found, trusted & chosen" — £119/mo
 The core offer. Everything in Essentials, plus the full build:
 - Full website: designed, built, copywritten, hosted, secured, backed up
 - Website edits included (fair use, ~1 hr/mo)
@@ -100,9 +107,9 @@ The core offer. Everything in Essentials, plus the full build:
 - Business email setup
 - Booking system setup
 - Analytics in the monthly report
-- **Market anchor:** agency websites alone run £1,200–£8,000 one-time plus £29–£100/mo care; entry digital-marketing retainers start at £500–£825/mo. £249/mo with zero upfront undercuts both.
+- **Market anchor:** agency websites alone run £1,200–£8,000 one-time plus £29–£100/mo care; entry digital-marketing retainers start at £500–£825/mo. £119/mo with zero upfront undercuts both substantially — this is land-grab pricing, not the long-run target (see §7 and the 24 Jul amendment above).
 
-### Complete — "The full digital presence" — £449/mo
+### Complete — "The full digital presence" — £179/mo
 Everything in Growth, plus the visibility and content engine:
 - **AI search optimisation (AEO/GEO) — exclusive to Complete.** Schema, entity
   signals, answer-format pages: the business AI assistants recommend
@@ -114,7 +121,7 @@ Everything in Growth, plus the visibility and content engine:
 - **Market anchor:** AI search optimisation alone sells at £299–£1,500+/mo
   (Yellowball from £1,500/mo); local SEO management alone at £300–£1,500/mo.
   Complete is cheaper than either single line item, and no one else offers
-  AEO to local businesses at this price.
+  AEO to local businesses at this price — at £179/mo the gap is even larger.
 
 ### Terms (apply to all packages)
 - **Rolling monthly, cancel anytime.** No setup fee, no minimum term. This is the trust
@@ -214,11 +221,15 @@ positioning is any under-served local business, barbers are just the first door.
 Stripe fees ~1.5% + 20p · our time: ~1–2 hrs/mo steady-state (report, edits, GBP posts).
 Essentials carries near-zero hard cost.
 
-| Book of clients (mix: 20% E / 55% G / 25% C, avg ~£269) | MRR | Annualised |
+| Book of clients (mix: 20% E / 55% G / 25% C, avg ~£120 at the reverted 24 Jul prices) | MRR | Annualised |
 |---|---|---|
-| 10 clients | ~£2,700 | ~£32,000 |
-| 25 clients | ~£6,700 | ~£81,000 |
-| 50 clients | ~£13,400 | ~£161,000 |
+| 10 clients | ~£1,200 | ~£14,400 |
+| 25 clients | ~£3,000 | ~£36,000 |
+| 50 clients | ~£6,000 | ~£72,000 |
+
+*(At the 16 Jul prices — £99/£249/£449, avg ~£269 — the same book runs roughly 2.2×
+higher. That comparison is the real cost of the 24 Jul reversion; see the amendment
+banner at the top of this document.)*
 
 Plus stand sales (pure margin, ~£20/unit) and buyouts (£595 each) as irregular income.
 
@@ -267,10 +278,24 @@ converts to loyalty only if value is *visible* monthly. Target churn <3%/mo.
 
 ---
 
-## 11. Decisions log (16 July 2026)
+## 11. Decisions log
+
+### 24 July 2026
+
+- **Packages revert to £49 Essentials / £119 Growth / £179 Complete** — the pre-16-July
+  figures, reinstated by Omar during the Coherence Upgrade project after the live site
+  (already running these prices) and this document (asserting £99/£249/£449) were found
+  to contradict each other. Chosen deliberately as land-grab pricing for the first
+  cohort, with unit economics (§7) accepted as running ~2.2× below the 16 Jul target.
+  **This document, not the site, was the stale one** — the reverse of every prior
+  correction in this log. If they disagree again, the site wins.
+- Everything else decided 16 July (below) stands unchanged.
+
+### 16 July 2026
 
 - Packages are **monthly recurring**: £99 Essentials / £249 Growth / £449 Complete
-  *(amended same day from £49/£119/£179 after competitor menu research)*
+  *(amended same day from £49/£119/£179 after competitor menu research —*
+  ***reverted back to £49/£119/£179 on 24 July, above*)*
 - **AI search optimisation (AEO/GEO) is exclusive to Complete** — the tier's headline differentiator
 - **No setup fee, no minimum term**, rolling monthly, cancel anytime
 - **Buyout option** on cancellation: £595 for the full site export

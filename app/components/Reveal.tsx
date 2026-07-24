@@ -2,6 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 
+// staggerDelay moved to ../lib/motion — NOT re-exported here. "use client"
+// taints a module's entire export surface (including re-exports), so a
+// server-component page calling a re-exported staggerDelay from this file
+// would hit the same "client function called from the server" build error
+// this split was meant to fix. Import it from ../lib/motion directly.
+
 /**
  * Restrained fade-up on scroll-in (fires once).
  *

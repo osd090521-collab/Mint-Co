@@ -22,12 +22,11 @@ const fraunces = Fraunces({
 export const metadata: Metadata = {
   metadataBase: new URL(site.url),
   title: {
-    default: "Mint & Co — Premium Websites for Businesses | Harrow",
+    default: "Mint & Co — Websites, Google Presence & Reviews | Harrow",
     template: "%s · Mint & Co",
   },
   description: site.description,
   applicationName: site.name,
-  authors: [{ name: "Omar" }, { name: "David" }, { name: "Rodrick" }],
   keywords: [
     "web design",
     "business websites",
@@ -45,12 +44,12 @@ export const metadata: Metadata = {
     locale: "en_GB",
     url: site.url,
     siteName: site.name,
-    title: "Mint & Co — Premium Websites for Businesses",
+    title: "Mint & Co — Websites, Google Presence & Reviews",
     description: site.description,
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mint & Co — Premium Websites for Businesses",
+    title: "Mint & Co — Websites, Google Presence & Reviews",
     description: site.description,
   },
   robots: { index: true, follow: true },
@@ -69,7 +68,6 @@ const professionalServiceJsonLd = {
   description: site.description,
   email: site.email,
   areaServed: site.areaServed.map((name) => ({ "@type": "Place", name })),
-  founder: site.founders.map((name) => ({ "@type": "Person", name })),
   knowsAbout: ["Web design", "Web development", "Local SEO", "Google Business Profile"],
   slogan: site.tagline,
   ...(sameAs.length > 0 && { sameAs }),
@@ -83,7 +81,6 @@ const organizationJsonLd = {
   logo: `${site.url}/apple-icon`,
   description: site.description,
   email: site.email,
-  founder: site.founders.map((name) => ({ "@type": "Person", name })),
   ...(sameAs.length > 0 && { sameAs }),
 };
 

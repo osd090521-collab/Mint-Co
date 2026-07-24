@@ -76,6 +76,22 @@ Until the variable is set, the form still works for visitors — submissions
 fall through to the error state, which offers a pre-filled email instead.
 Nothing typed is ever lost.
 
+## Updating an already-deployed script
+
+`Code.gs` now checks a `submissionId` the site sends with every POST, to
+stop a false-failure retry (or a second tab) writing a duplicate lead row
+(Coherence Upgrade, 24 Jul 2026 — see COHERENCE-AUDIT.md, risk T5). If the
+webhook is already live, this needs a **redeploy to take effect**:
+
+1. In the Apps Script editor, paste the updated `Code.gs` over the old one, save.
+2. **Deploy → Manage deployments → ✏️ Edit → New version → Deploy.**
+   (Same rule as above — edit the *existing* deployment. A *new* one mints
+   a new URL and orphans the live site.)
+3. Re-run the curl test in step 4 above twice **with the same
+   `submissionId`** field added to the JSON body — second run should
+   return `{"ok":true}` but add **no** second row and send **no** second
+   email, same shape as the honeypot check.
+
 ## Ongoing
 
 - **Retention:** privacy page promises deletion after 12 months — set a

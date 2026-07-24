@@ -1,123 +1,112 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { AmpMarker } from "../components/AmpMarker";
 import { ContactCta } from "../components/ContactCta";
-import { Eyebrow } from "../components/Eyebrow";
+import { InlineLink } from "../components/InlineLink";
+import { PageHero } from "../components/PageHero";
 import { Reveal } from "../components/Reveal";
-import { site } from "../site.config";
+import { Section } from "../components/Section";
+import { breadcrumbJsonLd, site } from "../site.config";
 
 export const metadata: Metadata = {
-  title: "Process & Pricing",
+  title: "Process",
   description:
-    "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in 7–10 working days.",
+    "How working with Mint & Co actually works: a free audit, pick your package, a 7–10 working day build, go live, then ongoing management. Rolling monthly, cancel anytime.",
   alternates: { canonical: "/process" },
   robots: { index: true, follow: true },
   openGraph: {
-    title: "Process & Pricing · Mint & Co",
+    title: "Process · Mint & Co",
     description:
-      "How a Mint & Co build works: a free audit, a clear fixed-price quote, half to begin, two rounds of revisions, and a working website in 7–10 working days.",
+      "How working with Mint & Co actually works: a free audit, pick your package, a 7–10 working day build, go live, then ongoing management. Rolling monthly, cancel anytime.",
     url: `${site.url}/process`,
   },
 };
 
+// Delivery stages, in order. Source: ULTRAPLAN.md §6 (sales motion), §8
+// (delivery standards) and the Terms clause (rolling monthly, no setup fee,
+// first month billed at go-live) — nothing here is invented.
 const steps = [
   {
     t: "Free audit",
-    d: "Tell us about your business and we'll reply with a short, honest write-up — how your site looks now, and the two or three things we'd fix first, plus a fixed-price quote.",
+    d: "Tell us about your business and we'll reply with a short, honest write-up — how your site looks now, the two or three things we'd fix first, and which package fits.",
   },
   {
-    t: "You approve",
-    d: "Agree the price up front. Half the fee to begin — no vague quotes, no surprise extras added later.",
+    t: "Pick your package",
+    d: "Rolling monthly, no setup fee, no minimum term. Nothing to pay yet — your first bill lands at go-live, not today.",
   },
   {
     t: "We build",
     d: "7–10 working days from receiving your content, with two rounds of revisions along the way so you can shape the result.",
   },
   {
-    t: "You launch",
-    d: "The rest paid once you're happy, before we go live. Your domain and your Google Business Profile stay in your name, always.",
+    t: "Go live",
+    d: "Your first month is billed once the site is live, not before — we carry the build. Your domain and Google Business Profile are yours from day one.",
+  },
+  {
+    t: "Ongoing",
+    d: "A monthly report, website edits, Google Business Profile management and real support — for as long as you stay. Cancel anytime, no questions asked.",
   },
 ];
 
 export default function ProcessPage() {
   return (
     <main id="main" className="flex-1">
-      <section className="border-b border-line">
-        <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
-          <Reveal>
-            <Eyebrow>How it works</Eyebrow>
-          </Reveal>
-          <Reveal delay={60}>
-            <h1 className="mt-6 max-w-3xl text-[2.25rem] font-medium leading-[1.1] tracking-[-0.01em] sm:text-5xl sm:leading-[1.05] sm:tracking-[-0.02em]">
-              Fixed price. Clear steps. No surprises.
-            </h1>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-slate sm:text-xl">
-              Premium work, fairly priced, properly delivered — clear
-              fixed-price packages, agreed before we start.
-            </p>
-          </Reveal>
-          <Reveal delay={180}>
-            <p className="mt-6 max-w-xl text-base text-muted">
-              See exactly what&apos;s included and what it costs{" "}
-              <Link
-                href="/packages"
-                className="font-medium text-mint-deep underline underline-offset-4"
-              >
-                → Packages
-              </Link>
-            </p>
-          </Reveal>
-        </div>
-      </section>
+      <PageHero
+        eyebrow="How it works"
+        title="Free audit. Clear steps. No surprises."
+        lead="One monthly price, agreed before you commit to anything — then a build process built to keep you informed, not waiting."
+        after={
+          <p className="mt-6 max-w-xl text-base text-muted">
+            See exactly what&apos;s included and what it costs{" "}
+            <InlineLink href="/packages">→ Packages</InlineLink>
+          </p>
+        }
+      />
 
-      <section>
-        <div className="mx-auto max-w-3xl px-5 py-16 sm:px-8 sm:py-24">
-          {/*
-            One Reveal trigger for the whole timeline (not one per step —
-            keeps a single IntersectionObserver here instead of four).
-            Nodes and the connecting line stagger in via CSS under
-            [data-shown="true"] .timeline-* selectors in globals.css.
-          */}
-          <Reveal as="ol" className="relative">
-            <div
-              aria-hidden="true"
-              className="absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-line"
-            />
-            <div
-              aria-hidden="true"
-              className="timeline-line absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-mint"
-            />
-            {steps.map((step, i) => (
-              <li key={step.t} className="timeline-node relative flex gap-6 pb-12 last:pb-0">
-                <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint bg-bg text-sm font-semibold text-mint-deep">
-                  {i + 1}
-                </span>
-                <div className="pt-1">
-                  <h2 className="flex items-baseline gap-2 text-xl font-medium text-ink">
-                    <AmpMarker />
-                    {step.t}
-                  </h2>
-                  <p className="mt-2 text-base leading-relaxed text-muted">
-                    {step.d}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </Reveal>
-        </div>
-      </section>
+      <Section width="3xl">
+        {/*
+          One Reveal trigger for the whole timeline (not one per step —
+          keeps a single IntersectionObserver here instead of five). Nodes
+          and the connecting line stagger in via CSS under
+          [data-shown="true"] .timeline-* selectors in globals.css.
+        */}
+        <Reveal as="ol" className="relative">
+          <div
+            aria-hidden="true"
+            className="absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-line"
+          />
+          <div
+            aria-hidden="true"
+            className="timeline-line absolute bottom-2 left-4 top-2 w-px -translate-x-1/2 bg-mint"
+          />
+          {steps.map((step, i) => (
+            <li key={step.t} className="timeline-node relative flex gap-6 pb-12 last:pb-0">
+              <span className="relative z-10 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 border-mint bg-bg text-sm font-semibold text-mint-deep">
+                {i + 1}
+              </span>
+              <div className="pt-1">
+                <h2 className="flex items-baseline gap-2 text-xl font-medium text-ink">
+                  <AmpMarker />
+                  {step.t}
+                </h2>
+                <p className="mt-2 text-base leading-relaxed text-muted">{step.d}</p>
+              </div>
+            </li>
+          ))}
+        </Reveal>
+      </Section>
 
-      {/*
-        FAQ section intentionally deferred — needs real answers from the
-        site owner on: what a client needs to provide to start, whether
-        post-launch support/website care is offered, and whether an
-        existing site can be updated vs. only new builds. Add a visible
-        Q&A block here + matching FAQPage JSON-LD once those are confirmed.
-      */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(breadcrumbJsonLd("/process", "Process")),
+        }}
+      />
 
-      <ContactCta refSource="process" />
+      <ContactCta
+        refSource="process"
+        heading="The first step is always the same."
+        lead="Tell us about your business and we'll send your free write-up within a working day — from there, you decide if step two is worth it."
+      />
     </main>
   );
 }
