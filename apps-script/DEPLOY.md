@@ -8,10 +8,10 @@ Google account — no third-party service, no monthly cost.
 
 1. Create a Google Sheet named **Mint & Co — Audit Leads**.
 2. Rename the first tab to **Leads**.
-3. Paste this header row into A1:N1:
+3. Paste this header row into A1:I1:
 
    ```
-   Timestamp	Business name	Business type	Location	Has website	Website URL	Frustration	Note	Timeline	Name	Contact method	Contact detail	Ref	Status
+   Timestamp	Name	Employees (index)	Employees	Marketing spend (index)	Marketing spend	Phone	Ref	Status
    ```
 
 4. **Sharing:** keep it restricted to named people only (you, David,
@@ -48,7 +48,7 @@ Google account — no third-party service, no monthly cost.
 # lets curl switch to GET when following the redirect.
 curl -sL 'PASTE_WEB_APP_URL_HERE' \
   -H 'Content-Type: text/plain' \
-  --data '{"token":"mintco-fa-2026-compass-7481","elapsedMs":5000,"company":"","ref":"curl-test","businessName":"Curl Test Barbers","businessType":"Barber","location":"Pinner","hasWebsite":"No","websiteUrl":"","frustration":"No website at all","note":"delete this row","timeline":"","name":"Curl Test","contactMethod":"Email","contactDetail":"test@example.com"}'
+  --data '{"token":"mintco-fa-2026-compass-7481","elapsedMs":5000,"company":"","ref":"curl-test","name":"Curl Test","employees":2,"employeesLabel":"3 people","marketingSpend":4,"marketingSpendLabel":"£500/mo","phone":"07000000000"}'
 ```
 
 If the first hop returns **401**, the deployment's "Who has access" is not

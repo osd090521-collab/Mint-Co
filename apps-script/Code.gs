@@ -28,21 +28,16 @@ var CONFIG = {
   maxFieldLength: 2000,
 };
 
-// Sheet columns A–N, in order. "Status" stays blank — Omar's pipeline
+// Sheet columns A–I, in order. "Status" stays blank — Omar's pipeline
 // column (New / Audited / Quoted / Won / Lost).
 var FIELDS = [
-  "businessName", // B
-  "businessType", // C
-  "location", // D
-  "hasWebsite", // E
-  "websiteUrl", // F
-  "frustration", // G
-  "note", // H
-  "timeline", // I
-  "name", // J
-  "contactMethod", // K
-  "contactDetail", // L
-  "ref", // M
+  "name", // B
+  "employees", // C
+  "employeesLabel", // D
+  "marketingSpend", // E
+  "marketingSpendLabel", // F
+  "phone", // G
+  "ref", // H
 ];
 
 function doPost(e) {
@@ -101,8 +96,8 @@ function doPost(e) {
       to: CONFIG.notifyTo,
       subject:
         CONFIG.emailSubjectPrefix +
-        (String(data.businessName || "(no name)").slice(0, 100) +
-          (data.timeline ? " · " + String(data.timeline).slice(0, 40) : "")),
+        (String(data.name || "(no name)").slice(0, 100) +
+          (data.phone ? " · " + String(data.phone).slice(0, 40) : "")),
       body: emailBody_(timestamp, values, sheetUrl),
     });
   } catch (err) {
@@ -152,17 +147,12 @@ function sanitize_(value) {
 
 function emailBody_(timestamp, values, sheetUrl) {
   var labels = [
-    "Business name",
-    "Type of business",
-    "Location",
-    "Has website",
-    "Website URL",
-    "Frustration",
-    "Note",
-    "Timeline",
     "Name",
-    "Contact method",
-    "Contact detail",
+    "Employees (index)",
+    "Employees",
+    "Marketing spend (index)",
+    "Marketing spend",
+    "Phone",
     "Ref",
   ];
   var lines = ["New audit request — " + timestamp, ""];
