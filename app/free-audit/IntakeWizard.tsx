@@ -4,11 +4,19 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Cta } from "../components/Cta";
 import { Eyebrow } from "../components/Eyebrow";
+import { ScaleReveal } from "../components/ScaleReveal";
 import { auditWhatsApp, site } from "../site.config";
 
 /*
- * The 4-step audit-request wizard. Spec: Client Intake Plan v2.1
- * (Client Intake Form/Client Intake Plan/ in the HQ workspace).
+ * The 4-step audit-request wizard: name, how many people they employ, what
+ * they spend (or want to spend) on marketing, and a phone number to call
+ * them back on. Cut down from an earlier draft that asked revenue + photos
+ * instead of employees/marketing spend — client correction: those are the
+ * two numbers that actually size up a lead for us, not turnover.
+ *
+ * Phone stays in even though it wasn't named in the latest instruction —
+ * without a contact channel there's no way to act on the lead at all. If
+ * that's wrong, easiest fix is deleting the Phone step below.
  *
  * Submission is fire-and-forget: Apps Script answers via a 302 to
  * script.googleusercontent.com and response readability is inconsistent
@@ -17,6 +25,12 @@ import { auditWhatsApp, site } from "../site.config";
  * triggers only on a thrown exception (network failure / 8s timeout) and
  * always offers a mailto pre-filled from the answers — nothing typed is
  * ever lost.
+ *
+ * NOTE: the Apps Script backend (apps-script/Code.gs) was built against the
+ * old field set — it needs a matching update to read employees/marketingSpend/
+ * phone/name instead of businessName/businessType/etc. before submissions
+ * actually land anywhere. Flagged, not done here — out of scope for a
+ * frontend pass.
  */
 
 /**
@@ -30,7 +44,7 @@ const CLIENT_TOKEN = "mintco-fa-2026-compass-7481";
 /** Apps Script web-app URL. Until set, submits go straight to the mailto fallback. */
 const INTAKE_URL = process.env.NEXT_PUBLIC_INTAKE_URL ?? "";
 
-const STORAGE_KEY = "mintco-free-audit-v1";
+const STORAGE_KEY = "mintco-free-audit-v3";
 const KNOWN_REFS = [
   "nav",
   "footer",
@@ -42,127 +56,65 @@ const KNOWN_REFS = [
   "band-about",
 ];
 
-const FRUSTRATIONS = [
-  "No website at all",
-  "Site looks dated",
-  "Invisible on Google",
-  "Not enough enquiries",
-  "Not sure — just curious",
-];
-const BUSINESS_TYPES = [
-  "Barber",
-  "Salon, beauty or clinic",
-  "Trade (plumber, electrician, builder)",
-  "Café, restaurant or takeaway",
-  "Shop or high-street retail",
-  "Dry cleaner, tailor or alterations",
-  "Online shop or dropshipping",
-  "Social seller (Instagram or TikTok)",
-  "Other",
-];
-const WEBSITE_YES = "Yes, I have one";
-const WEBSITE_OPTIONS = [WEBSITE_YES, "No website yet"];
-const CONTACT_METHODS = ["Email", "Phone", "WhatsApp"];
-const TIMELINES = ["As soon as possible", "Next 1–3 months", "Just exploring"];
+// Employee-count slider stops — just you, up through a genuinely open-ended
+// top band. Coarse on purpose: nobody needs to specify 14 vs 15.
+const EMPLOYEE_STOPS = [1, 2, 3, 5, 10, 15, 20, 30, 50];
+
+function formatEmployees(v: number): string {
+  const isTop = v >= EMPLOYEE_STOPS[EMPLOYEE_STOPS.length - 1];
+  if (v === 1) return "Just me";
+  return isTop ? `${v}+ people` : `${v} people`;
+}
+
+// Marketing-spend slider stops — what they currently spend, or would be
+// comfortable spending, per month. Same reasoning as revenue: nobody knows
+// this to the pound, so it's a coarse discrete scale, not a free-text box.
+const SPEND_STOPS = [0, 50, 100, 250, 500, 1000, 2000, 5000];
+
+function formatSpend(v: number): string {
+  const isTop = v >= SPEND_STOPS[SPEND_STOPS.length - 1];
+  if (v === 0) return "£0/mo — nothing yet";
+  const label = v >= 1000 ? `£${(v / 1000).toFixed(v % 1000 === 0 ? 0 : 1)}k` : `£${v}`;
+  return isTop ? `${label}+/mo` : `${label}/mo`;
+}
 
 const STEP_TITLES = [
-  "What's the biggest frustration?",
-  "Tell us about your business.",
-  "Do you have a website right now?",
-  "Where should we send your write-up?",
+  "What's your name?",
+  "How many people work with you?",
+  "What do you spend on marketing?",
+  "Where can we call you?",
 ];
 
 type Answers = {
-  frustrations: string[];
-  note: string;
-  businessName: string;
-  businessType: string;
-  businessTypeOther: string;
-  location: string;
-  hasWebsite: string;
-  websiteUrl: string;
   name: string;
-  contactMethod: string;
-  contactDetail: string;
-  timeline: string;
+  employeesIndex: number;
+  spendIndex: number;
+  phone: string;
 };
 
 const EMPTY: Answers = {
-  frustrations: [],
-  note: "",
-  businessName: "",
-  businessType: "",
-  businessTypeOther: "",
-  location: "",
-  hasWebsite: "",
-  websiteUrl: "",
   name: "",
-  contactMethod: "",
-  contactDetail: "",
-  timeline: "",
+  employeesIndex: 0, // defaults to "Just me"
+  spendIndex: 1, // defaults to £50/mo rather than the £0 floor
+  phone: "",
 };
-
-const STEP_FIELDS: (keyof Answers)[][] = [
-  ["frustrations"],
-  ["businessName", "businessType", "businessTypeOther", "location"],
-  ["hasWebsite", "websiteUrl"],
-  ["name", "contactMethod", "contactDetail"],
-];
 
 /**
  * A per-submission id, generated once and reused across retries within the
  * same session (persisted alongside the answers draft — see the hydration
- * effect below). Lets the backend (apps-script/Code.gs) recognise "the same
- * lead, submitted twice" — a real risk given the no-cors fire-and-forget
- * design (see the module comment above): a false-failure retry, a second
- * tab, or a resubmit after a slow response would otherwise write a
- * duplicate row with no way to tell it apart from a genuinely new lead.
+ * effect below). Lets the backend recognise "the same lead, submitted
+ * twice" — a real risk given the no-cors fire-and-forget design: a
+ * false-failure retry, a second tab, or a resubmit after a slow response
+ * would otherwise write a duplicate row with no way to tell it apart from a
+ * genuinely new lead.
  */
 function genSubmissionId(): string {
   if (typeof crypto !== "undefined" && crypto.randomUUID) return crypto.randomUUID();
   return `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-const isEmail = (v: string) => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim());
 const isPhone = (v: string) =>
   /^\+?[\d\s()-]{9,16}$/.test(v.trim()) && (v.match(/\d/g) ?? []).length >= 10;
-const isUrlish = (v: string) =>
-  /^(https?:\/\/)?[\w-]+(\.[\w-]+)+(\/\S*)?$/i.test(v.trim());
-
-function businessTypeFinal(a: Answers): string {
-  return a.businessType === "Other"
-    ? `Other: ${a.businessTypeOther.trim()}`
-    : a.businessType;
-}
-
-function validateStep(step: number, a: Answers): Partial<Record<keyof Answers, string>> {
-  const errs: Partial<Record<keyof Answers, string>> = {};
-  if (step === 0) {
-    if (a.frustrations.length === 0)
-      errs.frustrations = "Pick at least one — as many as apply.";
-  }
-  if (step === 1) {
-    if (!a.businessName.trim()) errs.businessName = "Tell us your business name.";
-    if (!a.businessType) errs.businessType = "Pick the closest match.";
-    if (a.businessType === "Other" && !a.businessTypeOther.trim())
-      errs.businessTypeOther = "Tell us what kind of business you run.";
-    if (!a.location.trim()) errs.location = "Tell us roughly where you're based.";
-  }
-  if (step === 2) {
-    if (!a.hasWebsite) errs.hasWebsite = "Let us know either way — no website yet is a fine answer.";
-    if (a.hasWebsite === WEBSITE_YES && !isUrlish(a.websiteUrl))
-      errs.websiteUrl = "That doesn't look like a web address — try something like yourbusiness.co.uk";
-  }
-  if (step === 3) {
-    if (!a.name.trim()) errs.name = "Tell us your name.";
-    if (!a.contactMethod) errs.contactMethod = "Pick how you'd like us to reply.";
-    else if (a.contactMethod === "Email" && !isEmail(a.contactDetail))
-      errs.contactDetail = "That doesn't look like a working email — try name@business.co.uk";
-    else if (a.contactMethod !== "Email" && !isPhone(a.contactDetail))
-      errs.contactDetail = "That doesn't look like a UK number — try 07… or +44…";
-  }
-  return errs;
-}
 
 function fallbackMailto(a: Answers): string {
   const lines = [
@@ -170,15 +122,10 @@ function fallbackMailto(a: Answers): string {
     "",
     "I tried the audit form on your site but it didn't go through — here are my answers.",
     "",
-    `Business name: ${a.businessName}`,
-    `Type of business: ${businessTypeFinal(a)}`,
-    `Where we're based: ${a.location}`,
-    `Website: ${a.hasWebsite === WEBSITE_YES ? a.websiteUrl : "No website yet"}`,
-    `Biggest frustration: ${a.frustrations.join("; ")}`,
-    ...(a.note.trim() ? [`Note: ${a.note.trim()}`] : []),
-    ...(a.timeline ? [`When we'd like to move: ${a.timeline}`] : []),
     `Name: ${a.name}`,
-    `Best way to reach me: ${a.contactMethod} — ${a.contactDetail}`,
+    `Team size: ${formatEmployees(EMPLOYEE_STOPS[a.employeesIndex])}`,
+    `Marketing spend: ${formatSpend(SPEND_STOPS[a.spendIndex])}`,
+    `Phone: ${a.phone}`,
     "",
     "Thanks.",
   ];
@@ -242,7 +189,7 @@ function TextField({
         onBlur={onBlur}
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
-        className={`mt-2 min-h-[48px] w-full rounded-xl border bg-surface px-4 text-base text-slate placeholder:text-muted/70 ${
+        className={`mt-2 min-h-[56px] w-full rounded-2xl border bg-surface px-5 text-lg text-slate placeholder:text-muted/70 focus:border-mint-cta focus:outline-none focus:ring-2 focus:ring-mint-cta/20 ${
           error ? "border-error" : "border-line"
         }`}
       />
@@ -252,168 +199,61 @@ function TextField({
 }
 
 /**
- * Single-select chip row with real radio semantics: radiogroup container,
- * role="radio" chips, roving tabindex, arrows move focus, Enter/Space
- * selects. Selected chip = filled pill + leading dot (mint-cta fill — the
- * only mint that may carry white text, per BRAND.md).
+ * Shared premium slider shell: big centered readout, gradient-filled track,
+ * oversized thumb (styled via .range-premium in globals.css), tick labels
+ * either end. Used for both the employees and marketing-spend steps —
+ * same visual language, different stop arrays.
  */
-function ChipGroup({
-  id,
-  labelledBy,
-  options,
-  value,
-  onSelect,
-  error,
-  toggleable = false,
+function PremiumSlider({
+  index,
+  max,
+  label,
+  minTick,
+  maxTick,
+  ariaLabel,
+  onChange,
 }: {
-  id: string;
-  labelledBy: string;
-  options: readonly string[];
-  value: string;
-  onSelect: (v: string) => void;
-  error?: string;
-  toggleable?: boolean;
+  index: number;
+  max: number;
+  label: string;
+  minTick: string;
+  maxTick: string;
+  ariaLabel: string;
+  onChange: (i: number) => void;
 }) {
-  const refs = useRef<(HTMLButtonElement | null)[]>([]);
-  const selectedIdx = options.findIndex((o) => o === value);
-  const tabbable = selectedIdx >= 0 ? selectedIdx : 0;
-
-  function pick(opt: string) {
-    onSelect(toggleable && opt === value ? "" : opt);
-  }
-
-  function onKeyDown(e: React.KeyboardEvent, i: number) {
-    let next: number | null = null;
-    if (e.key === "ArrowRight" || e.key === "ArrowDown") next = (i + 1) % options.length;
-    else if (e.key === "ArrowLeft" || e.key === "ArrowUp")
-      next = (i - 1 + options.length) % options.length;
-    else if (e.key === " " || e.key === "Enter") {
-      e.preventDefault();
-      pick(options[i]);
-      return;
-    }
-    if (next !== null) {
-      e.preventDefault();
-      refs.current[next]?.focus();
-    }
-  }
-
+  const pct = (index / max) * 100;
   return (
-    <div>
-      <div
-        id={id}
-        role="radiogroup"
-        aria-labelledby={labelledBy}
-        aria-describedby={error ? `${id}-error` : undefined}
-        aria-invalid={error ? true : undefined}
-        className="flex flex-wrap gap-2"
-      >
-        {options.map((opt, i) => {
-          const selected = opt === value;
-          return (
-            <button
-              key={opt}
-              ref={(el) => {
-                refs.current[i] = el;
-              }}
-              type="button"
-              role="radio"
-              aria-checked={selected}
-              data-chip=""
-              tabIndex={i === tabbable ? 0 : -1}
-              onClick={() => pick(opt)}
-              onKeyDown={(e) => onKeyDown(e, i)}
-              className={`inline-flex min-h-[44px] items-center rounded-full border px-4 text-[15px] font-medium transition-colors duration-150 ${
-                selected
-                  ? "border-mint-cta bg-mint-cta text-white"
-                  : "border-line bg-surface text-slate hover:border-mint"
-              }`}
-            >
-              <span
-                aria-hidden="true"
-                className={`mr-2 inline-block h-2 w-2 rounded-full ${
-                  selected ? "bg-white" : "border border-muted/60"
-                }`}
-              />
-              {opt}
-            </button>
-          );
-        })}
+    <div className="rounded-3xl border border-line bg-warm px-6 py-10 sm:px-10">
+      <div className="text-center">
+        <div className="font-display text-4xl font-medium tracking-tight text-mint-deep sm:text-5xl">
+          {label}
+        </div>
       </div>
-      {error && <FieldError id={`${id}-error`} text={error} />}
-    </div>
-  );
-}
 
-/**
- * Multi-select chip row (the 02-design-spec "one-vs-many" pattern):
- * role="group" container, plain <button aria-pressed> chips — every chip a
- * natural tab stop, Space/Enter toggles natively. Selected shows a leading
- * CHECK where single-select shows a dot, so sighted users get the same
- * one-vs-many cue AT users get from the semantics.
- */
-function MultiChipGroup({
-  id,
-  labelledBy,
-  options,
-  values,
-  onToggle,
-  error,
-}: {
-  id: string;
-  labelledBy: string;
-  options: readonly string[];
-  values: string[];
-  onToggle: (v: string) => void;
-  error?: string;
-}) {
-  return (
-    <div>
-      <div
-        id={id}
-        role="group"
-        aria-labelledby={labelledBy}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className="flex flex-wrap gap-2"
-      >
-        {options.map((opt) => {
-          const selected = values.includes(opt);
-          return (
-            <button
-              key={opt}
-              type="button"
-              aria-pressed={selected}
-              data-chip=""
-              onClick={() => onToggle(opt)}
-              className={`inline-flex min-h-[44px] items-center rounded-full border px-4 text-[15px] font-medium transition-colors duration-150 ${
-                selected
-                  ? "border-mint-cta bg-mint-cta text-white"
-                  : "border-line bg-surface text-slate hover:border-mint"
-              }`}
-            >
-              {selected ? (
-                <svg viewBox="0 0 12 12" className="mr-2 h-3 w-3 shrink-0" aria-hidden="true">
-                  <path
-                    d="M2 6.2 4.8 9 10 3.4"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-              ) : (
-                <span
-                  aria-hidden="true"
-                  className="mr-2 inline-block h-2 w-2 rounded-full border border-muted/60"
-                />
-              )}
-              {opt}
-            </button>
-          );
-        })}
+      <div className="relative mt-10">
+        <div className="relative h-2 rounded-full bg-line">
+          <div
+            className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-mint to-mint-cta transition-[width] duration-150"
+            style={{ width: `${pct}%` }}
+          />
+        </div>
+        <input
+          type="range"
+          min={0}
+          max={max}
+          step={1}
+          value={index}
+          onChange={(e) => onChange(Number(e.target.value))}
+          aria-label={ariaLabel}
+          aria-valuetext={label}
+          className="range-premium absolute inset-x-0 -top-3 h-8 w-full cursor-pointer appearance-none bg-transparent"
+        />
       </div>
-      {error && <FieldError id={`${id}-error`} text={error} />}
+
+      <div className="mt-4 flex justify-between text-xs text-muted">
+        <span>{minTick}</span>
+        <span>{maxTick}</span>
+      </div>
     </div>
   );
 }
@@ -426,10 +266,8 @@ export function IntakeWizard() {
   const [answers, setAnswers] = useState<Answers>(EMPTY);
   const [errors, setErrors] = useState<Partial<Record<keyof Answers, string>>>({});
   const [attempted, setAttempted] = useState<boolean[]>([false, false, false, false]);
-  const [noteOpen, setNoteOpen] = useState(false);
   const [restored, setRestored] = useState(false);
   const [announce, setAnnounce] = useState("");
-  const [switchNote, setSwitchNote] = useState("");
   const [company, setCompany] = useState(""); // honeypot — never shown to humans
   const [dir, setDir] = useState<"fwd" | "back" | null>(null);
 
@@ -451,30 +289,17 @@ export function IntakeWizard() {
       const raw = sessionStorage.getItem(STORAGE_KEY);
       if (raw) {
         const saved = JSON.parse(raw);
-        const savedAnswers = saved?.answers as
-          | (Partial<Answers> & { frustration?: string })
-          | undefined;
+        const savedAnswers = saved?.answers as Partial<Answers> | undefined;
         const hasContent =
-          savedAnswers &&
-          Object.values(savedAnswers).some((v) =>
-            Array.isArray(v) ? v.length > 0 : Boolean(v),
-          );
+          savedAnswers && Object.values(savedAnswers).some((v) => Boolean(v));
         if (savedAnswers && hasContent) {
-          // Tolerate the pre-multi-select saved shape (frustration: string).
-          const frustrations = Array.isArray(savedAnswers.frustrations)
-            ? savedAnswers.frustrations.filter((v): v is string => typeof v === "string")
-            : typeof savedAnswers.frustration === "string" && savedAnswers.frustration
-              ? [savedAnswers.frustration]
-              : [];
-          delete savedAnswers.frustration;
-          setAnswers({ ...EMPTY, ...savedAnswers, frustrations });
+          setAnswers({ ...EMPTY, ...savedAnswers });
           if (Number.isInteger(saved.step) && saved.step >= 0 && saved.step <= 3)
             setStep(saved.step);
           if (typeof saved.startedAt === "number") startedAt.current = saved.startedAt;
           if (!refSource.current && typeof saved.ref === "string") refSource.current = saved.ref;
           if (typeof saved.submissionId === "string" && saved.submissionId)
             submissionId.current = saved.submissionId;
-          if (savedAnswers.note) setNoteOpen(true);
           setRestored(true);
         }
       }
@@ -517,33 +342,29 @@ export function IntakeWizard() {
     setErrors((e) => (e[field] ? { ...e, [field]: undefined } : e));
   }
 
-  /** Re-validate one field on blur, but only after the step's first failed Next. */
   function blurCheck(field: keyof Answers) {
     if (!attempted[step]) return;
     const errs = validateStep(step, answers);
     setErrors((e) => ({ ...e, [field]: errs[field] }));
   }
 
-  function focusField(field: keyof Answers) {
-    const el = document.getElementById(`fa-${field}`);
-    if (!el) return;
-    const role = el.getAttribute("role");
-    if (role === "radiogroup" || role === "group") {
-      (el.querySelector("[data-chip]") as HTMLElement | null)?.focus();
-    } else {
-      el.focus();
-    }
+  function validateStep(s: number, a: Answers): Partial<Record<keyof Answers, string>> {
+    const errs: Partial<Record<keyof Answers, string>> = {};
+    if (s === 0 && !a.name.trim()) errs.name = "Tell us your name.";
+    if (s === 3 && !isPhone(a.phone))
+      errs.phone = "That doesn't look like a UK number — try 07… or +44…";
+    return errs;
   }
 
   function next() {
     if (phase === "sending") return;
     const errs = validateStep(step, answers);
     setAttempted((a) => a.map((v, i) => (i === step ? true : v)));
-    const bad = STEP_FIELDS[step].filter((f) => errs[f]);
+    const bad = Object.keys(errs) as (keyof Answers)[];
     if (bad.length > 0) {
       setErrors((e) => ({ ...e, ...errs }));
-      setAnnounce(bad.length === 1 ? "1 field needs attention." : `${bad.length} fields need attention.`);
-      focusField(bad[0]);
+      setAnnounce("That field needs a second look.");
+      document.getElementById(`fa-${bad[0]}`)?.focus();
       return;
     }
     if (step < 3) {
@@ -570,35 +391,19 @@ export function IntakeWizard() {
       // ignore
     }
     startedAt.current = Date.now();
-    submissionId.current = genSubmissionId(); // starting over is a new lead, not a retry
+    submissionId.current = genSubmissionId();
     setAnswers(EMPTY);
     setErrors({});
     setAttempted([false, false, false, false]);
-    setNoteOpen(false);
     setRestored(false);
     setStep(0);
     setPhase("form");
-  }
-
-  function selectMethod(m: string) {
-    const wasEmail = answers.contactMethod === "Email";
-    const isNowEmail = m === "Email";
-    if (answers.contactDetail && answers.contactMethod && wasEmail !== isNowEmail) {
-      const note = isNowEmail ? "Now for your email address" : "Now for your phone number";
-      setAnswers((a) => ({ ...a, contactMethod: m, contactDetail: "" }));
-      setSwitchNote(note);
-      setAnnounce(note);
-    } else {
-      setA("contactMethod", m);
-    }
-    clearError("contactMethod");
   }
 
   async function submit() {
     if (phase === "sending") return;
     setPhase("sending");
     const begun = Date.now();
-    // Keep the "Sending…" state visible for ≥400ms so it never flashes.
     const minDelay = () =>
       new Promise((r) => setTimeout(r, Math.max(0, 400 - (Date.now() - begun))));
     try {
@@ -610,17 +415,12 @@ export function IntakeWizard() {
         company,
         ref: refSource.current,
         submissionId: submissionId.current || genSubmissionId(),
-        businessName: a.businessName.trim(),
-        businessType: businessTypeFinal(a),
-        location: a.location.trim(),
-        hasWebsite: a.hasWebsite === WEBSITE_YES ? "Yes" : "No",
-        websiteUrl: a.hasWebsite === WEBSITE_YES ? a.websiteUrl.trim() : "",
-        frustration: a.frustrations.join("; "),
-        note: a.note.trim(),
-        timeline: a.timeline,
         name: a.name.trim(),
-        contactMethod: a.contactMethod,
-        contactDetail: a.contactDetail.trim(),
+        employees: EMPLOYEE_STOPS[a.employeesIndex],
+        employeesLabel: formatEmployees(EMPLOYEE_STOPS[a.employeesIndex]),
+        marketingSpend: SPEND_STOPS[a.spendIndex],
+        marketingSpendLabel: formatSpend(SPEND_STOPS[a.spendIndex]),
+        phone: a.phone.trim(),
       };
       const ctrl = new AbortController();
       const timer = setTimeout(() => ctrl.abort(), 8000);
@@ -652,12 +452,6 @@ export function IntakeWizard() {
 
   if (phase === "done") {
     const firstName = answers.name.trim().split(/\s+/)[0] || "there";
-    const channel =
-      answers.contactMethod === "Email"
-        ? "by email"
-        : answers.contactMethod === "Phone"
-          ? "by phone"
-          : "on WhatsApp";
     const whatsApp = auditWhatsApp();
     return (
       <div className="mx-auto w-full max-w-[560px] px-5 py-16 sm:px-0 sm:py-24">
@@ -673,17 +467,10 @@ export function IntakeWizard() {
           Thanks, {firstName} — your write-up is on its way.
         </h1>
         <p className="mt-6 text-base leading-relaxed text-slate sm:text-lg">
-          {/*
-            The {" "} after the name is load-bearing: Turbopack's JSX
-            transform eats a plain space that follows an expression opening
-            a source line ("Compass Cutscomes across").
-          */}
-          We&apos;ll reply {channel} with a short, honest look at how{" "}
-          {answers.businessName.trim() || "your business"}{" "}
-          comes across online: how it
-          performs on a phone right now, where you&apos;re likely losing customers, and
-          the two or three things we&apos;d fix first — plus which package fits.
-          Usually within one working day.
+          We&apos;ll call you on {answers.phone.trim()} with a short, honest look at
+          how your business comes across online: where you&apos;re likely losing
+          customers, and the two or three things we&apos;d fix first — plus which
+          package fits. Usually within one working day.
         </p>
         <div className="mt-10 space-y-4 text-base">
           <p>
@@ -721,19 +508,24 @@ export function IntakeWizard() {
   const sending = phase === "sending";
 
   return (
-    <div className="mx-auto w-full max-w-[560px] px-5 pb-40 pt-12 sm:px-0 sm:pb-24 sm:pt-16">
+    <div className="mx-auto w-full max-w-[640px] px-5 pb-40 pt-12 sm:px-0 sm:pb-24 sm:pt-16">
       <div aria-live="polite" className="sr-only">
         {announce}
       </div>
 
       <Eyebrow>Free audit</Eyebrow>
-      <div className="mt-4 text-sm text-muted">Step {step + 1} of 4</div>
-      <div className="mt-2 h-1 overflow-hidden rounded-full bg-line">
-        <div
-          className="h-full rounded-full bg-mint transition-[width] duration-[var(--dur-control)] ease-[var(--ease-house)] motion-reduce:transition-none"
-          style={{ width: `${((step + 1) / 4) * 100}%` }}
-        />
+
+      <div className="mt-5 flex items-center gap-2" aria-hidden="true">
+        {[0, 1, 2, 3].map((i) => (
+          <div
+            key={i}
+            className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+              i <= step ? "bg-mint-cta" : "bg-line"
+            }`}
+          />
+        ))}
       </div>
+      <div className="mt-2 text-sm text-muted">Step {step + 1} of 4</div>
 
       {restored && (
         <p className="mt-4 text-sm text-muted">
@@ -769,166 +561,27 @@ export function IntakeWizard() {
           />
         </div>
 
-        <div
+        <ScaleReveal
           key={step}
-          className={dir === "fwd" ? "step-in-fwd" : dir === "back" ? "step-in-back" : undefined}
+          className={`spotlight-card rounded-[1.75rem] border border-line bg-surface p-5 shadow-[0_24px_70px_-24px_rgba(16,33,27,0.18)] sm:rounded-[2rem] sm:p-8 md:p-10 ${
+            dir === "fwd" ? "step-in-fwd" : dir === "back" ? "step-in-back" : ""
+          }`}
+          onMouseMove={(e) => {
+            const rect = e.currentTarget.getBoundingClientRect();
+            e.currentTarget.style.setProperty("--spot-x", `${e.clientX - rect.left}px`);
+            e.currentTarget.style.setProperty("--spot-y", `${e.clientY - rect.top}px`);
+          }}
         >
           <h1
             id="fa-step-heading"
             ref={headingRef}
             tabIndex={-1}
-            className="mt-8 text-[1.9rem] font-medium leading-tight tracking-[-0.01em] text-ink outline-none sm:text-4xl"
+            className="relative z-[2] text-[1.5rem] font-medium leading-tight tracking-[-0.01em] text-ink outline-none sm:text-[1.9rem] md:text-[2.1rem]"
           >
-            {step === 0 && <>What&apos;s the biggest frustration?</>}
-            {step === 1 && <>Tell us about your business.</>}
-            {step === 2 && <>Do you have a website right now?</>}
-            {step === 3 && <>Where should we send your write-up?</>}
+            {STEP_TITLES[step]}
           </h1>
 
           {step === 0 && (
-            <div className="mt-8 space-y-6">
-              <p className="text-sm text-muted">
-                Takes under two minutes — tap as many as apply.
-              </p>
-              <MultiChipGroup
-                id="fa-frustrations"
-                labelledBy="fa-step-heading"
-                options={FRUSTRATIONS}
-                values={answers.frustrations}
-                onToggle={(v) => {
-                  setAnswers((a) => ({
-                    ...a,
-                    frustrations: a.frustrations.includes(v)
-                      ? a.frustrations.filter((x) => x !== v)
-                      : [...a.frustrations, v],
-                  }));
-                  clearError("frustrations");
-                }}
-                error={errors.frustrations}
-              />
-              {noteOpen ? (
-                <div>
-                  <label htmlFor="fa-note" className="block text-sm font-medium text-ink">
-                    Add a note (optional)
-                  </label>
-                  <textarea
-                    id="fa-note"
-                    rows={3}
-                    maxLength={2000}
-                    placeholder="Anything you'd love this to fix?"
-                    value={answers.note}
-                    onChange={(e) => setA("note", e.target.value)}
-                    className="mt-2 w-full rounded-xl border border-line bg-surface px-4 py-3 text-base text-slate placeholder:text-muted/70"
-                  />
-                </div>
-              ) : (
-                <button
-                  type="button"
-                  aria-expanded={false}
-                  aria-controls="fa-note"
-                  onClick={() => setNoteOpen(true)}
-                  className="text-sm font-medium text-mint-deep underline underline-offset-4"
-                >
-                  + add a note (optional)
-                </button>
-              )}
-            </div>
-          )}
-
-          {step === 1 && (
-            <div className="mt-8 space-y-6">
-              <TextField
-                id="fa-businessName"
-                label="Business name"
-                value={answers.businessName}
-                onChange={(v) => {
-                  setA("businessName", v);
-                  clearError("businessName");
-                }}
-                onBlur={() => blurCheck("businessName")}
-                error={errors.businessName}
-                autoComplete="organization"
-              />
-              <div>
-                <p id="fa-businessType-label" className="text-sm font-medium text-ink">
-                  Type of business
-                </p>
-                <div className="mt-2">
-                  <ChipGroup
-                    id="fa-businessType"
-                    labelledBy="fa-businessType-label"
-                    options={BUSINESS_TYPES}
-                    value={answers.businessType}
-                    onSelect={(v) => {
-                      setA("businessType", v);
-                      clearError("businessType");
-                    }}
-                    error={errors.businessType}
-                  />
-                </div>
-              </div>
-              {answers.businessType === "Other" && (
-                <TextField
-                  id="fa-businessTypeOther"
-                  label="What kind of business?"
-                  value={answers.businessTypeOther}
-                  onChange={(v) => {
-                    setA("businessTypeOther", v);
-                    clearError("businessTypeOther");
-                  }}
-                  onBlur={() => blurCheck("businessTypeOther")}
-                  error={errors.businessTypeOther}
-                />
-              )}
-              <TextField
-                id="fa-location"
-                label="Where are you based?"
-                value={answers.location}
-                onChange={(v) => {
-                  setA("location", v);
-                  clearError("location");
-                }}
-                onBlur={() => blurCheck("location")}
-                error={errors.location}
-                placeholder="e.g. Pinner, Harrow"
-              />
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="mt-8 space-y-6">
-              <ChipGroup
-                id="fa-hasWebsite"
-                labelledBy="fa-step-heading"
-                options={WEBSITE_OPTIONS}
-                value={answers.hasWebsite}
-                onSelect={(v) => {
-                  setA("hasWebsite", v);
-                  clearError("hasWebsite");
-                }}
-                error={errors.hasWebsite}
-              />
-              {answers.hasWebsite === WEBSITE_YES && (
-                <TextField
-                  id="fa-websiteUrl"
-                  label="Website address"
-                  value={answers.websiteUrl}
-                  onChange={(v) => {
-                    setA("websiteUrl", v);
-                    clearError("websiteUrl");
-                  }}
-                  onBlur={() => blurCheck("websiteUrl")}
-                  error={errors.websiteUrl}
-                  type="url"
-                  inputMode="url"
-                  autoComplete="url"
-                  placeholder="yourbusiness.co.uk"
-                />
-              )}
-            </div>
-          )}
-
-          {step === 3 && (
             <div className="mt-8 space-y-6">
               <TextField
                 id="fa-name"
@@ -942,70 +595,77 @@ export function IntakeWizard() {
                 error={errors.name}
                 autoComplete="name"
               />
-              <div>
-                <p id="fa-contactMethod-label" className="text-sm font-medium text-ink">
-                  Best way to reach you
+            </div>
+          )}
+
+          {step === 1 && (
+            <div className="mt-8">
+              <PremiumSlider
+                index={answers.employeesIndex}
+                max={EMPLOYEE_STOPS.length - 1}
+                label={formatEmployees(EMPLOYEE_STOPS[answers.employeesIndex])}
+                minTick="Just me"
+                maxTick="50+"
+                ariaLabel="Number of employees"
+                onChange={(i) => setA("employeesIndex", i)}
+              />
+            </div>
+          )}
+
+          {step === 2 && (
+            <div className="mt-8">
+              <PremiumSlider
+                index={answers.spendIndex}
+                max={SPEND_STOPS.length - 1}
+                label={formatSpend(SPEND_STOPS[answers.spendIndex])}
+                minTick="£0"
+                maxTick="£5k+"
+                ariaLabel="Monthly marketing spend"
+                onChange={(i) => setA("spendIndex", i)}
+              />
+              <p className="mt-4 text-center text-sm text-muted">
+                Whatever you currently spend, or would be comfortable spending.
+              </p>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div className="mt-8 space-y-6">
+              <p className="text-sm text-muted">
+                So we can call you with the write-up instead of leaving it to email.
+              </p>
+              <TextField
+                id="fa-phone"
+                label="Your phone number"
+                value={answers.phone}
+                onChange={(v) => {
+                  setA("phone", v);
+                  clearError("phone");
+                }}
+                onBlur={() => blurCheck("phone")}
+                error={errors.phone}
+                type="tel"
+                inputMode="tel"
+                autoComplete="tel"
+                placeholder="07…"
+              />
+              <div className="rounded-2xl border border-mint/20 bg-tint p-5">
+                <p className="text-sm font-semibold uppercase tracking-wide text-mint-deep">
+                  What&apos;s included
                 </p>
-                <div className="mt-2">
-                  <ChipGroup
-                    id="fa-contactMethod"
-                    labelledBy="fa-contactMethod-label"
-                    options={CONTACT_METHODS}
-                    value={answers.contactMethod}
-                    onSelect={selectMethod}
-                    error={errors.contactMethod}
-                  />
-                </div>
-              </div>
-              {answers.contactMethod && (
-                <div>
-                  <TextField
-                    id="fa-contactDetail"
-                    label={
-                      answers.contactMethod === "Email"
-                        ? "Your email address"
-                        : answers.contactMethod === "Phone"
-                          ? "Your phone number"
-                          : "Your WhatsApp number"
-                    }
-                    value={answers.contactDetail}
-                    onChange={(v) => {
-                      setA("contactDetail", v);
-                      clearError("contactDetail");
-                      if (switchNote) setSwitchNote("");
-                    }}
-                    onBlur={() => blurCheck("contactDetail")}
-                    error={errors.contactDetail}
-                    type={answers.contactMethod === "Email" ? "email" : "tel"}
-                    inputMode={answers.contactMethod === "Email" ? "email" : "tel"}
-                    autoComplete={answers.contactMethod === "Email" ? "email" : "tel"}
-                    placeholder={
-                      answers.contactMethod === "Email" ? "name@business.co.uk" : "07…"
-                    }
-                  />
-                  {switchNote && !errors.contactDetail && (
-                    <p className="mt-2 text-sm text-muted">{switchNote}</p>
-                  )}
-                </div>
-              )}
-              <div>
-                <p id="fa-timeline-label" className="text-sm font-medium text-ink">
-                  When would you like to get started?{" "}
-                  <span className="font-normal text-muted">(optional)</span>
+                <p className="mt-2 text-sm leading-relaxed text-slate">
+                  Every write-up comes back with the package that fits — from a
+                  built, hosted, secured website with missed-call text-back,
+                  up to the Full Package: Google review automation, instant
+                  lead follow-up, text remarketing and local SEO. No setup
+                  fee, no minimum term.
                 </p>
-                <p className="mt-1 text-sm text-muted">
-                  No obligation either way — this just helps us reply usefully.
-                </p>
-                <div className="mt-3">
-                  <ChipGroup
-                    id="fa-timeline"
-                    labelledBy="fa-timeline-label"
-                    options={TIMELINES}
-                    value={answers.timeline}
-                    onSelect={(v) => setA("timeline", v)}
-                    toggleable
-                  />
-                </div>
+                <Link
+                  href="/packages"
+                  className="mt-2 inline-block text-sm font-medium text-mint-deep underline underline-offset-4"
+                >
+                  See exactly what&apos;s in each package →
+                </Link>
               </div>
               <p className="text-sm text-muted">
                 Free, no obligation — and we&apos;ll only use your details to reply.{" "}
@@ -1017,10 +677,7 @@ export function IntakeWizard() {
                 </Link>
               </p>
               {phase === "failed" && (
-                <div
-                  role="alert"
-                  className="rounded-xl border border-error/40 bg-surface p-4"
-                >
+                <div role="alert" className="rounded-xl border border-error/40 bg-surface p-4">
                   <p className="text-sm font-medium text-error">
                     Something went wrong on our end — you can email us instead and
                     we&apos;ll pick it up straight away.
@@ -1040,15 +697,10 @@ export function IntakeWizard() {
               )}
             </div>
           )}
-        </div>
+        </ScaleReveal>
 
-        {/*
-          Next lives in a fixed thumb-reach bar on mobile (Back offset left and
-          visually secondary so a mis-tap can't erase a completed step);
-          static inline row on sm+.
-        */}
-        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:static sm:z-auto sm:mt-10 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
-          <div className="mx-auto flex w-full max-w-[560px] items-center gap-4">
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-bg/95 px-5 pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md sm:static sm:z-auto sm:mt-8 sm:border-0 sm:bg-transparent sm:p-0 sm:backdrop-blur-none">
+          <div className="mx-auto flex w-full max-w-[640px] items-center gap-4">
             {step > 0 ? (
               <button
                 type="button"
@@ -1066,7 +718,7 @@ export function IntakeWizard() {
             </Cta>
           </div>
           {sending && (
-            <div className="mx-auto mt-3 h-[3px] w-full max-w-[560px] overflow-hidden rounded-full bg-line">
+            <div className="mx-auto mt-3 h-[3px] w-full max-w-[640px] overflow-hidden rounded-full bg-line">
               <div className="h-full w-2/5 rounded-full bg-mint bar-indeterminate" />
             </div>
           )}
