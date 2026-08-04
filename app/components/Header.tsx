@@ -53,14 +53,14 @@ export function Header() {
 
         <nav
           aria-label="Primary"
-          className="col-span-2 row-start-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1 border-t border-line pt-3 text-sm sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:justify-self-center sm:border-0 sm:pt-0 sm:gap-8"
+          className="col-span-2 row-start-2 -mx-5 flex flex-nowrap items-center gap-x-4 overflow-x-auto border-t border-line px-5 pt-3 text-sm [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:col-span-1 sm:col-start-2 sm:row-start-1 sm:mx-0 sm:justify-self-center sm:overflow-visible sm:border-0 sm:px-0 sm:pt-0 sm:gap-8"
         >
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               aria-current={pathname === link.href ? "page" : undefined}
-              className={navLinkClass}
+              className={`shrink-0 whitespace-nowrap ${navLinkClass}`}
             >
               {link.label}
             </Link>
