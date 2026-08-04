@@ -42,7 +42,7 @@ export function Header() {
         with responsive display classes, which put two identically-labelled
         "Primary" landmarks in the DOM at once.
       */}
-      <div className="mx-auto grid max-w-5xl grid-cols-[auto_1fr] items-center gap-x-6 gap-y-3 px-5 py-4 sm:grid-cols-[auto_1fr_auto] sm:px-8">
+      <div className="mx-auto grid max-w-5xl grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-3 px-5 py-4 sm:grid-cols-[auto_1fr_auto] sm:gap-x-6 sm:px-8">
         <Link
           href="/"
           aria-label="Mint & Co home"
@@ -77,9 +77,10 @@ export function Header() {
         */}
         <Cta
           href="/free-audit?ref=nav"
-          className="col-start-2 row-start-1 min-h-[40px] justify-self-end px-5 text-sm sm:col-start-3"
+          className="col-start-2 row-start-1 min-w-0 justify-self-end whitespace-nowrap px-4 text-sm sm:col-start-3 sm:px-5"
         >
-          Get my free audit
+          <span className="sm:hidden">Free audit</span>
+          <span className="hidden sm:inline">Get my free audit</span>
         </Cta>
       </div>
     </header>
