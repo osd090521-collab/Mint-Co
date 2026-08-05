@@ -703,7 +703,12 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
   }
   18%,
   62% {
-    transform: translateY(-34%);
+    /*
+      Tuned to the page's real height: it scrolls just far enough to bring
+      the booking bar under the thumb and keep content in frame, never far
+      enough to drag bare background up into the screen.
+    */
+    transform: translateY(-22%);
   }
   62.01%,
   100% {
@@ -776,6 +781,30 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
 @keyframes phone-caret {
   to {
     opacity: 0;
+  }
+}
+/*
+  Keys depress under the typing. Only a handful are wired up — a keyboard
+  where every key fires reads as a light show, not as someone typing. The
+  window matches .phone-type so the flashes land while the text is growing.
+*/
+.phone-key {
+  animation: phone-key 12s var(--ease-house) infinite;
+}
+@keyframes phone-key {
+  0%,
+  33% {
+    transform: translateY(0);
+    background-color: var(--color-surface);
+  }
+  35% {
+    transform: translateY(1px);
+    background-color: var(--color-tint);
+  }
+  38%,
+  100% {
+    transform: translateY(0);
+    background-color: var(--color-surface);
   }
 }
 .phone-star {
@@ -937,6 +966,7 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
   .phone-ripple,
   .phone-type,
   .phone-caret,
+  .phone-key,
   .phone-star,
   .phone-post,
   .phone-card,
