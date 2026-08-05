@@ -973,6 +973,14 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
   .phone-toast {
     animation: none;
   }
+  /*
+    The toast floats over the rating summary, which only reads correctly
+    while it's sliding in. Held still it just covers the card, so the
+    resting frame drops it and shows the list clean.
+  */
+  .phone-toast {
+    display: none;
+  }
   .shine::after {
     animation: none !important;
     display: none;
