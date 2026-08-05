@@ -583,6 +583,278 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
   }
 }
 
+/*
+  Hero phone — one 12s loop, three acts: the site being navigated, a
+  customer writing the review, the reviews landing. Every moving part
+  shares the same 12s duration and carves its own window out of the
+  keyframe percentages, so the scene stays in lockstep forever with no JS
+  and no hydration — the phone sits beside the LCP element and must never
+  gate it. Where a part repeats (stars, cards) one keyframe is reused and
+  staggered with animation-delay.
+
+  Base styles are the resting frame — Act C, reviews in, stars full — so
+  the reduced-motion block below leaves a composed phone rather than a
+  blank one (same reasoning as .bar-indeterminate, noted there). Opacity
+  and transform only; nothing here triggers layout.
+*/
+.phone-float {
+  animation: phone-float 7s ease-in-out infinite;
+}
+@keyframes phone-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-9px);
+  }
+}
+
+/* Light travelling across the glass. */
+.phone-glare {
+  opacity: 0;
+  transform: translateX(-160%) rotate(18deg);
+  animation: phone-glare 9s ease-in-out infinite;
+}
+@keyframes phone-glare {
+  0% {
+    opacity: 0;
+    transform: translateX(-160%) rotate(18deg);
+  }
+  12% {
+    opacity: 1;
+  }
+  38% {
+    opacity: 0;
+  }
+  40%,
+  100% {
+    opacity: 0;
+    transform: translateX(280%) rotate(18deg);
+  }
+}
+
+/* The three acts — cross-faded windows of one shared 12s cycle. */
+.phone-act {
+  position: absolute;
+  inset: 0;
+}
+.phone-act-a {
+  opacity: 0;
+  animation: phone-act-a 12s ease-in-out infinite;
+}
+.phone-act-b {
+  opacity: 0;
+  animation: phone-act-b 12s ease-in-out infinite;
+}
+.phone-act-c {
+  opacity: 1;
+  animation: phone-act-c 12s ease-in-out infinite;
+}
+@keyframes phone-act-a {
+  0%,
+  26% {
+    opacity: 1;
+  }
+  30%,
+  96% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+@keyframes phone-act-b {
+  0%,
+  28% {
+    opacity: 0;
+  }
+  32%,
+  58% {
+    opacity: 1;
+  }
+  62%,
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes phone-act-c {
+  0%,
+  60% {
+    opacity: 0;
+  }
+  64%,
+  96% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Act A — the page scrolls under a thumb, which taps the booking bar. */
+.phone-page {
+  animation: phone-page 12s var(--ease-house) infinite;
+}
+@keyframes phone-page {
+  0%,
+  5% {
+    transform: translateY(0);
+  }
+  18%,
+  62% {
+    transform: translateY(-34%);
+  }
+  62.01%,
+  100% {
+    transform: translateY(0);
+  }
+}
+.phone-tap {
+  opacity: 0;
+  animation: phone-tap 12s var(--ease-house) infinite;
+}
+@keyframes phone-tap {
+  0%,
+  18% {
+    opacity: 0;
+    transform: translateY(12px) scale(0.92);
+  }
+  22%,
+  27% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  30%,
+  100% {
+    opacity: 0;
+    transform: translateY(0) scale(1);
+  }
+}
+.phone-ripple {
+  opacity: 0;
+  animation: phone-ripple 12s ease-out infinite;
+}
+@keyframes phone-ripple {
+  0%,
+  21% {
+    opacity: 0;
+    transform: scale(0.4);
+  }
+  23% {
+    opacity: 0.55;
+  }
+  29%,
+  100% {
+    opacity: 0;
+    transform: scale(2.6);
+  }
+}
+
+/* Act B — the review types itself out, then the stars go in one by one. */
+.phone-type {
+  transform-origin: left center;
+  animation: phone-type 12s var(--ease-house) infinite;
+}
+@keyframes phone-type {
+  0%,
+  34% {
+    transform: scaleX(0);
+  }
+  43%,
+  62% {
+    transform: scaleX(1);
+  }
+  62.01%,
+  100% {
+    transform: scaleX(0);
+  }
+}
+.phone-caret {
+  animation: phone-caret 900ms steps(2, jump-none) infinite;
+}
+@keyframes phone-caret {
+  to {
+    opacity: 0;
+  }
+}
+.phone-star {
+  animation: phone-star 12s var(--ease-house) infinite;
+}
+@keyframes phone-star {
+  0%,
+  47% {
+    opacity: 0.16;
+    transform: scale(0.7);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.22);
+  }
+  53%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.phone-post {
+  animation: phone-post 12s var(--ease-house) infinite;
+}
+@keyframes phone-post {
+  0%,
+  56% {
+    transform: scale(1);
+  }
+  59% {
+    transform: scale(1.09);
+  }
+  62%,
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Act C — the reviews land, then an enquiry drops in on top of them. */
+.phone-card {
+  animation: phone-card 12s var(--ease-house) infinite;
+}
+@keyframes phone-card {
+  0%,
+  64% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  71%,
+  96% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+.phone-toast {
+  animation: phone-toast 12s var(--ease-house) infinite;
+}
+@keyframes phone-toast {
+  0%,
+  85% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.96);
+  }
+  89%,
+  95% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  99%,
+  100% {
+    opacity: 0;
+    transform: translateY(-18px) scale(0.96);
+  }
+}
+
 /* Restrained motion, honoured for reduced-motion users */
 @media (prefers-reduced-motion: reduce) {
   html {
@@ -647,6 +919,28 @@ html[data-js] [data-autodemo="care"][data-shown="true"] .demo-pulse {
     instead, so it just sits still at its natural position.
   */
   .bar-indeterminate {
+    animation: none;
+  }
+  /*
+    Same reasoning for the hero phone: cancelled outright so it freezes on
+    its resting frame (Act C, reviews in, stars full) instead of settling
+    on whatever each keyframe happens to end on. Every looping part of the
+    scene is named explicitly.
+  */
+  .phone-float,
+  .phone-glare,
+  .phone-act-a,
+  .phone-act-b,
+  .phone-act-c,
+  .phone-page,
+  .phone-tap,
+  .phone-ripple,
+  .phone-type,
+  .phone-caret,
+  .phone-star,
+  .phone-post,
+  .phone-card,
+  .phone-toast {
     animation: none;
   }
   .shine::after {

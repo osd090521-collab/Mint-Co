@@ -6,6 +6,7 @@ import { InlineLink } from "./components/InlineLink";
 import { staggerDelay } from "./lib/motion";
 import { Reveal } from "./components/Reveal";
 import { Section } from "./components/Section";
+import { TenSecondVerdict } from "./components/TenSecondVerdict";
 import {
   auditWhatsApp,
   ctaConsequence,
@@ -36,15 +37,17 @@ export default function Home() {
     <main id="main" className="flex-1">
       {/* HERO — answers "why should I look twice?" */}
       <section className="relative overflow-hidden">
-        {/* Oversized faint ampersand — typographic art direction, not decoration */}
+        {/* Oversized faint ampersand — typographic art direction, not
+            decoration. Sits behind the copy column, not the phone. */}
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -right-[4%] -top-[6%] select-none font-display leading-none text-mint/[0.05] text-[22rem] sm:text-[30rem]"
+          className="pointer-events-none absolute -left-[6%] -top-[8%] select-none font-display leading-none text-mint/[0.05] text-[22rem] sm:text-[30rem]"
         >
           &amp;
         </span>
 
-        <div className="mx-auto max-w-5xl px-5 py-20 sm:px-8 sm:py-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-14 px-5 py-20 sm:px-8 sm:py-28 lg:grid-cols-[1.05fr_auto] lg:gap-20">
+          <div className="relative">
           {/*
             Hero renders as plain server HTML at full opacity (no Reveal) —
             it's the LCP element and must not paint blank behind JS/IO gating.
@@ -86,6 +89,12 @@ export default function Home() {
             No obligation, no hard sell — we&apos;ll show you what we&apos;d
             change, you decide.
           </p>
+          </div>
+
+          {/* The claim, shown. Server-rendered CSS only — see the component. */}
+          <div className="relative lg:pl-4">
+            <TenSecondVerdict />
+          </div>
         </div>
       </section>
 
